@@ -1,4 +1,11 @@
 package com.roles.usermanagement.modules.lifecycle.enums;
 
-public class TransitionAction {
+public enum TransitionAction {
+
+    ASSING,
+    REASSING,
+    START_PROGRESS,
+    RESOLVE,
+    CONFIRM_CLOSE
+
 }
