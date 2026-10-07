@@ -1,4 +1,10 @@
 package com.roles.usermanagement.modules.dashboard.enums;
 
-public class MetricPeriod {
+public enum MetricPeriod {
+
+    TODAY,
+    THIS_WEEK,
+    THIS_MONTH,
+    ALL_TIME
+
 }
