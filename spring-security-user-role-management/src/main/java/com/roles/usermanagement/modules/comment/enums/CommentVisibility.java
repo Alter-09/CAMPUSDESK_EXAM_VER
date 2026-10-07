@@ -1,4 +1,6 @@
 package com.roles.usermanagement.modules.comment.enums;
 
-public class CommentVisibility {
+public enum CommentVisibility {
+    PUBLIC,
+    INTERNAL
 }
