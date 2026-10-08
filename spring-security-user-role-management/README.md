@@ -41,7 +41,7 @@ $env:DB_PASSWORD = '<contraseña de tu PostgreSQL>'
 
 El perfil predeterminado es `dev` y el puerto es `8050`. Hibernate utiliza
 `ddl-auto=update` para crear o actualizar las tablas dentro de una base existente.
-El banner de arranque identifica el proyecto como NEXO y muestra Spring Boot,
+El banner de arranque identifica el proyecto como CAMPUSDESK y muestra Spring Boot,
 Java y el perfil activo.
 
 Para generar el ejecutable:

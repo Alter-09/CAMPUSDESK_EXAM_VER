@@ -72,7 +72,7 @@ $env:DB_PASSWORD = '<contraseña de tu PostgreSQL>'
 ```
 
 Por defecto usa el perfil `dev` y escucha en `http://localhost:8050`.
-El banner NEXO muestra las versiones de Java, Spring Boot y el perfil activo.
+El banner CAMPUSDESK muestra las versiones de Java, Spring Boot y el perfil activo.
 
 ### 3. Abrir el frontend
 
