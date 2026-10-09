@@ -1,0 +1,66 @@
+/**
+ * Design tokens — single source of truth for color, type, space, and radii.
+ * Keeps the UI theme DRY and easy to evolve without hunting through components.
+ */
+:root {
+  /* Color */
+  --color-bg-page: #011e44;
+  --color-bg-card: #121d2d;
+  --color-bg-input: #1e2a3a;
+  --color-bg-button: #000000;
+
+  --color-text-primary: #ffffff;
+  --color-text-label: #94a3b8;
+  --color-text-placeholder: rgba(255, 255, 255, 0.72);
+  --color-text-accent: #e75c69;
+
+  --color-border-input: #282828;
+  --color-border-card-mobile: #878787;
+  --color-focus-ring: #e75c69;
+
+  --color-shadow-card: rgba(0, 0, 0, 0.05);
+
+  /* Typography */
+  --font-family-base: "Poppins", system-ui, sans-serif;
+  --font-weight-light: 300;
+  --font-weight-medium: 500;
+  --font-weight-bold: 700;
+  --font-weight-extrabold: 800;
+  --font-weight-black: 900;
+
+  --font-size-title-lg: 2rem; /* 32px */
+  --font-size-title-md: 1.9375rem; /* 31px */
+  --font-size-title-sm: 1.5rem; /* 24px */
+  --font-size-label-lg: 1.5rem; /* 24px */
+  --font-size-label-md: 1.25rem; /* 20px */
+  --font-size-label-sm: 1rem; /* 16px */
+  --font-size-input-lg: 1.25rem; /* 20px */
+  --font-size-input-sm: 0.875rem; /* 14px */
+  --font-size-button-lg: 1.5rem; /* 24px */
+  --font-size-button-sm: 1rem; /* 16px */
+
+  /* Spacing */
+  --space-2xs: 0.25rem;
+  --space-xs: 0.5rem;
+  --space-sm: 0.75rem;
+  --space-md: 1rem;
+  --space-lg: 1.5rem;
+  --space-xl: 2rem;
+  --space-2xl: 2.5rem;
+  --space-3xl: 3rem;
+
+  /* Radii */
+  --radius-card: 10px;
+  --radius-control: 6px;
+
+  /* Layout */
+  --login-card-width-desktop: 33.1875rem; /* 531px */
+  --login-card-max-width: 33.1875rem;
+  --login-brand-size: min(48rem, 48vw); /* ~768px capped */
+  --login-page-max-width: 90rem; /* 1440px */
+  --login-gutter: clamp(1.25rem, 4vw, 3.5rem);
+
+  /* Motion */
+  --transition-fast: 150ms ease;
+  --transition-base: 220ms ease;
+}

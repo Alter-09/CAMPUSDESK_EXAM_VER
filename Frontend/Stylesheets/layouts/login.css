@@ -1,0 +1,152 @@
+/**
+ * Login page composition.
+ * Owns layout only — visual tokens and controls remain in shared modules.
+ */
+.login-page {
+  min-height: 100vh;
+  min-height: 100dvh;
+  background-color: var(--color-bg-page);
+}
+
+.login-page__inner {
+  display: grid;
+  grid-template-columns: minmax(18rem, var(--login-card-width-desktop)) minmax(0, 1fr);
+  align-items: center;
+  column-gap: clamp(1rem, 3vw, 2.75rem);
+  width: min(100%, var(--login-page-max-width));
+  min-height: 100vh;
+  min-height: 100dvh;
+  margin-inline: auto;
+  padding: clamp(2rem, 5vh, 3.75rem) var(--login-gutter);
+}
+
+.login-page__brand {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 0;
+  height: 100%;
+}
+
+.login-page__brand-image {
+  width: min(100%, var(--login-brand-size));
+  max-height: min(48rem, 85vh);
+  height: auto;
+  aspect-ratio: 1;
+  object-fit: contain;
+  pointer-events: none;
+  user-select: none;
+}
+
+.login-page__brand-mobile {
+  display: none;
+}
+
+.login-card {
+  width: 100%;
+  max-width: var(--login-card-max-width);
+  padding: clamp(1.75rem, 3vw, 2.5rem) clamp(1.25rem, 2.5vw, 1.75rem)
+    clamp(2rem, 3.5vw, 3rem);
+}
+
+.login-card__welcome-mobile {
+  display: none;
+}
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(1.75rem, 3vw, 2.75rem);
+  margin-top: clamp(2rem, 4vw, 3.25rem);
+}
+
+.login-form__fields {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(1.5rem, 3vw, 2.25rem);
+}
+
+.login-form__actions {
+  margin-top: var(--space-xs);
+}
+
+@media (max-width: 1024px) {
+  .login-page__inner {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 0.9fr);
+  }
+
+  .login-page__brand-image {
+    width: min(100%, 28rem);
+  }
+}
+
+@media (max-width: 767px) {
+  .login-page__inner {
+    grid-template-columns: 1fr;
+    align-content: start;
+    justify-items: center;
+    gap: 0;
+    padding: 0 1.25rem 2.5rem;
+  }
+
+  .login-page__brand {
+    order: -1;
+    width: 100%;
+    padding-top: 0.5rem;
+  }
+
+  .login-page__brand-desktop {
+    display: none;
+  }
+
+  .login-page__brand-mobile {
+    display: block;
+    width: min(19.5rem, 83vw);
+    height: auto;
+    margin-inline: auto;
+  }
+
+  .login-card {
+    max-width: 20.25rem; /* 324px */
+    margin-top: -1.5rem;
+    padding: 2rem 1rem 2.25rem;
+  }
+
+  .login-card--mobile-border {
+    border: 0.5px solid var(--color-border-card-mobile);
+  }
+
+  /* Keep the real heading for a11y; the visual copy sits above the card. */
+  .login-card__header .card__title {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+
+  .login-card__welcome-mobile {
+    display: block;
+    order: -1;
+    width: min(100%, 21.5rem);
+    margin: 0.25rem 0 1rem;
+    text-align: center;
+    font-size: clamp(1.35rem, 5vw, 1.5rem);
+    font-weight: var(--font-weight-black);
+    line-height: 1.2;
+    color: var(--color-text-primary);
+  }
+
+  .login-form {
+    margin-top: 2.5rem;
+    gap: 2rem;
+  }
+
+  .login-card__header {
+    padding-top: 1.25rem;
+  }
+}

@@ -1,0 +1,72 @@
+/**
+ * Button primitives. Variants express intent; size adapts by breakpoint.
+ */
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: 4rem;
+  padding: 0.875rem var(--space-lg);
+  border: 0;
+  border-radius: var(--radius-control);
+  cursor: pointer;
+  text-align: center;
+  transition:
+    transform var(--transition-fast),
+    background-color var(--transition-base),
+    color var(--transition-base),
+    opacity var(--transition-fast);
+}
+
+.button:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
+.button:not(:disabled):hover {
+  transform: translateY(-1px);
+}
+
+.button:not(:disabled):active {
+  transform: translateY(0);
+}
+
+.button--primary {
+  background-color: var(--color-bg-button);
+  color: var(--color-text-accent);
+  font-size: var(--font-size-button-lg);
+  font-weight: var(--font-weight-black);
+}
+
+.button--primary:not(:disabled):hover {
+  background-color: #0a0a0a;
+}
+
+.button__label-desktop {
+  display: inline;
+}
+
+.button__label-mobile {
+  display: none;
+}
+
+@media (max-width: 767px) {
+  .button {
+    min-height: 4rem;
+  }
+
+  .button--primary {
+    color: var(--color-text-primary);
+    font-size: var(--font-size-button-sm);
+    font-weight: var(--font-weight-medium);
+  }
+
+  .button__label-desktop {
+    display: none;
+  }
+
+  .button__label-mobile {
+    display: inline;
+  }
+}

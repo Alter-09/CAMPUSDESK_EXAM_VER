@@ -1,0 +1,107 @@
+/**
+ * Reusable labeled form control.
+ * Composition: .field > .field__label + .field__control(+modifiers)
+ */
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  width: 100%;
+}
+
+.field__label {
+  margin: 0;
+  font-size: var(--font-size-label-lg);
+  font-weight: var(--font-weight-extrabold);
+  line-height: 1.2;
+  color: var(--color-text-label);
+}
+
+.field__control {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.field__input {
+  width: 100%;
+  min-height: 4.5rem;
+  padding: 0 var(--space-lg);
+  border: 0.6px solid var(--color-border-input);
+  border-radius: var(--radius-control);
+  background-color: var(--color-bg-input);
+  color: var(--color-text-primary);
+  font-size: var(--font-size-input-lg);
+  font-weight: var(--font-weight-light);
+  transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.field__input::placeholder {
+  color: var(--color-text-placeholder);
+}
+
+.field__input:hover {
+  border-color: color-mix(in srgb, var(--color-border-input) 60%, var(--color-text-label));
+}
+
+.field__input:focus {
+  outline: none;
+  border-color: var(--color-focus-ring);
+  box-shadow: 0 0 0 1px var(--color-focus-ring);
+}
+
+.field__input--with-action {
+  padding-right: 3.25rem;
+}
+
+.field__action {
+  position: absolute;
+  right: 0.85rem;
+  top: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.75rem;
+  height: 1.75rem;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  transform: translateY(-50%);
+  opacity: 0.85;
+  transition: opacity var(--transition-fast);
+}
+
+.field__action:hover,
+.field__action:focus-visible {
+  opacity: 1;
+}
+
+.field__action-icon {
+  width: 1.35rem;
+  height: auto;
+}
+
+.field__action[aria-pressed="true"] .field__action-icon {
+  opacity: 0.55;
+}
+
+@media (max-width: 767px) {
+  .field__label {
+    font-size: var(--font-size-label-md);
+  }
+
+  .field__label--password {
+    font-size: var(--font-size-label-sm);
+  }
+
+  .field__input {
+    min-height: 3.75rem;
+    font-size: var(--font-size-input-sm);
+    padding-inline: var(--space-md);
+  }
+
+  .field__input--with-action {
+    padding-right: 2.75rem;
+  }
+}
