@@ -1,20 +1,20 @@
 /**
- * Reusable labeled form control.
- * Composition: .field > .field__label + .field__control(+modifiers)
+ * Campo de formulario reutilizable (label + control + acción opcional).
  */
 .field {
   display: flex;
   flex-direction: column;
-  gap: var(--space-sm);
+  gap: var(--cd-space-sm);
   width: 100%;
 }
 
 .field__label {
   margin: 0;
-  font-size: var(--font-size-label-lg);
-  font-weight: var(--font-weight-extrabold);
-  line-height: 1.2;
-  color: var(--color-text-label);
+  font-family: var(--cd-font-body);
+  font-size: 0.875rem;
+  font-weight: var(--cd-font-weight-semibold);
+  line-height: 1.4;
+  color: var(--cd-color-slate-titanium-300);
 }
 
 .field__control {
@@ -25,83 +25,82 @@
 
 .field__input {
   width: 100%;
-  min-height: 4.5rem;
-  padding: 0 var(--space-lg);
-  border: 0.6px solid var(--color-border-input);
-  border-radius: var(--radius-control);
-  background-color: var(--color-bg-input);
-  color: var(--color-text-primary);
-  font-size: var(--font-size-input-lg);
-  font-weight: var(--font-weight-light);
-  transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+  min-height: var(--cd-touch-target);
+  padding: 0 0.75rem;
+  border: 1px solid var(--cd-color-border-input);
+  border-radius: var(--cd-radius-lg);
+  background-color: var(--cd-color-surface-canvas);
+  color: var(--cd-color-slate-titanium-100);
+  font-size: 0.875rem;
+  font-weight: var(--cd-font-weight-regular);
+  line-height: 1.4;
+  transition:
+    border-color var(--cd-transition-fast),
+    box-shadow var(--cd-transition-fast),
+    background-color var(--cd-transition-fast);
 }
 
 .field__input::placeholder {
-  color: var(--color-text-placeholder);
+  color: var(--cd-color-slate-titanium-500);
 }
 
 .field__input:hover {
-  border-color: color-mix(in srgb, var(--color-border-input) 60%, var(--color-text-label));
+  border-color: var(--cd-color-border-button);
 }
 
 .field__input:focus {
   outline: none;
-  border-color: var(--color-focus-ring);
-  box-shadow: 0 0 0 1px var(--color-focus-ring);
+  border-color: var(--cd-color-signal-coral);
+  box-shadow: 0 0 0 3px var(--cd-color-focus-ring);
 }
 
 .field__input--with-action {
-  padding-right: 3.25rem;
+  padding-right: 2.75rem;
 }
 
 .field__action {
   position: absolute;
-  right: 0.85rem;
+  right: 0.35rem;
   top: 50%;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 1.75rem;
-  height: 1.75rem;
+  width: var(--cd-touch-target);
+  height: var(--cd-touch-target);
   padding: 0;
   border: 0;
+  border-radius: var(--cd-radius-md);
   background: transparent;
   cursor: pointer;
   transform: translateY(-50%);
-  opacity: 0.85;
-  transition: opacity var(--transition-fast);
+  transition: background-color var(--cd-transition-fast);
 }
 
-.field__action:hover,
-.field__action:focus-visible {
-  opacity: 1;
+.field__action:hover {
+  background-color: var(--cd-color-signal-coral-muted);
 }
 
 .field__action-icon {
-  width: 1.35rem;
+  width: 1.25rem;
   height: auto;
+  /* El SVG exportado es negro; lo teñimos a titanium sin editar el asset */
+  filter: invert(78%) sepia(8%) saturate(404%) hue-rotate(176deg) brightness(95%)
+    contrast(88%);
+  opacity: 0.95;
 }
 
 .field__action[aria-pressed="true"] .field__action-icon {
-  opacity: 0.55;
+  filter: invert(56%) sepia(62%) saturate(1200%) hue-rotate(318deg) brightness(98%)
+    contrast(92%);
 }
 
-@media (max-width: 767px) {
-  .field__label {
-    font-size: var(--font-size-label-md);
-  }
+.field__error {
+  margin: 0;
+  font-size: 0.75rem;
+  line-height: 1.5;
+  color: var(--cd-color-signal-coral);
+}
 
-  .field__label--password {
-    font-size: var(--font-size-label-sm);
-  }
-
-  .field__input {
-    min-height: 3.75rem;
-    font-size: var(--font-size-input-sm);
-    padding-inline: var(--space-md);
-  }
-
-  .field__input--with-action {
-    padding-right: 2.75rem;
-  }
+.field__input[aria-invalid="true"] {
+  border-color: var(--cd-color-signal-coral);
 }

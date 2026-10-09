@@ -1,6 +1,5 @@
 /**
- * Global reset and document-level defaults.
- * Component styles live elsewhere — this file stays intentionally small.
+ * Reset mínimo y defaults de documento.
  */
 *,
 *::before,
@@ -15,9 +14,10 @@ html {
 body {
   margin: 0;
   min-height: 100%;
-  font-family: var(--font-family-base);
-  background-color: var(--color-bg-page);
-  color: var(--color-text-primary);
+  font-family: var(--cd-font-body);
+  font-weight: var(--cd-font-weight-regular);
+  background-color: var(--cd-color-surface-canvas);
+  color: var(--cd-color-slate-titanium-100);
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
 }
@@ -38,7 +38,7 @@ a {
 }
 
 :focus-visible {
-  outline: 2px solid var(--color-focus-ring);
+  outline: 3px solid var(--cd-color-focus-ring);
   outline-offset: 2px;
 }
 
@@ -52,4 +52,15 @@ a {
   clip: rect(0, 0, 0, 0);
   white-space: nowrap;
   border: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }

@@ -1,6 +1,6 @@
 /**
- * Password visibility toggle.
- * Single responsibility: sync button pressed state with an input type.
+ * Alternar visibilidad de contraseña.
+ * Una sola responsabilidad: sincronizar aria-pressed con el type del input.
  */
 
 /**

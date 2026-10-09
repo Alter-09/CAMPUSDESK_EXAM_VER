@@ -5,53 +5,51 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta
       name="description"
-      content="Inicia sesión en CampusDesk para gestionar tu campus desde un solo lugar."
+      content="Inicia sesión en CampusDesk para gestionar y reportar tickets de soporte tecnico de manera eficiente y sencilla."
     />
     <title>CampusDesk | Iniciar sesión</title>
     <link rel="icon" href="./Assets/favicon.svg" type="image/svg+xml" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700;800;900&display=swap"
-      rel="stylesheet"
-    />
     <link rel="stylesheet" href="./Stylesheets/main.css" />
   </head>
   <body>
     <main class="login-page" aria-label="Inicio de sesión">
+      <div class="login-page__atmosphere" aria-hidden="true"></div>
+
       <div class="login-page__inner">
         <section class="login-panel" aria-labelledby="login-title">
-          <p class="login-card__welcome-mobile" aria-hidden="true">
-            Bienvenido a CampusDesk!
-          </p>
+          <h1 id="login-title" class="login-welcome">Bienvenido a CampusDesk!</h1>
 
-          <article class="card login-card login-card--mobile-border">
-            <header class="card__header login-card__header">
-              <h1 id="login-title" class="card__title">Bienvenido a CampusDesk!</h1>
-              <p class="card__subtitle">Iniciar Sesión</p>
-            </header>
+          <div class="login-card">
+            <p class="login-card__subtitle">Iniciar sesión</p>
 
             <form id="login-form" class="login-form" action="#" method="post" novalidate>
+              <div
+                id="login-form-summary"
+                class="login-form__summary"
+                role="alert"
+                aria-live="polite"
+              ></div>
+
               <div class="login-form__fields">
                 <div class="field">
-                  <label class="field__label" for="username">Nombre de Usuario</label>
+                  <label class="field__label" for="email">Correo electrónico</label>
                   <div class="field__control">
                     <input
-                      id="username"
+                      id="email"
                       class="field__input"
-                      name="username"
-                      type="text"
+                      name="email"
+                      type="email"
+                      inputmode="email"
                       autocomplete="username"
-                      placeholder="Ejemplo: Usuario2026"
+                      placeholder="Ejemplo: usuario@campusdesk.edu"
                       required
                     />
                   </div>
+                  <p id="email-error" class="field__error" aria-live="polite"></p>
                 </div>
 
                 <div class="field">
-                  <label class="field__label field__label--password" for="password">
-                    Contraseña
-                  </label>
+                  <label class="field__label" for="password">Contraseña</label>
                   <div class="field__control">
                     <input
                       id="password"
@@ -59,7 +57,7 @@
                       name="password"
                       type="password"
                       autocomplete="current-password"
-                      placeholder="Ejemplo: ContraseñaSegura123"
+                      placeholder="Ingresa tu contraseña"
                       required
                     />
                     <button
@@ -68,8 +66,7 @@
                       type="button"
                       aria-controls="password"
                       aria-pressed="false"
-                      data-label-show="Mostrar contraseña"
-                      data-label-hide="Ocultar contraseña"
+                      aria-label="Mostrar contraseña"
                     >
                       <img
                         class="field__action-icon"
@@ -81,23 +78,26 @@
                       />
                     </button>
                   </div>
+                  <p id="password-error" class="field__error" aria-live="polite"></p>
                 </div>
               </div>
 
               <div class="login-form__actions">
                 <button class="button button--primary" type="submit">
-                  <span class="button__label-desktop">Iniciar Sesion</span>
-                  <span class="button__label-mobile">Login</span>
+                  <span class="button__label">Ingresar</span>
                 </button>
+                <p class="login-form__hint">
+                  Acceso privado · Solicita tu cuenta al Administrador
+                </p>
               </div>
             </form>
-          </article>
+          </div>
         </section>
 
         <aside class="login-page__brand" aria-label="Marca CampusDesk">
           <img
             class="login-page__brand-image login-page__brand-desktop"
-            src="./Assets/Static/logo-brand.png"
+            src="./Assets/Static/Logo2.svg"
             width="768"
             height="768"
             alt="CampusDesk"
