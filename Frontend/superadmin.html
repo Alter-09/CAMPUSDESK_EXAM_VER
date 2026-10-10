@@ -33,25 +33,62 @@
                             <span class="superadmin-nav-link__text">Crear nuevo usuario</span>
                         </a>
                         <a class="superadmin-nav-link" href="#roles">
-                            <span class="superadmin-nav-link__icon" aria-hidden("true">◆</span>
-                            <span class("superadmin-nav-link__text">Roles y permisos</span>
+                            <span class="superadmin-nav-link__icon" aria-hidden="true">◆</span>
+                            <span class="superadmin-nav-link__text">Roles y permisos</span>
                         </a>
                     </section>
-                    <section class("superadmin-nav-group") aria-labelledby("people-navigation")>
-                        <h2 id("people-navigation") class("superadmin-nav-group__label")>Personal</h2>
-                        <a class("superadmin-nav-link") href("#technicians")>
-                            <span class("superadmin-nav-link__icon") aria-hidden("true")>T</span>
-                            <span class("superadmin-nav-link__text")>Técnicos</span>
+                    <section class="superadmin-nav-group" aria-labelledby="people-navigation">
+                        <h2 id="people-navigation" class="superadmin-nav-group__label">Personal</h2>
+                        <a class="superadmin-nav-link" href="#technicians">
+                            <span class="superadmin-nav-link__icon" aria-hidden="true">T</span>
+                            <span class="superadmin-nav-link__text">Técnicos</span>
                         </a>
-                        <a class("superadmin-nav-link") href("#users")>
-                            <span class("superadmin-nav-link__icon") aria-hidden("true")>U</span>
-                            <span class("superadmin-nav-link__text")>Usuarios</span>
+                        <a class="superadmin-nav-link" href="#users">
+                            <span class="superadmin-nav-link__icon" aria-hidden="true">U</span>
+                            <span class="superadmin-nav-link__text">Usuarios</span>
                         </a>
                     </section>
-<section class="superadmin-nav-group" aria-labelledby="tickets-navigation">
-    <h2 id="tickets-navigation" class="superadmin-nav-group__label">Tiquetes</h2>
-    <a class="superadmin-nav-link" href="#assign-technician"><span class="superadmin-nav-link__icon" aria-hidden="true">→</span><span class="superadmin-nav-link__text">Asignar técnico</span></a><a class="superadmin-nav-link" href="#ticket-status"><span class="superadmin-nav-link__icon" aria-hidden="true">≡</span><span class="superadmin-nav-link__text">Estado de tiquetes</span></a></section></nav>
-<div class="superadmin-sidebar__footer"><button class="superadmin-signout" type="button" disabled aria-label="Cerrar sesión, disponible cuando se conecte la autenticación"><span class="superadmin-nav-link__icon" aria-hidden="true">↗</span><span class="superadmin-signout__text">Cerrar sesión</span></button></div></aside>
-<div class="superadmin-workspace"><header class="superadmin-header"><div class="superadmin-header__context"><p class="superadmin-header__organization">TechNova Solutions</p><p class="superadmin-header__section">Vista general</p></div><div class="superadmin-profile" aria-label="Sesión actual"><div class="superadmin-profile__copy"><span class="superadmin-profile__role">Superadmin</span><span class="superadmin-profile__product">CampusDesk</span></div><span class="superadmin-profile__avatar" aria-hidden="true">SA</span></div></header>
-<main id="overview" class="superadmin-content"><section class="superadmin-empty-state" aria-labelledby="superadmin-title"><p class="superadmin-empty-state__eyebrow">Administración</p><h1 id="superadmin-title" class="superadmin-empty-state__title">Panel de superadministración</h1><p class="superadmin-empty-state__description">Las herramientas de gestión de usuarios, permisos y tiquetes estarán disponibles cuando se integren los servicios del backend.</p></section></main></div>
-</div></body></html>
+                    <section class="superadmin-nav-group" aria-labelledby="tickets-navigation">
+                        <h2 id="tickets-navigation" class="superadmin-nav-group__label">Tiquetes</h2>
+                        <a class="superadmin-nav-link" href="#assign-technician">
+                            <span class="superadmin-nav-link__icon" aria-hidden="true">→</span>
+                            <span class="superadmin-nav-link__text">Asignar técnico</span>
+                        </a>
+                        <a class="superadmin-nav-link" href="#ticket-status">
+                            <span class="superadmin-nav-link__icon" aria-hidden="true">≡</span>
+                            <span class="superadmin-nav-link__text">Estado de tiquetes</span>
+                        </a>
+                    </section>
+                </nav>
+                <div class="sidebar-footer">
+                <!-- Cambiamos el <button> por un enlace <a> apuntando al login -->
+                    <a href="index.html" class="btn-outline-danger" style="text-decoration: none; display: flex; justify-content: center; align-items: center;">
+                        Cerrar Sesión
+                    </a>
+                </div>
+            </aside>
+            <div class="superadmin-workspace">
+                <header class="superadmin-header">
+                    <div class="superadmin-header__context">
+                        <p class="superadmin-header__organization">TechNova Solutions</p>
+                        <p class="superadmin-header__section">Vista general</p>
+                    </div>
+                    <div class="superadmin-profile" aria-label="Sesión actual">
+                        <div class="superadmin-profile__copy">
+                            <span class="superadmin-profile__role">Superadmin</span>
+                            <span class="superadmin-profile__product">CampusDesk</span>
+                        </div>
+                        <span class="superadmin-profile__avatar" aria-hidden="true">SA</span>
+                    </div>
+                </header>
+                <main id="overview" class="superadmin-content">
+                    <section class="superadmin-empty-state" aria-labelledby="superadmin-title">
+                        <p class="superadmin-empty-state__eyebrow">Administración</p>
+                        <h1 id="superadmin-title" class="superadmin-empty-state__title">Panel de superadministración</h1>
+                        <p class="superadmin-empty-state__description">Las herramientas de gestión de usuarios, permisos y tiquetes estarán disponibles cuando se integren los servicios del backend.</p>
+                    </section>
+                </main>
+            </div>
+        </div>
+    </body>
+</html>
