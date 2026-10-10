@@ -6,6 +6,10 @@ import lombok.*;
 
 import java.time.LocalDateTime;
 
+/**
+ * Conserva en caché un indicador del dashboard para un periodo y ámbito de
+ * consulta determinados (RF-07).
+ */
 @Getter
 @Setter
 @NoArgsConstructor
@@ -37,6 +41,7 @@ public class DashboardCacheMetric {
     @Column(name = "last_updated", nullable = false)
     private LocalDateTime lastUpdated;
 
+    /** Mantiene vigente la fecha de actualización al crear o modificar la métrica. */
     @PrePersist
     @PreUpdate
     protected void onPersist() {
