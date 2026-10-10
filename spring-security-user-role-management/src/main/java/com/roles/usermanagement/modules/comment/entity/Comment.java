@@ -7,6 +7,11 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
+
+/**
+ * Representa un comentario asociado a una incidencia, su autor y su ámbito de
+ * visibilidad (RF-05).
+ */
 @Getter
 @Setter
 @NoArgsConstructor
@@ -46,6 +51,7 @@ public class Comment {
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
+    /** Asigna la fecha de creación y la visibilidad pública predeterminada. */
     @PrePersist
     protected void onCreate() {
         this.createdAt = LocalDateTime.now();
