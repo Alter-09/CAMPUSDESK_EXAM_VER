@@ -1,6 +1,6 @@
 package com.roles.usermanagement.modules.dashboard.service;
 
-import com.roles.usermanagement.modules.dashboard.dto.DashboardMetricsResponse;
+import com.roles.usermanagement.modules.dashboard.model.DashboardMetrics;
 import com.roles.usermanagement.modules.dashboard.repository.DashboardReportRepository;
 import com.roles.usermanagement.modules.lifecycle.enums.TicketStatus;
 import com.roles.usermanagement.persistance.crud.UserCrudRepository;
@@ -12,7 +12,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 /**
- * Calcula métricas globales o limitadas al solicitante o técnico autenticado.
+ * Calcula métricas globales o limitadas al solicitante o técnico autenticado,
+ * y devuelve un resultado interno independiente del DTO HTTP.
  */
 @Service
 public class DashboardService {
@@ -29,7 +30,7 @@ public class DashboardService {
      * Devuelve los conteos permitidos para el rol y usuario solicitantes.
      */
     @Transactional(readOnly = true)
-    public DashboardMetricsResponse getMetricsForUser(String username) {
+    public DashboardMetrics getMetricsForUser(String username) {
         if (username == null || username.isBlank()) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "No se pudo identificar al usuario autenticado");
         }
@@ -37,7 +38,7 @@ public class DashboardService {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "El usuario no existe"));
 
         if (hasRole(user, "ADMIN")) {
-            return new DashboardMetricsResponse(
+            return new DashboardMetrics(
                     reports.count(),
                     reports.countByStatus(TicketStatus.ABIERTA),
                     reports.countByStatus(TicketStatus.ASIGNADA),
@@ -49,7 +50,7 @@ public class DashboardService {
 
         if (hasRole(user, "TECHNICIAN")) {
             String technicianUsername = user.getUsername();
-            return new DashboardMetricsResponse(
+            return new DashboardMetrics(
                     reports.countByTechnician_Username(technicianUsername),
                     0,
                     reports.countByTechnician_UsernameAndStatus(technicianUsername, TicketStatus.ASIGNADA),
@@ -61,7 +62,7 @@ public class DashboardService {
 
         if (hasRole(user, "USER")) {
             String applicantUsername = user.getUsername();
-            return new DashboardMetricsResponse(
+            return new DashboardMetrics(
                     reports.countByApplicant_Username(applicantUsername),
                     reports.countByApplicant_UsernameAndStatus(applicantUsername, TicketStatus.ABIERTA),
                     reports.countByApplicant_UsernameAndStatus(applicantUsername, TicketStatus.ASIGNADA),
