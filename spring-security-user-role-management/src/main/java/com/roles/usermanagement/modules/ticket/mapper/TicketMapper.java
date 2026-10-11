@@ -12,7 +12,8 @@ public class TicketMapper {
                 t.getId(), t.getTitle(), t.getDescription(),
                 t.getCategory(), t.getPriority(), t.getStatus(),
                 t.getApplicant().getUsername(),
-                t.getTechnician().getUsername(),
+                // Si el ticket aún no tiene técnico asignado, devuelve null en lugar de fallar
+                t.getTechnician() == null ? null : t.getTechnician().getUsername(),
                 t.getCreatedAt(), t.getUpdatedAt()
         );
 
