@@ -69,6 +69,11 @@
   --cd-login-brand-max: 48rem;
   --cd-touch-target: 2.75rem;
 
+  /* Layout de aplicación */
+  --cd-sidebar-width: 16rem;
+  --cd-header-height: 4rem;
+  --cd-app-content-max: 78rem;
+
   /* Motion */
   --cd-transition-fast: 150ms ease;
   --cd-transition-base: 220ms ease;

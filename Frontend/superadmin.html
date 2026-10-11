@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Panel de superadministración de CampusDesk." />
+    <title>CampusDesk | Superadministrador</title>
+    <link rel="icon" href="./Assets/favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="./stylesheet/main.css" />
+</head>
+<body>
+    <div class="superadmin-page">
+        <aside class="superadmin-sidebar" aria-label="Navegación principal">
+            <a class="superadmin-brand" href="./superadmin.html" aria-label="CampusDesk, Vista SuperAdministrador">
+                <img class="superadmin-brand__mark" src="./Assets/favicon.svg" width="40" height="40" alt="" />
+                <span class="superadmin-brand__copy">
+                    <span class="superadmin-brand__name">CAMPUSDESK</span>
+                    <span class="superadmin-brand__view">Vista SuperAdministrador</span>
+                </span>
+            </a>
+
+            <nav class="superadmin-navigation">
+                <section class="superadmin-nav-group" aria-labelledby="general-navigation">
+                    <h2 id="general-navigation" class="superadmin-nav-group__label">General</h2>
+                    <a class="superadmin-nav-link" href="#overview" aria-current="page">
+                        <!-- SLOT: ícono del Dashboard -->
+                        <img class="superadmin-nav-link__icon" src="./Assets/icons/dashboard.svg" width="24" height="24" alt="" />
+                        <span class="superadmin-nav-link__text">Dashboard</span>
+                    </a>
+                </section>
+
+                <section class="superadmin-nav-group" aria-labelledby="security-navigation">
+                    <h2 id="security-navigation" class="superadmin-nav-group__label">Seguridad</h2>
+                    <a class="superadmin-nav-link" href="#create-user">
+                        <!-- SLOT: ícono de Crear nuevo usuario -->
+                        <img class="superadmin-nav-link__icon" src="./Assets/icons/user-logo.svg" width="24" height="24" alt="" />
+                        <span class="superadmin-nav-link__text">Crear nuevo usuario</span>
+                    </a>
+                    <a class="superadmin-nav-link" href="#roles">
+                        <!-- SLOT: ícono de Roles y permisos -->
+                        <img class="superadmin-nav-link__icon" src="./Assets/icons/shieldlock.svg" width="24" height="24" alt="" />
+                        <span class="superadmin-nav-link__text">Roles y permisos</span>
+                    </a>
+                </section>
+
+                <section class="superadmin-nav-group" aria-labelledby="people-navigation">
+                    <h2 id="people-navigation" class="superadmin-nav-group__label">Personal</h2>
+                    <a class="superadmin-nav-link" href="#technicians">
+                        <!-- SLOT: ícono de Técnicos -->
+                        <img class="superadmin-nav-link__icon" src="./Assets/icons/technician.svg" width="24" height="24" alt="" />
+                        <span class="superadmin-nav-link__text">Técnicos</span>
+                    </a>
+                    <a class="superadmin-nav-link" href="#users">
+                        <!-- SLOT: ícono de Usuarios -->
+                        <img class="superadmin-nav-link__icon" src="./Assets/icons/users.svg" width="24" height="24" alt="" />
+                        <span class="superadmin-nav-link__text">Usuarios</span>
+                    </a>
+                </section>
+
+                <section class="superadmin-nav-group" aria-labelledby="tickets-navigation">
+                    <h2 id="tickets-navigation" class="superadmin-nav-group__label">Tiquetes</h2>
+                    <a class="superadmin-nav-link" href="#assign-technician">
+                        <!-- SLOT: ícono de Asignar técnico -->
+                        <img class="superadmin-nav-link__icon" src="./Assets/icons/assign.svg" width="24" height="24" alt="" />
+                        <span class="superadmin-nav-link__text">Asignar técnico</span>
+                    </a>
+                    <a class="superadmin-nav-link" href="#ticket-status">
+                        <!-- SLOT: ícono de Estado de tiquetes -->
+                        <img class="superadmin-nav-link__icon" src="./Assets/icons/search.svg" width="24" height="24" alt="" />
+                        <span class="superadmin-nav-link__text">Estado de tiquetes</span>
+                    </a>
+                </section>
+            </nav>
+
+            <div class="superadmin-sidebar__footer">
+                <a class="superadmin-nav-link superadmin-nav-link--danger" href="./index.html">
+                    <!-- SLOT: ícono de Cerrar sesión -->
+                    <img class="superadmin-nav-link__icon" src="./Assets/icons/logout.svg" width="24" height="24" alt="" />
+                    <span class="superadmin-nav-link__text">Cerrar sesión</span>
+                </a>
+            </div>
+        </aside>
+
+        <div class="superadmin-workspace">
+            <header class="app-header">
+                <nav class="app-header__breadcrumb" aria-label="Ubicación actual">
+                    <ol class="app-header__crumbs">
+                        <li class="app-header__crumb">TechNova Solutions</li>
+                        <li class="app-header__crumb" aria-current="page">Vista general</li>
+                    </ol>
+                </nav>
+                <div class="app-header__user">
+                    <span class="app-header__role">Superadmin</span>
+                    <span class="app-header__avatar" aria-hidden="true">SA</span>
+                </div>
+            </header>
+
+            <main id="overview" class="superadmin-content">
+                <section class="superadmin-empty-state" aria-labelledby="superadmin-title">
+                    <p class="superadmin-empty-state__eyebrow">Administración</p>
+                    <h1 id="superadmin-title" class="superadmin-empty-state__title">Panel de superadministración</h1>
+                    <p class="superadmin-empty-state__description">Las herramientas de gestión de usuarios, permisos y tiquetes estarán disponibles cuando se integren los servicios del backend.</p>
+                </section>
+            </main>
+        </div>
+    </div>
+</body>
+</html>
