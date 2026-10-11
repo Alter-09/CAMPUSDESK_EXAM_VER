@@ -23,8 +23,8 @@
   display: flex;
   align-items: center;
   gap: var(--cd-space-sm);
-  min-height: 5.5rem;
-  padding: var(--cd-space-lg);
+  min-height: var(--cd-header-height);
+  padding: 0 var(--cd-space-lg); /* Aquí faltaba el punto y coma y estaba pegado */
   border-bottom: 1px solid var(--cd-color-border-level-1);
   text-decoration: none;
 }
