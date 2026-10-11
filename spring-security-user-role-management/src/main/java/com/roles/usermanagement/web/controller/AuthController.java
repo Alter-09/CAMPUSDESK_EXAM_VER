@@ -3,6 +3,7 @@ package com.roles.usermanagement.web.controller;
 import com.roles.usermanagement.domain.dto.ChangePasswordDto;
 import com.roles.usermanagement.domain.dto.LoginDto;
 import com.roles.usermanagement.domain.dto.LoginResponseDto;
+import com.roles.usermanagement.domain.dto.RegisterDto;
 import com.roles.usermanagement.domain.dto.UserPermissionsDto;
 import com.roles.usermanagement.domain.service.UserService;
 import com.roles.usermanagement.persistance.crud.UserCrudRepository;
@@ -25,7 +26,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api/auth")
-@Tag(name = "Autenticación", description = "Emisión de tokens y cambio de contraseña")
+@Tag(name = "Autenticación", description = "Registro, login, cambio de contraseña y sesión")
 public class AuthController {
 
     private final AuthenticationManager authenticationManager;
@@ -46,16 +47,34 @@ public class AuthController {
         this.userService = userService;
     }
 
+    @PostMapping("/register")
+    @ResponseStatus(HttpStatus.CREATED)
+    @Operation(summary = "Registrar nuevo usuario", description = "Crea un usuario publico con rol USER por defecto")
+    public ResponseEntity<?> register(@RequestBody RegisterDto registerDto) {
+        if (registerDto.getUsername() == null || registerDto.getUsername().isBlank()
+                || registerDto.getEmail() == null || registerDto.getEmail().isBlank()
+                || registerDto.getPassword() == null || registerDto.getPassword().isBlank()) {
+            return ResponseEntity.badRequest().body(Map.of("error", "Todos los campos son obligatorios"));
+        }
+        var created = userService.register(registerDto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(Map.of(
+                "message", "Usuario registrado exitosamente con rol USER",
+                "username", created.getUsername(),
+                "email", created.getEmail(),
+                "role", created.getRole()
+        ));
+    }
+
     @PostMapping("/login")
-    @Operation(summary = "Obtener token JWT", description = "Valida credenciales y devuelve token junto a mustChangePassword")
+    @Operation(summary = "Obtener token JWT", description = "Valida credenciales por usuario o correo y devuelve token junto a mustChangePassword")
     public ResponseEntity<?> login(@RequestBody LoginDto loginDto) {
-        if (loginDto.getUsername() == null || loginDto.getUsername().isBlank()
-                || loginDto.getPassword() == null || loginDto.getPassword().isBlank()) {
-            return ResponseEntity.badRequest().body(Map.of("error", "Usuario y contraseña son obligatorios"));
+        String identifier = loginDto.getIdentifier();
+        if (identifier == null || loginDto.getPassword() == null || loginDto.getPassword().isBlank()) {
+            return ResponseEntity.badRequest().body(Map.of("error", "Usuario/correo y contraseña son obligatorios"));
         }
         try {
             var authentication = authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(loginDto.getUsername(), loginDto.getPassword()));
+                    new UsernamePasswordAuthenticationToken(identifier, loginDto.getPassword()));
 
             String token = jwtUtil.create(authentication.getName());
 

@@ -16,4 +16,7 @@ public interface UserCrudRepository extends CrudRepository<UserEntity, String> {
 
     boolean existsByEmailAndUsernameNot(String email, String username);
 
+    boolean existsByEmail(String email);
+
+    java.util.Optional<UserEntity> findByEmail(String email);
 }

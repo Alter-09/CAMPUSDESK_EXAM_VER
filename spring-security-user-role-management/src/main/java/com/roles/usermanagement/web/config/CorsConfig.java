@@ -27,8 +27,8 @@ public class CorsConfig {
         // Permitir todas las solicitudes desde cualquier origen (aquí se puede restringir a orígenes específicos)
         corsConfiguration.setAllowedOrigins(Arrays.asList("*")); // Se puede cambiar a una lista de orígenes permitidos EJ: /http://localhost:4200
 
-        // Permitir métodos HTTP específicos (GET, POST, PUT, DELETE, etc.)
-        corsConfiguration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE"));
+        // Permitir métodos HTTP específicos (GET, POST, PUT, PATCH, DELETE, OPTIONS)
+        corsConfiguration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
 
         // Permitir todos los encabezados en las solicitudes
         corsConfiguration.setAllowedHeaders(Arrays.asList("*"));

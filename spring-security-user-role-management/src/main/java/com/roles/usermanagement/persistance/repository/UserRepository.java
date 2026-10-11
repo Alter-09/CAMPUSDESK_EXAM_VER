@@ -149,12 +149,53 @@ public class UserRepository implements IUserRepository {
     List<String> names=new ArrayList<>(); permissions.findAll().forEach(item -> names.add(item.getName()));
     return names.stream().sorted().toList();
   }
-  @Override public UserDto loadUserByUsername(String username) {return mapper.toUserDto(users.findById(username).orElse(null));}
+  @Override public UserDto loadUserByUsername(String identifier) {
+    if (identifier == null) return null;
+    return mapper.toUserDto(users.findById(identifier)
+            .or(() -> users.findByEmail(identifier.trim().toLowerCase()))
+            .orElse(null));
+  }
   @Override public List<UserDto> getAllUsers() {
     List<UserEntity> result=new ArrayList<>(); users.findAll().forEach(result::add); return mapper.toUsersDto(result);
   }
   @Override public void deleteUser(String username) {users.deleteById(username);}
   @Override public boolean existsByUsername(String username) {return users.existsById(username);}
+
+  @Transactional
+  public UserDto register(RegisterDto dto) {
+    if (dto.getUsername() == null || dto.getUsername().isBlank() || dto.getUsername().length() > 50) {
+      throw invalid("El nombre de usuario es obligatorio y debe tener como máximo 50 caracteres");
+    }
+    if (dto.getEmail() == null || dto.getEmail().isBlank()) {
+      throw invalid("El correo electrónico es obligatorio");
+    }
+    if (dto.getPassword() == null || dto.getPassword().isBlank() || dto.getPassword().length() < 6) {
+      throw invalid("La contraseña es obligatoria y debe tener al menos 6 caracteres");
+    }
+    String cleanUsername = dto.getUsername().trim();
+    String cleanEmail = dto.getEmail().trim().toLowerCase();
+
+    if (users.existsById(cleanUsername)) {
+      throw new ResponseStatusException(HttpStatus.CONFLICT, "El nombre de usuario ya se encuentra registrado");
+    }
+    if (users.existsByEmail(cleanEmail)) {
+      throw new ResponseStatusException(HttpStatus.CONFLICT, "El correo electrónico ya se encuentra registrado");
+    }
+
+    UserEntity user = new UserEntity();
+    user.setUsername(cleanUsername);
+    user.setEmail(cleanEmail);
+    user.setPassword(encoder.encode(dto.getPassword()));
+    user.setLocked(false);
+    user.setDisabled(false);
+    user.setMustChangePassword(false);
+    user.setRoles(new ArrayList<>());
+    user = users.save(user);
+
+    setRole(user, "USER");
+    em.flush();
+    return mapper.toUserDto(user);
+  }
 
   @Transactional // metodo nuevo agregado. verifica las caracteristicas de la contraseña
   public void changeUserPassword(String username, String currentPassword, String newPassword) {
