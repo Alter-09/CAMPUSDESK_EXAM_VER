@@ -7,6 +7,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.List;
+import java.util.Map;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -66,5 +67,27 @@ public class UserController {
     public ResponseEntity<Void> delete(@PathVariable String name) {
         if(!users.exists(name)) throw new org.springframework.web.server.ResponseStatusException(org.springframework.http.HttpStatus.NOT_FOUND,"El usuario no existe");
         users.deleteUser(name); return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/{username}/reset-password")
+    @PreAuthorize("hasAuthority('USER_UPDATE') or hasRole('ADMIN')")
+    @Operation(summary = "Super Admin restablece la contraseña de un usuario", 
+               description = "Asigna una nueva clave temporal y obliga al usuario a cambiarla en su siguiente login")
+    public ResponseEntity<?> resetUserPassword(
+            @PathVariable String username,
+            @RequestBody(required = false) Map<String, String> body) {
+        
+        String tempPass = (body != null) ? body.get("temporaryPassword") : null;
+        if (tempPass == null || tempPass.isBlank()) {
+            tempPass = "Temporal123!"; // Valor por defecto si el admin no especifica uno
+        }
+
+        users.adminResetPassword(username, tempPass);
+
+        return ResponseEntity.ok(Map.of(
+                "message", "Contraseña restablecida con éxito para el usuario: " + username,
+                "temporaryPassword", tempPass,
+                "mustChangePassword", true
+        ));
     }
 }
