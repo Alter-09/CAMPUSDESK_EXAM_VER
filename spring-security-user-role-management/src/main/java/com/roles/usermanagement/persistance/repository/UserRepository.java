@@ -90,7 +90,9 @@ public class UserRepository implements IUserRepository {
     String role=requestedRole(dto,true);
     UserEntity user=new UserEntity(); user.setUsername(dto.getUsername()); user.setEmail(dto.getEmail());
     user.setPassword(encoder.encode(dto.getPassword())); user.setLocked(Boolean.TRUE.equals(dto.getLocked()));
-    user.setDisabled(Boolean.TRUE.equals(dto.getDisabled())); user.setRoles(new ArrayList<>());
+    user.setDisabled(Boolean.TRUE.equals(dto.getDisabled()));
+    user.setMustChangePassword(dto.getMustChangePassword() != null ? dto.getMustChangePassword() : true);
+    user.setRoles(new ArrayList<>());
     setPermissions(user,dto.getAdditionalPermissions());
     user=users.save(user); setRole(user,role); em.flush(); return mapper.toUserDto(user);
   }
@@ -153,4 +155,35 @@ public class UserRepository implements IUserRepository {
   }
   @Override public void deleteUser(String username) {users.deleteById(username);}
   @Override public boolean existsByUsername(String username) {return users.existsById(username);}
+
+  @Transactional // metodo nuevo agregado. verifica las caracteristicas de la contraseña
+  public void changeUserPassword(String username, String currentPassword, String newPassword) {
+    if (newPassword == null || newPassword.isBlank() || newPassword.length() < 6) {
+      throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "La nueva contraseña debe tener al menos 6 caracteres");
+    }
+    UserEntity user = account(username);
+
+    if (!encoder.matches(currentPassword, user.getPassword())) {
+      throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "La contraseña actual es incorrecta");
+    }
+    if (encoder.matches(newPassword, user.getPassword())) {
+      throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "La nueva contraseña debe ser diferente a la actual");
+    }
+
+    user.setPassword(encoder.encode(newPassword));
+    user.setMustChangePassword(false);
+    users.save(user);
+  }
+
+  @Transactional//metodo nuevo agregado, Comprueba que la contraseña temporal suministrada no sea nula, no esté vacía y tenga al menos 6 caracteres.
+  public void adminResetPassword(String username, String newTemporaryPassword) {
+    if (newTemporaryPassword == null || newTemporaryPassword.isBlank() || newTemporaryPassword.length() < 6) {
+      throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "La contraseña temporal debe tener al menos 6 caracteres");
+    }
+    UserEntity user = account(username);
+    user.setPassword(encoder.encode(newTemporaryPassword));
+    user.setMustChangePassword(true);
+    user.setLocked(false);
+    users.save(user);
+  }
 }
