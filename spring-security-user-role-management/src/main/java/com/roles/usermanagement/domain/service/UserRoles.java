@@ -1,16 +1,45 @@
 package com.roles.usermanagement.domain.service;
 
 public class UserRoles {
-    public enum Role { ADMIN, CUSTOMER }
+    public enum Role {
+        ADMIN,
+        TECHNICIAN,
+        USER
+    }
 
     public enum Authority {
-        USER_READ, USER_CREATE, USER_UPDATE, USER_DELETE, ROLE_ASSIGN, PERMISSION_ASSIGN, ROLE_MANAGE, PERMISSION_MANAGE,
-        CUSTOMER_READ, CUSTOMER_CREATE, CUSTOMER_UPDATE, CUSTOMER_DELETE,
-        PRODUCT_READ, PRODUCT_CREATE, PRODUCT_UPDATE, PRODUCT_DELETE,
-        SALE_READ, SALE_CREATE, SALE_CANCEL, RANDOM_ORDER;
+        // Permisos de Usuarios y Seguridad
+        USER_READ,
+        USER_CREATE,
+        USER_UPDATE,
+        USER_DELETE,
+        ROLE_ASSIGN,
+        PERMISSION_ASSIGN,
+        ROLE_MANAGE,
+        PERMISSION_MANAGE,
+
+        // Permisos de Tickets para Solicitantes (USER)
+        TICKET_CREATE,
+        TICKET_READ_OWN,
+        TICKET_UPDATE_OWN,
+        TICKET_CLOSE,
+
+        // Permisos de Técnicos (TECHNICIAN)
+        TICKET_READ_ASSIGNED,
+        TICKET_STATUS_UPDATE,
+
+        // Permisos Administrativos (ADMIN)
+        TICKET_READ_ALL,
+        TICKET_ASSIGN,
+        REPORT_READ,
+
+        // Permisos Comunes (Comentarios e Historial)
+        COMMENT_CREATE,
+        COMMENT_READ,
+        HISTORY_READ;
 
         public String value() {
-            return this == RANDOM_ORDER ? "random_order" : name();
+            return name();
         }
     }
 }
