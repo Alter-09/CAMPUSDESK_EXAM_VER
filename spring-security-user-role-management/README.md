@@ -9,15 +9,17 @@ Backend robusto desarrollado en Java 21 y Spring Boot para la administracion int
 - **Nombre del Sistema:** CAMPUSDESK
 - **Modulo:** API REST Backend
 - **Estado:** En desarrollo activo
-- **Lenguaje:** Java 21 LTS
+- **Lenguaje Base:** Java 21 LTS
 - **Framework:** Spring Boot 4.1.1
-- **Motor de Base de Datos:** PostgreSQL
+- **Base de Datos:** PostgreSQL
 - **Seguridad y Tokens:** Spring Security 6 con JWT (HMAC256)
 - **Documentacion Interactiva:** Swagger UI / OpenAPI 3
 
 ---
 
-## Integrantes del Equipo de Desarrollo
+## Creadores e Integrantes del Equipo
+
+Sistema desarrollado por:
 
 - **Sergio Aparicio**
 - **Jhon Reyes**
@@ -40,7 +42,7 @@ Backend robusto desarrollado en Java 21 y Spring Boot para la administracion int
 - [Instrucciones de Ejecucion](#instrucciones-de-ejecucion)
 - [Estructura del Repositorio](#estructura-del-repositorio)
 - [Documentacion Interactiva (Swagger UI)](#documentacion-interactiva-swagger-ui)
-- [Origen y Creditos de la Plantilla Base](#origen-y-creditos-de-la-plantilla-base)
+- [Creditos y Reconocimientos](#creditos-y-reconocimientos)
 
 ---
 
@@ -56,7 +58,7 @@ CAMPUSDESK surge como una respuesta a la necesidad de canalizar, priorizar y res
 
 ## Funcionalidades Implementadas
 
-La version actual del backend cuenta con las siguientes capacidades implementadas y operativas:
+La version actual del backend de CAMPUSDESK cuenta con las siguientes capacidades implementadas y operativas:
 
 ### 1. Mesa de Ayuda y Gestion de Tickets
 - Creacion y recepcion de solicitudes tecnicas con descripcion detallada, categorizacion y prioridad (Baja, Media, Alta, Critica).
@@ -77,7 +79,7 @@ La version actual del backend cuenta con las siguientes capacidades implementada
 - **Creacion Asistida por el Super Admin:** Los usuarios son dados de alta por el administrador con una contraseña temporal elegida por este.
 - **Forzado de Cambio en Primer Ingreso (`mustChangePassword`):** Toda cuenta nueva nace con la bandera activada. Al autenticarse, la respuesta de login notifica al cliente que debe forzar la pantalla de cambio de clave antes de ingresar al sistema.
 - **Cambio de Contraseña Autenticado (`/api/auth/change-password`):** El usuario ingresa su clave temporal y define su nueva clave definitiva (minimo 6 caracteres, diferente a la temporal). Al completarse, se apaga la bandera.
-- **Restablecimiento Administrativo de Claves (`/api/user/{username}/reset-password`):** Si un usuario pierde o olvida su contraseña, el Super Admin puede reestablecerla asignando una nueva clave provisional y reactivando la obligatoriedad de cambio, sin requerir servidores de correo electronico externos.
+- **Restablecimiento Administrativo de Claves (`/api/user/{username}/reset-password`):** Si un usuario pierde u olvida su contraseña, el Super Admin puede restablecerla asignando una nueva clave provisional y reactivando la obligatoriedad de cambio, sin requerir servidores de correo electronico externos.
 
 ### 5. Control de Acceso Basado en Roles (RBAC) y Permisos Dinamicos
 - Cada usuario posee exactamente un rol principal (`ADMIN`, `CUSTOMER`, roles tecnicos personalizados).
@@ -88,7 +90,7 @@ La version actual del backend cuenta con las siguientes capacidades implementada
 
 ## Modulos del Sistema
 
-El codigo del sistema se estructura modularmente para desacoplar el dominio del negocio de la infraestructura:
+El codigo de CAMPUSDESK se estructura modularmente para desacoplar el dominio del negocio de la infraestructura:
 
 ```text
 com.roles.usermanagement/
@@ -391,12 +393,11 @@ Una vez iniciado el servidor, puedes probar visualmente todas las rutas y metodo
 
 ---
 
-## Origen y Creditos de la Plantilla Base
+## Creditos y Reconocimientos
 
-Este proyecto utiliza como base arquitectonica la plantilla **NEXO / spring-security-user-role-management**, reutilizando sus componentes fundamentales de:
-- Autenticacion stateless con Spring Security y filtros JWT con HMAC256.
-- Modelo relacional para gestion de usuarios, roles unicos y extension dinamica de permisos individuales en PostgreSQL.
-- Servicio de bootstrap automatizado para la creacion inicial de catalogos y cuenta administrativa.
-- Configuracion base de MapStruct, Lombok y Swagger OpenAPI.
+Este proyecto adopto como punto de partida la plantilla de codigo abierto **spring-security-user-role-management**, reutilizando sus fundamentos tecnicos para:
+- La configuracion base de Spring Security con filtros JWT stateless y algoritmo HMAC256.
+- El modelo relacional inicial de roles unicos y extension dinamica de permisos individuales en PostgreSQL.
+- El servicio de bootstrap para la inicializacion automatica de catalogos del sistema.
 
-Sobre esta base, el equipo de desarrollo diseño e integro las reglas de negocio de **CAMPUSDESK**, la gestion de tickets de soporte, las transiciones de estado, los flujos asistidos de contraseñas de primer ingreso y el reseteo por el Super Administrador.
+Sobre dicha base, los creadores de este proyecto diseñaron, desarrollaron e integraron toda la logica de negocio de **CAMPUSDESK**: la gestion de tickets de soporte tecnico, operadores tecnicos, asignaciones, historial de estados, y la politica de seguridad para el ciclo de vida de contraseñas (contraseñas temporales, forzado de cambio en primer ingreso y restablecimiento administrativo).
