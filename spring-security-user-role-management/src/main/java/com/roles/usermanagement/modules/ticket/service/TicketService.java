@@ -3,6 +3,7 @@ package com.roles.usermanagement.modules.ticket.service;
 import com.roles.usermanagement.modules.lifecycle.enums.TicketStatus;
 import com.roles.usermanagement.modules.ticket.dto.TicketCreateRequest;
 import com.roles.usermanagement.modules.ticket.dto.TicketResponse;
+import com.roles.usermanagement.modules.ticket.dto.TicketUpdateRequest;
 import com.roles.usermanagement.modules.ticket.entity.Ticket;
 import com.roles.usermanagement.modules.ticket.enums.TicketCategory;
 import com.roles.usermanagement.modules.ticket.enums.TicketPriority;
@@ -120,5 +121,38 @@ public class TicketService {
                 .stream()                       // recorre la lista de tickets
                 .map(mapper::toResponse)        // convierte cada Ticket en TicketResponse
                 .toList();                      // junta los resultados en una lista
+    }
+
+    /**
+     * Actualiza un ticket. Solo puede hacerlo su solicitante y únicamente
+     * mientras el ticket esté abierto (OPEN) y sin técnico asignado.
+     */
+    @Transactional
+    public TicketResponse update(Long id, TicketUpdateRequest request, Authentication auth) {
+        // Busca el ticket; si no existe, responde 404
+        Ticket ticket = ticketRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND, "Ticket not found"));
+
+        // Solo el solicitante puede modificarlo; cualquier otro recibe 403
+        if (!policy.isApplicant(ticket, auth)) {
+            throw new ResponseStatusException(
+                    HttpStatus.FORBIDDEN, "Only the applicant can modify the ticket");
+        }
+
+        // Si ya no está abierto o ya tiene técnico, el estado actual no lo permite: 409
+        if (ticket.getStatus() != TicketStatus.OPEN || ticket.getTechnician() != null) {
+            throw new ResponseStatusException(
+                    HttpStatus.CONFLICT, "Only an open, unassigned ticket can be modified");
+        }
+
+        // Copia los datos nuevos del request a la entidad (sin espacios sobrantes)
+        ticket.setTitle(request.title().trim());
+        ticket.setDescription(request.description().trim());
+        ticket.setCategory(request.category());
+        ticket.setPriority(request.priority());
+
+        // Guarda y devuelve el DTO de respuesta
+        return mapper.toResponse(ticketRepository.save(ticket));
     }
 }
