@@ -50,7 +50,7 @@ public class UserRepository implements IUserRepository {
     } else if(dto.getRoles()!=null && !creating && result==null) {
       throw invalid("El usuario debe conservar un rol; utiliza role para cambiarlo");
     }
-    if(result==null && creating) result="CUSTOMER";
+    if(result==null && creating) result="USER";
     if(result!=null && !roles.existsById(result)) throw invalid("El rol debe existir en el catálogo");
     return result;
   }
