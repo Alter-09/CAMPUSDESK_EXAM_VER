@@ -58,10 +58,34 @@ public class SecurityBootstrapService {
                 return created;
             });
             for (PermissionEntity permission : catalog.values()) {
-                if (roleName == UserRoles.Role.ADMIN || "random_order".equals(permission.getName())) {
+                String permName = permission.getName();
+                boolean shouldAssign = false;
+
+                if (roleName == UserRoles.Role.ADMIN) {
+                    shouldAssign = true;
+                } else if (roleName == UserRoles.Role.TECHNICIAN) {
+                    shouldAssign = permName.equals(UserRoles.Authority.TICKET_READ_ASSIGNED.name())
+                            || permName.equals(UserRoles.Authority.TICKET_STATUS_UPDATE.name())
+                            || permName.equals(UserRoles.Authority.COMMENT_CREATE.name())
+                            || permName.equals(UserRoles.Authority.COMMENT_READ.name())
+                            || permName.equals(UserRoles.Authority.HISTORY_READ.name())
+                            || permName.equals(UserRoles.Authority.USER_READ.name());
+                } else if (roleName == UserRoles.Role.USER) {
+                    shouldAssign = permName.equals(UserRoles.Authority.TICKET_CREATE.name())
+                            || permName.equals(UserRoles.Authority.TICKET_READ_OWN.name())
+                            || permName.equals(UserRoles.Authority.TICKET_UPDATE_OWN.name())
+                            || permName.equals(UserRoles.Authority.TICKET_CLOSE.name())
+                            || permName.equals(UserRoles.Authority.COMMENT_CREATE.name())
+                            || permName.equals(UserRoles.Authority.COMMENT_READ.name())
+                            || permName.equals(UserRoles.Authority.HISTORY_READ.name());
+                }
+
+                if (shouldAssign) {
                     boolean present = role.getPermissions().stream()
-                            .anyMatch(existing -> existing.getName().equals(permission.getName()));
-                    if (!present) role.getPermissions().add(permission);
+                            .anyMatch(existing -> existing.getName().equals(permName));
+                    if (!present) {
+                        role.getPermissions().add(permission);
+                    }
                 }
             }
             roles.save(role);
@@ -87,11 +111,7 @@ public class SecurityBootstrapService {
         admin.setPassword(encoder.encode(password));
         admin.setLocked(false);
         admin.setDisabled(false);
-        admin.setLocked(false);
-        admin.setDisabled(false);
         admin.setMustChangePassword(false); // <-- Super Admin no requiere forzar cambio
-        admin.setRoles(new ArrayList<>());
-        users.save(admin);
         admin.setRoles(new ArrayList<>());
         users.save(admin);
         UserRoleEntity assignment = new UserRoleEntity();

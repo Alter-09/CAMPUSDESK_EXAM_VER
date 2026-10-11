@@ -58,4 +58,8 @@ public class UserService {
   public void adminResetPassword(String targetUsername, String temporaryPassword) {
     userRepository.adminResetPassword(targetUsername, temporaryPassword);
   }
+
+  public UserDto register(com.roles.usermanagement.domain.dto.RegisterDto dto) {
+    return userRepository.register(dto);
+  }
 }

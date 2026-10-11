@@ -216,7 +216,8 @@ La aplicacion adopta una arquitectura multicapa desacoplada y sin estado (Statel
 
 | Metodo | Ruta | Autorizacion | Descripcion |
 |---|---|---|---|
-| `POST` | `/api/auth/login` | Publico | Autentica con usuario y contraseña; retorna JWT y el indicador `mustChangePassword`. |
+| `POST` | `/api/auth/register` | Publico | Registro publico de usuarios. Asigna obligatoriamente el rol `USER` y valida correos duplicados. |
+| `POST` | `/api/auth/login` | Publico | Autentica con correo electronico o usuario y contraseña; retorna JWT y bandera `mustChangePassword`. |
 | `POST` | `/api/auth/change-password` | Autenticado | Actualiza la contraseña actual por una nueva y desactiva el cambio obligatorio. |
 | `GET` | `/api/auth/me` | Autenticado | Devuelve el rol actual, permisos individuales y el consolidado de permisos efectivos. |
 
