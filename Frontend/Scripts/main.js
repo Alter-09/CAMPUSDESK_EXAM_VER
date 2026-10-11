@@ -3,7 +3,8 @@
  */
 import { bindPasswordToggle } from "./modules/password-toggle.js";
 import { bindLoginForm } from "./modules/login-form.js";
-import { MESSAGES } from "../js/constants/messages.es.js";
+import { MESSAGES } from "./constants/messages.es.js";
+console.log("Mensajes importados con éxito:", MESSAGES);
 
 function initLoginPage() {
   const form = document.querySelector("#login-form");
