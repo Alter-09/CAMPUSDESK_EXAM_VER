@@ -30,6 +30,9 @@ public class UserEntity {
   @Column(nullable = false, length = 50, unique = true)
   private String username;
 
+  @Column(name = "must_change_password", nullable = false)
+  private Boolean mustChangePassword = true; // se agrega el atributo  dentro de la clase para activar el cambio
+                                             // de la contraseña.
   @Column(nullable = false, length = 200, unique = true)
   private String email;
 

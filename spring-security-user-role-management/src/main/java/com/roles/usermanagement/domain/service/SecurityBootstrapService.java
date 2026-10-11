@@ -87,6 +87,11 @@ public class SecurityBootstrapService {
         admin.setPassword(encoder.encode(password));
         admin.setLocked(false);
         admin.setDisabled(false);
+        admin.setLocked(false);
+        admin.setDisabled(false);
+        admin.setMustChangePassword(false); // <-- Super Admin no requiere forzar cambio
+        admin.setRoles(new ArrayList<>());
+        users.save(admin);
         admin.setRoles(new ArrayList<>());
         users.save(admin);
         UserRoleEntity assignment = new UserRoleEntity();
