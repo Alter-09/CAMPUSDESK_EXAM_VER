@@ -1,6 +1,8 @@
 package com.roles.usermanagement.modules.ticket.service;
 
 import com.roles.usermanagement.modules.lifecycle.enums.TicketStatus;
+import com.roles.usermanagement.modules.statushistory.enums.StatusHistoryAction;
+import com.roles.usermanagement.modules.statushistory.service.StatusHistoryService;
 import com.roles.usermanagement.modules.ticket.dto.TicketCreateRequest;
 import com.roles.usermanagement.modules.ticket.dto.TicketResponse;
 import com.roles.usermanagement.modules.ticket.dto.TicketUpdateRequest;
@@ -31,17 +33,20 @@ public class TicketService {
     private final UserCrudRepository userRepository;   // habla con la tabla de usuarios
     private final TicketMapper mapper;                 // convierte Ticket -> TicketResponse
     private final TicketAccessPolicy policy;           // reglas de quién puede ver qué
+    private final StatusHistoryService historyService;
 
     // Constructor: Spring detecta los 4 tipos y los entrega solo (inyección de dependencias)
     public TicketService(TicketRepository ticketRepository,
                          UserCrudRepository userRepository,
                          TicketMapper mapper,
-                         TicketAccessPolicy policy) {
+                         TicketAccessPolicy policy,
+                         StatusHistoryService historyService) {
         // Guarda cada dependencia recibida en su campo
         this.ticketRepository = ticketRepository;
         this.userRepository = userRepository;
         this.mapper = mapper;
         this.policy = policy;
+        this.historyService = historyService;
     }
 
     // ---------- CREATE ----------
@@ -65,9 +70,18 @@ public class TicketService {
                 .applicant(applicant)                        // el solicitante sale del token
                 .build();                                    // termina de crear el objeto
 
-        // save() inserta en la BD y devuelve el ticket ya con id y fechas
-        // toResponse() lo convierte al DTO seguro que se devuelve al cliente
-        return mapper.toResponse(ticketRepository.save(ticket));
+        // Guarda el ticket; el resultado ya trae el id generado por la BD
+        Ticket savedTicket = ticketRepository.save(ticket);
+
+// Registra en el historial la creación (sin estado anterior), en la misma transacción
+        historyService.record(
+                savedTicket,
+                null,                           // no hay estado anterior: el ticket acaba de nacer
+                TicketStatus.OPEN,              // estado nuevo
+                applicant,                      // quien lo creó
+                StatusHistoryAction.CREATION);  // tipo de cambio
+
+        return mapper.toResponse(savedTicket);
     }
 
     // ---------- GET BY ID ----------
