@@ -57,4 +57,11 @@ public class TicketAccessPolicy {
         }
         // Si puede, no hace nada y el método que lo llamó continúa
     }
+
+    // Indica si el usuario autenticado tiene el rol indicado (por ejemplo "ROLE_ADMIN")
+// Indica si el usuario autenticado tiene el rol indicado (por ejemplo "ROLE_ADMIN")
+    public boolean hasRole(Authentication auth, String role) {
+        return auth != null && auth.getAuthorities().stream()
+                .anyMatch(a -> role.equals(a.getAuthority()));
+    }
 }
