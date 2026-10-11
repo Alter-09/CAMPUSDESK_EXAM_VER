@@ -134,7 +134,7 @@ public class TicketLifecycleService {
     // Traduce la acción del ciclo de vida al tipo de evento que se guarda en el historial
     private StatusHistoryAction toHistoryAction(TransitionAction action) {
         return switch (action) {
-            case ASSIGN, REASSIGN -> StatusHistoryAction.ASSIGMENT;
+            case ASSIGN, REASSIGN -> StatusHistoryAction.ASSIGNMENT;
             case CONFIRM_CLOSE -> StatusHistoryAction.CLOSURE;
             case START_PROGRESS, RESOLVE -> StatusHistoryAction.STATUS_TRANSITION;
         };

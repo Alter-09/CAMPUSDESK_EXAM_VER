@@ -3,7 +3,7 @@ package com.roles.usermanagement.modules.statushistory.enums;
 public enum StatusHistoryAction {
 
     CREATION,
-    ASSIGMENT,
+    ASSIGNMENT,
     STATUS_TRANSITION,
     CLOSURE
 
