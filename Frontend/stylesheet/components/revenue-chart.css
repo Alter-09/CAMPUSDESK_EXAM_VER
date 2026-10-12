@@ -1,168 +1,191 @@
-/* Revenue chart component */
+/* ==========================================================================
+   Productivity Line Chart — Dark Glowing Waves (Titan Meridian / CampusDesk)
+   Matches the sleek curve aesthetics from the reference design.
+   ========================================================================== */
+
 .superadmin-content--dashboard {
   display: block;
 }
 
 .superadmin-dashboard {
-  width: min(100%, var(--cd-app-content-max));
+  width: min(100%, var(--cd-app-content-max, 78rem));
   margin-inline: auto;
 }
 
 .revenue-chart {
   position: relative;
   overflow: hidden;
-  padding: clamp(var(--cd-space-lg), 3vw, var(--cd-space-xl));
-  border: 1px solid var(--cd-color-border-subtle);
-  border-top-color: var(--cd-color-card-highlight);
-  border-radius: var(--cd-radius-xl);
+  padding: clamp(1.25rem, 2.5vw, 2rem);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-top-color: rgba(255, 255, 255, 0.15);
+  border-radius: var(--cd-radius-xl, 16px);
   background:
-    radial-gradient(circle at 18% 0%, var(--cd-color-data-revenue-fill), transparent 34%),
-    radial-gradient(circle at 86% 12%, var(--cd-color-data-expenses-fill), transparent 28%),
-    var(--cd-color-surface-navy-deep);
-  box-shadow: var(--cd-elevation-float);
+    radial-gradient(120% 80% at 50% 0%, rgba(14, 34, 78, 0.5) 0%, transparent 60%),
+    linear-gradient(180deg, #070f24 0%, #030816 100%);
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.55), inset 0 1px 0 rgba(255, 255, 255, 0.1);
 }
 
-.revenue-chart__header,
-.revenue-chart__summary,
-.revenue-chart__series-toggle,
-.revenue-chart__tooltip-row,
-.revenue-chart__tooltip-growth {
-  display: flex;
-  align-items: center;
-}
-
+/* Header */
 .revenue-chart__header {
+  display: flex;
+  align-items: flex-start;
   justify-content: space-between;
-  gap: var(--cd-space-lg);
+  flex-wrap: wrap;
+  gap: 1.25rem;
 }
 
 .revenue-chart__heading {
   min-width: 0;
 }
 
-.revenue-chart__eyebrow,
-.revenue-chart__range-label {
-  margin: 0 0 var(--cd-space-xs);
-  color: var(--cd-color-slate-titanium-500);
-  font-family: var(--cd-font-mono);
-  font-size: 0.6875rem;
-  font-weight: var(--cd-font-weight-semibold);
-  letter-spacing: 0.09em;
-  text-transform: uppercase;
-}
-
-.revenue-chart__title {
-  margin: 0;
-  color: var(--cd-color-slate-titanium-100);
-  font-family: var(--cd-font-display);
-  font-size: clamp(1.25rem, 2.5vw, 1.5rem);
-  font-weight: var(--cd-font-weight-semibold);
-  letter-spacing: -0.01em;
-}
-
-.revenue-chart__description {
-  margin: var(--cd-space-xs) 0 0;
-  color: var(--cd-color-slate-titanium-300);
-  font-size: 0.875rem;
-}
-
-.revenue-chart__range-control {
-  display: grid;
-  flex: 0 0 auto;
-}
-
-.revenue-chart__range-select {
-  min-height: 2.5rem;
-  padding: 0 var(--cd-space-lg) 0 0.75rem;
-  border: 1px solid var(--cd-color-border-input);
-  border-radius: var(--cd-radius-md);
-  outline: none;
-  background-color: var(--cd-color-surface-canvas);
-  color: var(--cd-color-slate-titanium-100);
-  font-family: var(--cd-font-body);
+.revenue-chart__eyebrow {
+  margin: 0 0 0.35rem 0;
+  color: #94a3b8;
+  font-family: var(--cd-font-body, "Inter", sans-serif);
   font-size: 0.8125rem;
-  font-variant-numeric: tabular-nums;
-}
-
-.revenue-chart__range-select:focus-visible,
-.revenue-chart__series-toggle:focus-visible,
-.revenue-chart__svg:focus-visible {
-  outline: 3px solid var(--cd-color-focus-ring);
-  outline-offset: 3px;
-}
-
-.revenue-chart__summary {
-  flex-wrap: wrap;
-  gap: var(--cd-space-sm) var(--cd-space-md);
-  margin-top: var(--cd-space-lg);
-}
-
-.revenue-chart__series-toggle {
-  gap: var(--cd-space-sm);
-  min-height: 2rem;
-  padding: 0 var(--cd-space-sm);
-  border: 1px solid var(--cd-color-border-subtle);
-  border-radius: var(--cd-radius-md);
-  background: var(--cd-color-surface-card);
-  color: var(--cd-color-slate-titanium-300);
-  cursor: pointer;
-  font-family: var(--cd-font-body);
-  font-size: 0.75rem;
-  transition: border-color var(--cd-transition-fast), opacity var(--cd-transition-fast), transform var(--cd-transition-fast);
-}
-
-.revenue-chart__series-toggle:hover {
-  border-color: var(--cd-color-border-button);
-}
-
-.revenue-chart__series-toggle:active {
-  transform: scale(0.98);
-}
-
-.revenue-chart__series-toggle[aria-pressed="false"] {
-  opacity: 0.48;
-}
-
-.revenue-chart__series-toggle strong {
-  color: var(--cd-color-slate-titanium-100);
-  font-family: var(--cd-font-mono);
-  font-size: 0.6875rem;
-  font-variant-numeric: tabular-nums;
-}
-
-.revenue-chart__legend-dot,
-.revenue-chart__tooltip-dot {
-  display: inline-block;
-  flex: 0 0 auto;
-  width: 0.5rem;
-  height: 0.5rem;
-  border-radius: 50%;
-}
-
-.revenue-chart__legend-dot--revenue,
-.revenue-chart__tooltip-dot--revenue {
-  background: var(--cd-color-data-revenue);
-  box-shadow: 0 0 0.5rem var(--cd-color-data-revenue);
-}
-
-.revenue-chart__legend-dot--expenses,
-.revenue-chart__tooltip-dot--expenses {
-  background: var(--cd-color-data-expenses);
-  box-shadow: 0 0 0.5rem var(--cd-color-data-expenses);
-}
-
-.revenue-chart__source {
-  margin-left: auto;
-  color: var(--cd-color-slate-titanium-500);
-  font-family: var(--cd-font-mono);
-  font-size: 0.625rem;
+  font-weight: 500;
   letter-spacing: 0.02em;
 }
 
+.revenue-chart__headline {
+  display: flex;
+  align-items: baseline;
+  gap: 0.875rem;
+}
+
+.revenue-chart__main-val {
+  color: #ffffff;
+  font-family: var(--cd-font-display, "Hanken Grotesk", sans-serif);
+  font-size: clamp(2rem, 3.5vw, 2.75rem);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+
+.revenue-chart__trend-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.25rem 0.65rem;
+  border-radius: 9999px;
+  background: rgba(16, 185, 129, 0.15);
+  border: 1px solid rgba(16, 185, 129, 0.28);
+  color: #34d399;
+  font-family: var(--cd-font-body, "Inter", sans-serif);
+  font-size: 0.75rem;
+  font-weight: 600;
+  line-height: 1;
+}
+
+/* Header Controls & Legend */
+.revenue-chart__header-right {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.revenue-chart__legend {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+}
+
+.revenue-chart__legend-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.revenue-chart__legend-dot {
+  width: 0.55rem;
+  height: 0.55rem;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.revenue-chart__legend-dot--purple {
+  background: #c084fc;
+  box-shadow: 0 0 10px #c084fc;
+}
+
+.revenue-chart__legend-dot--cyan {
+  background: #22d3ee;
+  box-shadow: 0 0 10px #22d3ee;
+}
+
+.revenue-chart__legend-label {
+  color: #cbd5e1;
+  font-size: 0.8125rem;
+  font-weight: 500;
+}
+
+.revenue-chart__period-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.4rem 0.85rem;
+  border-radius: var(--cd-radius-md, 8px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.04);
+  color: #94a3b8;
+  font-size: 0.75rem;
+  font-weight: 500;
+  cursor: default;
+  transition: all var(--cd-transition-fast, 150ms);
+}
+
+.revenue-chart__period-pill:hover {
+  background: rgba(255, 255, 255, 0.07);
+  border-color: rgba(255, 255, 255, 0.18);
+  color: #e2e8f0;
+}
+
+/* Quick KPI cards row */
+.revenue-chart__quick-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 0.75rem;
+  margin-top: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.revenue-chart__stat-card {
+  padding: 0.75rem 1rem;
+  border-radius: var(--cd-radius-md, 10px);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  background: rgba(255, 255, 255, 0.03);
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  transition: border-color var(--cd-transition-fast, 150ms);
+}
+
+.revenue-chart__stat-card:hover {
+  border-color: rgba(255, 255, 255, 0.14);
+}
+
+.revenue-chart__stat-label {
+  color: #64748b;
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+.revenue-chart__stat-value {
+  color: #f1f5f9;
+  font-family: var(--cd-font-display, "Hanken Grotesk", sans-serif);
+  font-size: 1.25rem;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Plot Area & SVG */
 .revenue-chart__plot {
   position: relative;
-  min-height: clamp(17.5rem, 38vw, 24rem);
-  margin-top: var(--cd-space-md);
+  width: 100%;
+  min-height: clamp(18rem, 38vw, 24rem);
+  margin-top: 1rem;
 }
 
 .revenue-chart__svg {
@@ -173,120 +196,86 @@
   cursor: crosshair;
 }
 
+/* SVG Chart Elements */
 .revenue-chart__grid-line {
-  stroke: var(--cd-color-chart-grid);
-  stroke-dasharray: 3 5;
+  stroke: rgba(255, 255, 255, 0.06);
+  stroke-dasharray: 4 6;
   vector-effect: non-scaling-stroke;
 }
 
-.revenue-chart__axis-label,
-.revenue-chart__month-label {
-  fill: var(--cd-color-slate-titanium-500);
-  font-family: var(--cd-font-mono);
-  font-size: 10px;
-  font-weight: var(--cd-font-weight-medium);
+.revenue-chart__axis-text {
+  fill: #64748b;
+  font-family: var(--cd-font-body, "Inter", sans-serif);
+  font-size: 11px;
+  font-weight: 500;
   letter-spacing: 0.02em;
 }
 
-.revenue-chart__month-label {
+.revenue-chart__axis-text--y {
+  text-anchor: end;
+}
+
+.revenue-chart__axis-text--x {
   text-anchor: middle;
 }
 
-.revenue-chart__area--revenue {
-  fill: url(#revenue-chart-revenue-fill);
+.revenue-chart__axis-text--x.is-active {
+  fill: #e2e8f0;
+  font-weight: 600;
 }
 
-.revenue-chart__area--expenses {
-  fill: url(#revenue-chart-expenses-fill);
+/* Line & Wave Curves */
+.revenue-chart__wave-area {
+  pointer-events: none;
 }
 
-.revenue-chart__line {
+.revenue-chart__wave-line {
   fill: none;
+  stroke-width: 2.5;
   stroke-linecap: round;
   stroke-linejoin: round;
-  stroke-width: 2.5;
   vector-effect: non-scaling-stroke;
 }
 
-.revenue-chart__line--revenue {
-  stroke: var(--cd-color-data-revenue-bright);
+.revenue-chart__wave-line--cyan {
+  stroke: #22d3ee;
+  filter: drop-shadow(0 0 6px rgba(34, 211, 238, 0.5));
 }
 
-.revenue-chart__line--expenses {
-  stroke: var(--cd-color-data-expenses-bright);
+.revenue-chart__wave-line--purple {
+  stroke: #c084fc;
+  filter: drop-shadow(0 0 6px rgba(192, 132, 252, 0.5));
 }
 
-.revenue-chart__line-glow {
-  fill: none;
-  opacity: 0.75;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-  stroke-width: 3;
+.revenue-chart__guide-line {
+  stroke: rgba(255, 255, 255, 0.15);
+  stroke-width: 1.5;
+  stroke-dasharray: 3 4;
+  pointer-events: none;
   vector-effect: non-scaling-stroke;
 }
 
-.revenue-chart__line-glow--revenue {
-  stroke: var(--cd-color-data-revenue);
-  filter: url(#revenue-chart-revenue-glow);
+.revenue-chart__active-dot {
+  pointer-events: none;
+  transition: cx 0.1s ease-out, cy 0.1s ease-out;
 }
 
-.revenue-chart__line-glow--expenses {
-  stroke: var(--cd-color-data-expenses);
-  filter: url(#revenue-chart-expenses-glow);
-}
-
-.revenue-chart__point {
-  opacity: 0;
-  transition: opacity var(--cd-transition-fast);
-}
-
-.revenue-chart__point.is-active {
-  opacity: 1;
-}
-
-.revenue-chart__point-core {
-  stroke-width: 2.5;
-}
-
-.revenue-chart__point-core--revenue {
-  fill: var(--cd-color-data-revenue);
-  stroke: var(--cd-color-surface-card);
-}
-
-.revenue-chart__point-core--expenses {
-  fill: var(--cd-color-data-expenses);
-  stroke: var(--cd-color-surface-card);
-}
-
-.revenue-chart__crosshair {
-  display: none;
-  stroke: var(--cd-color-chart-crosshair);
-  stroke-dasharray: 4 5;
-  vector-effect: non-scaling-stroke;
-}
-
-.revenue-chart__crosshair.is-visible {
-  display: block;
-}
-
-.revenue-chart__series--hidden {
-  display: none;
-}
-
+/* Floating Glassmorphism Tooltip */
 .revenue-chart__tooltip {
   position: absolute;
-  z-index: 1;
-  min-width: 13.5rem;
-  padding: 0.75rem;
-  border: 1px solid var(--cd-color-border-input);
-  border-radius: var(--cd-radius-lg);
-  background: var(--cd-color-surface-elevated);
-  box-shadow: var(--cd-elevation-float);
-  color: var(--cd-color-slate-titanium-300);
+  z-index: 10;
+  min-width: 180px;
+  padding: 0.85rem 1.15rem;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  background: rgba(10, 18, 42, 0.94);
+  backdrop-filter: blur(16px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.65), 0 0 0 1px rgba(255, 255, 255, 0.06);
+  color: #cbd5e1;
   opacity: 0;
   pointer-events: none;
-  transform: translate(-50%, calc(-100% - var(--cd-space-md)));
-  transition: opacity var(--cd-transition-fast);
+  transform: translate(-50%, -100%);
+  transition: opacity 0.15s ease, transform 0.12s ease-out;
 }
 
 .revenue-chart__tooltip.is-visible {
@@ -294,61 +283,109 @@
 }
 
 .revenue-chart__tooltip-date {
-  margin: 0 0 var(--cd-space-sm);
-  color: var(--cd-color-slate-titanium-100);
-  font-family: var(--cd-font-mono);
+  margin: 0 0 0.35rem;
+  color: #94a3b8;
+  font-family: var(--cd-font-body, "Inter", sans-serif);
   font-size: 0.6875rem;
-  font-weight: var(--cd-font-weight-semibold);
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
 }
 
-.revenue-chart__tooltip-row,
-.revenue-chart__tooltip-growth {
+.revenue-chart__tooltip-top {
+  display: flex;
+  align-items: center;
   justify-content: space-between;
-  gap: var(--cd-space-lg);
-  font-size: 0.75rem;
-  line-height: 1.6;
+  gap: 0.75rem;
+  margin-bottom: 0.4rem;
 }
 
-.revenue-chart__tooltip-row span {
+.revenue-chart__tooltip-total {
+  color: #ffffff;
+  font-family: var(--cd-font-display, "Hanken Grotesk", sans-serif);
+  font-size: 1.1rem;
+  font-weight: 700;
+}
+
+.revenue-chart__tooltip-growth {
   display: inline-flex;
   align-items: center;
-  gap: var(--cd-space-xs);
-}
-
-.revenue-chart__tooltip-row strong,
-.revenue-chart__tooltip-growth strong {
-  color: var(--cd-color-slate-titanium-100);
-  font-family: var(--cd-font-mono);
+  padding: 0.15rem 0.45rem;
+  border-radius: 4px;
+  background: rgba(16, 185, 129, 0.2);
+  color: #34d399;
   font-size: 0.6875rem;
+  font-weight: 600;
+}
+
+.revenue-chart__tooltip-divider {
+  height: 1px;
+  background: rgba(255, 255, 255, 0.08);
+  margin: 0.45rem 0 0.5rem;
+}
+
+.revenue-chart__tooltip-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.75rem;
+  line-height: 1.6;
+  color: #94a3b8;
+}
+
+.revenue-chart__tooltip-row strong {
+  margin-left: auto;
+  color: #f1f5f9;
+  font-family: var(--cd-font-body, "Inter", sans-serif);
   font-variant-numeric: tabular-nums;
+  font-weight: 600;
 }
 
-.revenue-chart__tooltip-growth {
-  margin-top: var(--cd-space-sm);
-  padding-top: var(--cd-space-sm);
-  border-top: 1px solid var(--cd-color-border-subtle);
+.tooltip-dot {
+  width: 0.45rem;
+  height: 0.45rem;
+  border-radius: 50%;
+  flex-shrink: 0;
 }
 
-.revenue-chart__tooltip-growth strong {
-  color: var(--cd-color-data-revenue-bright);
+.tooltip-dot--purple {
+  background: #c084fc;
 }
 
-@media (max-width: 620px) {
+.tooltip-dot--cyan {
+  background: #22d3ee;
+}
+
+/* Footer / Status */
+.revenue-chart__footer {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 0.75rem;
+}
+
+.revenue-chart__source {
+  color: #64748b;
+  font-family: var(--cd-font-mono, monospace);
+  font-size: 0.6875rem;
+  letter-spacing: 0.02em;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
   .revenue-chart__header {
-    align-items: stretch;
     flex-direction: column;
+    align-items: stretch;
   }
 
-  .revenue-chart__range-control {
-    width: 100%;
+  .revenue-chart__header-right {
+    justify-content: space-between;
   }
 
-  .revenue-chart__source {
-    flex-basis: 100%;
-    margin-left: 0;
+  .revenue-chart__quick-stats {
+    grid-template-columns: repeat(2, 1fr);
   }
 
   .revenue-chart__plot {
-    min-height: 17.5rem;
+    min-height: 17rem;
   }
 }

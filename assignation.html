@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Asignación de técnicos a tiquetes en CampusDesk." />
+    <title>CampusDesk | Asignar Técnico</title>
+    <link rel="icon" href="./Assets/favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="./stylesheet/main.css" />
+</head>
+<body>
+    <div class="superadmin-page" data-shell>
+        <aside id="sidebar" class="superadmin-sidebar" data-sidebar aria-label="Navegación principal">
+            <a class="superadmin-brand" href="./superadmin.html" aria-label="CampusDesk, Vista SuperAdministrador">
+                <img class="superadmin-brand__mark" src="./Assets/favicon.svg" width="40" height="40" alt="" />
+                <span class="superadmin-brand__copy">
+                    <span class="superadmin-brand__name">CAMPUSDESK</span>
+                    <span class="superadmin-brand__view">Vista SuperAdministrador</span>
+                </span>
+            </a>
+
+            <nav class="superadmin-navigation">
+                <section class="superadmin-nav-group" aria-labelledby="general-navigation">
+                    <h2 id="general-navigation" class="superadmin-nav-group__label">General</h2>
+                    <a class="superadmin-nav-link" href="./superadmin.html">
+                        <!-- SLOT: ícono del Dashboard -->
+                        <img class="superadmin-nav-link__icon" src="./Assets/icons/dashboard.svg" width="24" height="24" alt="" />
+                        <span class="superadmin-nav-link__text">Dashboard</span>
+                    </a>
+                </section>
+
+                <section class="superadmin-nav-group" aria-labelledby="security-navigation">
+                    <h2 id="security-navigation" class="superadmin-nav-group__label">Seguridad</h2>
+                    <a class="superadmin-nav-link" href="./newuser.html">
+                        <!-- SLOT: ícono de Crear nuevo usuario -->
+                        <img class="superadmin-nav-link__icon" src="./Assets/icons/user-logo.svg" width="24" height="24" alt="" />
+                        <span class="superadmin-nav-link__text">Crear nuevo Usuario</span>
+                    </a>
+                    <a class="superadmin-nav-link" href="./roleselector.html">
+                        <!-- SLOT: ícono de Roles y permisos -->
+                        <img class="superadmin-nav-link__icon" src="./Assets/icons/shieldlock.svg" width="24" height="24" alt="" />
+                        <span class="superadmin-nav-link__text">Roles y Permisos</span>
+                    </a>
+                </section>
+
+                <section class="superadmin-nav-group" aria-labelledby="people-navigation">
+                    <h2 id="people-navigation" class="superadmin-nav-group__label">Personal</h2>
+                    <a class="superadmin-nav-link" href="./techguys.html">
+                        <!-- SLOT: ícono de Técnicos -->
+                        <img class="superadmin-nav-link__icon" src="./Assets/icons/technician.svg" width="24" height="24" alt="" />
+                        <span class="superadmin-nav-link__text">Técnicos</span>
+                    </a>
+                    <a class="superadmin-nav-link" href="./userlist.html">
+                        <!-- SLOT: ícono de Usuarios -->
+                        <img class="superadmin-nav-link__icon" src="./Assets/icons/users.svg" width="24" height="24" alt="" />
+                        <span class="superadmin-nav-link__text">Usuarios</span>
+                    </a>
+                </section>
+
+                <section class="superadmin-nav-group" aria-labelledby="tickets-navigation">
+                    <h2 id="tickets-navigation" class="superadmin-nav-group__label">Tiquetes</h2>
+                    <a class="superadmin-nav-link" href="#overview" aria-current="page">
+                        <!-- SLOT: ícono de Asignar técnico -->
+                        <img class="superadmin-nav-link__icon" src="./Assets/icons/assign.svg" width="24" height="24" alt="" />
+                        <span class="superadmin-nav-link__text">Asignar Técnico</span>
+                    </a>
+                    <a class="superadmin-nav-link" href="./ticketlist.html">
+                        <!-- SLOT: ícono de Estado de tiquetes -->
+                        <img class="superadmin-nav-link__icon" src="./Assets/icons/search.svg" width="24" height="24" alt="" />
+                        <span class="superadmin-nav-link__text">Estado de Tiquetes</span>
+                    </a>
+                </section>
+            </nav>
+
+            <div class="superadmin-sidebar__footer">
+                <a class="superadmin-nav-link superadmin-nav-link--danger" href="./index.html">
+                    <!-- SLOT: ícono de Cerrar sesión -->
+                    <img class="superadmin-nav-link__icon" src="./Assets/icons/logout.svg" width="24" height="24" alt="" />
+                    <span class="superadmin-nav-link__text">Cerrar sesión</span>
+                </a>
+            </div>
+        </aside>
+
+        <!-- Fondo oscuro del menú lateral en pantallas pequeñas -->
+        <div class="superadmin-backdrop" data-sidebar-backdrop></div>
+
+        <div class="superadmin-workspace">
+            <header class="app-header">
+                <div class="app-header__start">
+                    <button class="app-header__menu-button" type="button" data-sidebar-toggle aria-controls="sidebar" aria-expanded="false" aria-label="Abrir menú de navegación">
+                        <img class="app-header__menu-icon" src="./Assets/icons/menu.svg" width="24" height="24" alt="" />
+                    </button>
+                    <nav class="app-header__breadcrumb" aria-label="Ubicación actual">
+                        <ol class="app-header__crumbs">
+                            <li class="app-header__crumb">TechNova Solutions</li>
+                            <li class="app-header__crumb" aria-current="page">Asignar técnico</li>
+                        </ol>
+                    </nav>
+                </div>
+                <div class="app-header__user">
+                    <span class="app-header__role">Superadmin</span>
+                    <span class="app-header__avatar" aria-hidden="true">SA</span>
+                </div>
+            </header>
+
+            <main id="assign-ticket-content" class="superadmin-content">
+                <section class="superadmin-empty-state" aria-labelledby="assign-title" style="max-width: 750px; margin: 0 auto; text-align: left;">
+                    <p class="superadmin-empty-state__eyebrow" style="text-align: center;">Gestión Operativa</p>
+                    <h1 id="assign-title" class="superadmin-empty-state__title" style="font-size: 1.5rem; text-align: center; margin-bottom: 1.5rem;">Asignación de Técnico a Tiquete</h1>
+                    
+                    <form id="assign-tech-form" class="login-form" action="#" method="post" novalidate>
+                        <div class="login-form__fields">
+                            
+                            <!-- Seleccionar Tiquete Pendiente -->
+                            <div class="field" style="margin-bottom: 1rem;">
+                                <label class="field__label" for="select-ticket">Seleccionar Tiquete Pendiente</label>
+                                <div class="field__control">
+                                    <select id="select-ticket" class="field__input" style="background-color: inherit; color: inherit; cursor: pointer;" required>
+                                        <option value="" disabled selected>Elige un tiquete sin asignar...</option>
+                                        <option value="TK-104" style="color: #000;">#104 - Fallo en red Wi-Fi Bloque B (Ana Gómez)</option>
+                                        <option value="TK-105" style="color: #000;">#105 - Error al actualizar software contable (Jorge Gaitán)</option>
+                                        <option value="TK-108" style="color: #000;">#108 - Daño físico en proyector Aula 302 (Mariana Pajón)</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <!-- Tarjeta de Detalles del Tiquete (Mockup visual) -->
+                            <div style="background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 8px; padding: 1rem; margin-bottom: 1rem; font-size: 0.85rem;">
+                                <p style="margin: 0 0 0.5rem 0; color: #94a3b8; font-weight: 600;">Detalles del caso seleccionado:</p>
+                                <p style="margin: 0 0 0.25rem 0; color: #e2e8f0;"><strong>Prioridad:</strong> Alta</p>
+                                <p style="margin: 0 0 0.25rem 0; color: #e2e8f0;"><strong>Categoría:</strong> Conectividad / Redes</p>
+                                <p style="margin: 0; color: #cbd5e1;"><strong>Descripción:</strong> Los dispositivos del segundo piso pierden conexión intermitentemente desde la mañana.</p>
+                            </div>
+
+                            <!-- Seleccionar Técnico Disponible -->
+                            <div class="field" style="margin-bottom: 1.5rem;">
+                                <label class="field__label" for="select-technician">Asignar Técnico de Soporte</label>
+                                <div class="field__control">
+                                    <select id="select-technician" class="field__input" style="background-color: inherit; color: inherit; cursor: pointer;" required>
+                                        <option value="" disabled selected>Selecciona un técnico disponible...</option>
+                                        <option value="1" style="color: #000;">Carlos Mendoza (3 tiquetes activos - En servicio)</option>
+                                        <option value="2" style="color: #000;">Laura Restrepo (0 tiquetes activos - Disponible)</option>
+                                        <option value="3" style="color: #000;">Felipe Torres (1 tiquete activo - Disponible)</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div class="login-form__actions">
+                            <button class="button button--primary" type="submit" style="width: 100%;">
+                                <span class="button__label">Confirmar y Asignar Tiquete</span>
+                            </button>
+                        </div>
+                    </form>
+                </section>
+            </main>
+        </div>
+    </div>
+    <script type="module" src="./scripts/modules/sidebar-toggle.js"></script>
+</body>
+</html>
