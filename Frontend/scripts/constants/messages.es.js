@@ -1,4 +1,5 @@
 import { USERS_MESSAGES } from "./messages.users.es.js";
+import { ACCESS_MESSAGES } from "./messages.access.es.js";
 
 /**
  * Textos visibles de la interfaz (español).
@@ -35,4 +36,5 @@ export const MESSAGES = Object.freeze({
     }),
   }),
   users: USERS_MESSAGES,
+  access: ACCESS_MESSAGES,
 });

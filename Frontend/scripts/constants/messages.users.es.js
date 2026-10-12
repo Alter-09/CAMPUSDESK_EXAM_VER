@@ -12,7 +12,7 @@ export const USERS_MESSAGES = {
   list: {
     eyebrow: "Gestión de accesos",
     title: "Usuarios registrados",
-    addButton: "Add new user",
+    addButton: "Agregar nuevo Usuario",
     loading: "Cargando usuarios…",
     empty: "Todavía no hay usuarios registrados.",
     loadError: "No se pudo cargar el listado de usuarios.",
