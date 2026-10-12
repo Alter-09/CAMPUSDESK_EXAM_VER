@@ -168,6 +168,44 @@
   }
 }
 
+/* 🖥️ Pantallas Grandes, Monitores y Televisores (Autoescalado fluido) */
+@media (min-width: 1280px) {
+  .login-page__inner {
+    grid-template-columns: minmax(28rem, 38vw) minmax(0, 1fr);
+    column-gap: clamp(3rem, 6vw, 10rem);
+    width: min(95%, 90vw);
+    max-width: 140rem;
+  }
+
+  .login-panel {
+    max-width: 100%;
+    padding: clamp(2.5rem, 3.5vw, 4.5rem) clamp(2rem, 3vw, 3.5rem);
+  }
+
+  .login-welcome {
+    font-size: clamp(2rem, 2.5vw, 3rem);
+  }
+
+  .login-card__subtitle {
+    font-size: clamp(1.4rem, 1.8vw, 2.1rem);
+  }
+
+  .field__input {
+    min-height: clamp(3.2rem, 4vw, 4.5rem);
+    font-size: clamp(1rem, 1.2vw, 1.25rem);
+  }
+
+  .button {
+    min-height: clamp(3.2rem, 4vw, 4.5rem);
+    font-size: clamp(1rem, 1.3vw, 1.25rem);
+  }
+
+  .login-page__brand-image {
+    width: min(100%, 48vw);
+    max-height: min(75rem, 85vh);
+  }
+}
+
 /* Mobile — columna con gaps reales; el panel deja de ser la tarjeta */
 @media (max-width: 767px) {
   .login-page__inner {
@@ -204,7 +242,6 @@
     gap: var(--cd-space-lg);
     width: min(100%, 22.5rem);
     max-width: none;
-    /* Aplicamos padding interno y omitimos las reglas que hacían el fondo transparente */
     padding: var(--cd-space-xl) var(--cd-space-md);
   }
 
@@ -216,7 +253,6 @@
   .login-card {
     gap: var(--cd-space-lg);
     padding: 0;
-    /* Eliminamos el background, border y box-shadow para no anidar una tarjeta dentro de otra */
   }
 
   .login-card__subtitle {
@@ -250,4 +286,22 @@
   .login-card {
     padding-block: var(--cd-space-lg);
   }
+}
+/* Forzar el fondo oscuro y texto claro cuando el navegador autocompleta el input */
+.field__input:-webkit-autofill,
+.field__input:-webkit-autofill:hover,
+.field__input:-webkit-autofill:focus {
+  -webkit-box-shadow: 0 0 0 1000px var(--cd-color-surface-canvas, #071328) inset !important;
+  -webkit-text-fill-color: var(--cd-color-slate-titanium-100, #ffffff) !important;
+  transition: background-color 5000s ease-in-out 0s;
+}
+/* Forzar color de texto claro y fondo oscuro en autocompletados y sugerencias de Chrome */
+.field__input:-webkit-autofill,
+.field__input:-webkit-autofill:hover,
+.field__input:-webkit-autofill:focus,
+.field__input:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0 1000px var(--cd-color-surface-canvas, #071328) inset !important;
+  -webkit-text-fill-color: var(--cd-color-slate-titanium-100, #ffffff) !important;
+  caret-color: var(--cd-color-slate-titanium-100, #ffffff);
+  transition: background-color 5000s ease-in-out 0s;
 }
