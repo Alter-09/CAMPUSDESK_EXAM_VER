@@ -17,8 +17,7 @@
   display: flex;
   flex-direction: column;
   gap: var(--cd-space-lg);
-  max-width: 65rem; /* Sube de 50rem a 65rem para que no quede tan pequeño en pantallas grandes */
-  width: 100%;
+  max-width: 50rem;
   margin-inline: auto;
   padding: var(--cd-gutter);
   border: 1px solid var(--cd-color-border-subtle);
@@ -243,20 +242,14 @@
 
 .confirm {
   box-sizing: border-box;
-  inline-size: min(32rem, calc(100% - 2rem)); /* Un poco más amplio para que los textos respiren mejor */
-  margin: auto; /* Fuerza el centrado perfecto automático del navegador */
+  inline-size: min(26rem, calc(100% - 1.5rem));
+  margin: auto;
   padding: 0;
   border: 1px solid var(--cd-color-border-subtle);
   border-radius: var(--cd-radius-xl);
   background: var(--cd-color-surface-navy-deep);
   color: var(--cd-color-slate-titanium-100);
   color-scheme: dark;
-  box-shadow: 0 20px 25px -5px rgb(1 8 20 / 0.5), 0 8px 10px -6px rgb(1 8 20 / 0.5); /* Sombra elegante para profundidad */
-}
-
-.confirm::backdrop {
-  background: rgb(1 8 20 / 0.78); /* Fondo oscuro más sólido para resaltar el diálogo */
-  backdrop-filter: blur(4px); /* Efecto difuminado moderno en el fondo */
 }
 
 .confirm::backdrop {
