@@ -87,24 +87,8 @@
             <!-- ── Contenido principal ─────────────────────────────────── -->
             <main id="user-main" class="superadmin-content">
 
-                <!-- Sección: Inicio / Dashboard -->
-                <section class="superadmin-empty-state" aria-labelledby="overview-title">
-                    <p class="superadmin-empty-state__eyebrow">Panel Personal</p>
-                    <h1 id="overview-title" class="superadmin-empty-state__title">Bienvenido a tu Portal</h1>
-                    <p class="superadmin-empty-state__description">
-                        Desde aquí puedes crear nuevas solicitudes de soporte o consultar el estado de tus tiquetes actuales.
-                    </p>
-                    <div style="display:flex; gap:1rem; justify-content:center; flex-wrap:wrap; margin-top:1.5rem;">
-                        <a href="./create-ticket.html" class="superadmin-nav-link" style="border:1px solid var(--cd-color-border-subtle); padding:0.75rem 1.5rem; border-radius:var(--cd-radius-md);">
-                            <img src="./Assets/Icons/assign.svg" width="20" height="20" alt="" style="filter:brightness(0) invert(1);opacity:0.8;" />
-                            <span>Crear Tiquete</span>
-                        </a>
-                        <a href="./my-tickets.html" class="superadmin-nav-link" style="border:1px solid var(--cd-color-border-subtle); padding:0.75rem 1.5rem; border-radius:var(--cd-radius-md);">
-                            <img src="./Assets/Icons/search.svg" width="20" height="20" alt="" style="filter:brightness(0) invert(1);opacity:0.8;" />
-                            <span>Mis Solicitudes</span>
-                        </a>
-                    </div>
-                </section>
+                <!-- Sección: Dashboard Especializado del Usuario -->
+                <cd-user-dashboard></cd-user-dashboard>
 
             </main>
         </div>
@@ -112,6 +96,8 @@
 
     <!-- Módulo del sidebar responsivo -->
     <script type="module" src="./scripts/modules/sidebar-toggle.js"></script>
+    <!-- Componente Dashboard del Usuario -->
+    <script type="module" src="./scripts/components/user-dashboard.js"></script>
     <!-- Bootstrap de la página: sincroniza cabecera con datos de sesión -->
     <script type="module" src="./scripts/pages/user-overview.js"></script>
 </body>

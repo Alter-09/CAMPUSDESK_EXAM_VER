@@ -32,7 +32,7 @@ function setupTechnicianNavigation() {
   }
 
   function handleRoute() {
-    const hash = window.location.hash || "#assigned-tickets";
+    const hash = window.location.hash || "#overview";
 
     // Actualizar estados visuales de los enlaces del sidebar
     links.forEach((link) => {

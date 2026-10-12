@@ -77,13 +77,9 @@
                     <cd-assigned-tickets></cd-assigned-tickets>
                 </section>
 
-                <!-- Sección Dashboard (pospuesta para el final según instrucción) -->
-                <section id="section-overview" class="technician-view" hidden>
-                    <section class="superadmin-empty-state" aria-labelledby="technician-title">
-                        <p class="superadmin-empty-state__eyebrow">Soporte Técnico</p>
-                        <h1 id="technician-title" class="superadmin-empty-state__title">Dashboard Operativo</h1>
-                        <p class="superadmin-empty-state__description">El panel de estadísticas e indicadores de rendimiento se integrará al final según lo solicitado.</p>
-                    </section>
+                <!-- Sección Dashboard del Técnico -->
+                <section id="section-overview" class="technician-view">
+                    <cd-technician-dashboard></cd-technician-dashboard>
                 </section>
 
                 <!-- Sección Cola General (informativa) -->
@@ -98,6 +94,7 @@
         </div>
     </div>
 
+    <script type="module" src="./scripts/components/technician-dashboard.js"></script>
     <script type="module" src="./scripts/components/assigned-tickets.js"></script>
     <script type="module" src="./scripts/modules/technician-nav.js"></script>
     <script type="module" src="./scripts/modules/sidebar-toggle.js"></script>

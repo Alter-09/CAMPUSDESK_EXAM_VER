@@ -9,6 +9,7 @@
 @import url("./components/button.css");
 @import url("./components/app-header.css");
 @import url("./components/revenue-chart.css");
+@import url("./components/role-dashboard.css");
 @import url("./layouts/login.css");
 @import url("./layouts/superadmin.css");
 @import url("./layouts/user.css");
