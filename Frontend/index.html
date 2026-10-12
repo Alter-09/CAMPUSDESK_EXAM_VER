@@ -22,7 +22,7 @@
           <div class="login-card">
             <p class="login-card__subtitle">Iniciar sesión</p>
 
-            <form id="login-form" class="login-form" action="superadmin.html" method="get" novalidate>
+            <form id="login-form" class="login-form" novalidate>
               <div
                 id="login-form-summary"
                 class="login-form__summary"
@@ -32,20 +32,19 @@
 
               <div class="login-form__fields">
                 <div class="field">
-                  <label class="field__label" for="email">Correo electrónico</label>
+                  <label class="field__label" for="username">Usuario</label>
                   <div class="field__control">
                     <input
-                      id="email"
+                      id="username"
                       class="field__input"
-                      name="email"
-                      type="email"
-                      inputmode="email"
-                      autocomplete="off"
-                      placeholder="Ejemplo: usuario@campusdesk.edu"
+                      name="username"
+                      type="text"
+                      autocomplete="username"
+                      placeholder="Ejemplo: superadmin"
                       required
                     />
                   </div>
-                  <p id="email-error" class="field__error" aria-live="polite"></p>
+                  <p id="username-error" class="field__error" aria-live="polite"></p>
                 </div>
 
                 <div class="field">

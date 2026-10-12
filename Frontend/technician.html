@@ -9,8 +9,8 @@
     <link rel="stylesheet" href="./stylesheet/main.css" />
 </head>
 <body>
-    <div class="superadmin-page">
-        <aside class="superadmin-sidebar" aria-label="Navegación principal">
+    <div class="superadmin-page" data-shell>
+        <aside id="sidebar" class="superadmin-sidebar" data-sidebar aria-label="Navegación principal">
             <a class="superadmin-brand" href="./technician.html" aria-label="CampusDesk, Vista Técnico">
                 <img class="superadmin-brand__mark" src="./Assets/favicon.svg" width="40" height="40" alt="" />
                 <span class="superadmin-brand__copy">
@@ -53,14 +53,22 @@
             </div>
         </aside>
 
+        <!-- Fondo oscuro del menú lateral en pantallas pequeñas -->
+        <div class="superadmin-backdrop" data-sidebar-backdrop></div>
+
         <div class="superadmin-workspace">
             <header class="app-header">
-                <nav class="app-header__breadcrumb" aria-label="Ubicación actual">
-                    <ol class="app-header__crumbs">
-                        <li class="app-header__crumb">TechNova Solutions</li>
-                        <li class="app-header__crumb" aria-current="page">Panel operativo</li>
-                    </ol>
-                </nav>
+                <div class="app-header__start">
+                    <button class="app-header__menu-button" type="button" data-sidebar-toggle aria-controls="sidebar" aria-expanded="false" aria-label="Abrir menú de navegación">
+                        <img class="app-header__menu-icon" src="./Assets/icons/menu.svg" width="24" height="24" alt="" />
+                    </button>
+                    <nav class="app-header__breadcrumb" aria-label="Ubicación actual">
+                        <ol class="app-header__crumbs">
+                            <li class="app-header__crumb">TechNova Solutions</li>
+                            <li class="app-header__crumb" aria-current="page">Panel operativo</li>
+                        </ol>
+                    </nav>
+                </div>
                 <div class="app-header__user">
                     <span class="app-header__role">Técnico</span>
                     <span class="app-header__avatar" aria-hidden="true">TC</span>
@@ -76,5 +84,6 @@
             </main>
         </div>
     </div>
+    <script type="module" src="./scripts/modules/sidebar-toggle.js"></script>
 </body>
 </html>

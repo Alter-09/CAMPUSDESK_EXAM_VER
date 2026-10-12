@@ -1,21 +1,21 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="Panel de superadministración de CampusDesk." />
-    <title>CampusDesk | Superadministrador</title>
+    <meta name="description" content="CampusDesk Superadmin dashboard." />
+    <title>CampusDesk | Superadmin Dashboard</title>
     <link rel="icon" href="./Assets/favicon.svg" type="image/svg+xml" />
     <link rel="stylesheet" href="./stylesheet/main.css" />
 </head>
 <body>
-    <div class="superadmin-page">
-        <aside class="superadmin-sidebar" aria-label="Navegación principal">
-            <a class="superadmin-brand" href="./superadmin.html" aria-label="CampusDesk, Vista SuperAdministrador">
+    <div class="superadmin-page" data-shell>
+        <aside id="sidebar" class="superadmin-sidebar" data-sidebar aria-label="Main navigation">
+            <a class="superadmin-brand" href="./superadmin.html" aria-label="CampusDesk, Superadmin view">
                 <img class="superadmin-brand__mark" src="./Assets/favicon.svg" width="40" height="40" alt="" />
                 <span class="superadmin-brand__copy">
                     <span class="superadmin-brand__name">CAMPUSDESK</span>
-                    <span class="superadmin-brand__view">Vista SuperAdministrador</span>
+                    <span class="superadmin-brand__view">Superadmin View</span>
                 </span>
             </a>
 
@@ -24,82 +24,136 @@
                     <h2 id="general-navigation" class="superadmin-nav-group__label">General</h2>
                     <a class="superadmin-nav-link" href="#overview" aria-current="page">
                         <!-- SLOT: ícono del Dashboard -->
-                        <img class="superadmin-nav-link__icon" src="./Assets/icons/dashboard.svg" width="24" height="24" alt="" />
+                        <img class="superadmin-nav-link__icon" src="./Assets/Icons/dashboard.svg" width="24" height="24" alt="" />
                         <span class="superadmin-nav-link__text">Dashboard</span>
                     </a>
                 </section>
 
                 <section class="superadmin-nav-group" aria-labelledby="security-navigation">
-                    <h2 id="security-navigation" class="superadmin-nav-group__label">Seguridad</h2>
+                    <h2 id="security-navigation" class="superadmin-nav-group__label">Security</h2>
                     <a class="superadmin-nav-link" href="./newuser.html">
-                        <!-- SLOT: ícono de Crear nuevo usuario -->
-                        <img class="superadmin-nav-link__icon" src="./Assets/icons/user-logo.svg" width="24" height="24" alt="" />
-                        <span class="superadmin-nav-link__text">Crear nuevo usuario</span>
+                        <img class="superadmin-nav-link__icon" src="./Assets/Icons/user-logo.svg" width="24" height="24" alt="" />
+                        <span class="superadmin-nav-link__text">Create new user</span>
                     </a>
                     <a class="superadmin-nav-link" href="./roleselector.html">
-                        <img class="superadmin-nav-link__icon" src="./Assets/icons/shieldlock.svg" width="24" height="24" alt="" />
-                        <span class="superadmin-nav-link__text">Roles y permisos</span>
+                        <img class="superadmin-nav-link__icon" src="./Assets/Icons/shieldlock.svg" width="24" height="24" alt="" />
+                        <span class="superadmin-nav-link__text">Roles and permissions</span>
                     </a>
                 </section>
                 <section class="superadmin-nav-group" aria-labelledby="people-navigation">
-                    <h2 id="people-navigation" class="superadmin-nav-group__label">Personal</h2>
+                    <h2 id="people-navigation" class="superadmin-nav-group__label">People</h2>
                     <a class="superadmin-nav-link" href="./techguys.html">
-                        <!-- SLOT: ícono de Técnicos -->
-                        <img class="superadmin-nav-link__icon" src="./Assets/icons/technician.svg" width="24" height="24" alt="" />
-                        <span class="superadmin-nav-link__text">Técnicos</span>
+                        <img class="superadmin-nav-link__icon" src="./Assets/Icons/technician.svg" width="24" height="24" alt="" />
+                        <span class="superadmin-nav-link__text">Technicians</span>
                     </a>
                     <a class="superadmin-nav-link" href="./userlist.html">
-                        <!-- SLOT: ícono de Usuarios -->
-                        <img class="superadmin-nav-link__icon" src="./Assets/icons/users.svg" width="24" height="24" alt="" />
-                        <span class="superadmin-nav-link__text">Usuarios</span>
+                        <img class="superadmin-nav-link__icon" src="./Assets/Icons/users.svg" width="24" height="24" alt="" />
+                        <span class="superadmin-nav-link__text">Users</span>
                     </a>
                 </section>
 
                 <section class="superadmin-nav-group" aria-labelledby="tickets-navigation">
-                    <h2 id="tickets-navigation" class="superadmin-nav-group__label">Tiquetes</h2>
+                    <h2 id="tickets-navigation" class="superadmin-nav-group__label">Tickets</h2>
                     <a class="superadmin-nav-link" href="./assignation.html">
-                        <!-- SLOT: ícono de Asignar técnico -->
-                        <img class="superadmin-nav-link__icon" src="./Assets/icons/assign.svg" width="24" height="24" alt="" />
-                        <span class="superadmin-nav-link__text">Asignar técnico</span>
+                        <img class="superadmin-nav-link__icon" src="./Assets/Icons/assign.svg" width="24" height="24" alt="" />
+                        <span class="superadmin-nav-link__text">Assign technician</span>
                     </a>
                     <a class="superadmin-nav-link" href="./ticketlist.html">
-                        <img class="superadmin-nav-link__icon" src="./Assets/icons/search.svg" width="24" height="24" alt="" />
-                        <span class="superadmin-nav-link__text">Estado de tiquetes</span>
+                        <img class="superadmin-nav-link__icon" src="./Assets/Icons/search.svg" width="24" height="24" alt="" />
+                        <span class="superadmin-nav-link__text">Ticket status</span>
                     </a>
                 </section>
             </nav>
 
             <div class="superadmin-sidebar__footer">
                 <a class="superadmin-nav-link superadmin-nav-link--danger" href="./index.html">
-                    <!-- SLOT: ícono de Cerrar sesión -->
-                    <img class="superadmin-nav-link__icon" src="./Assets/icons/logout.svg" width="24" height="24" alt="" />
-                    <span class="superadmin-nav-link__text">Cerrar sesión</span>
+                    <img class="superadmin-nav-link__icon" src="./Assets/Icons/logout.svg" width="24" height="24" alt="" />
+                    <span class="superadmin-nav-link__text">Sign out</span>
                 </a>
             </div>
         </aside>
 
+        <div class="superadmin-backdrop" data-sidebar-backdrop></div>
+
         <div class="superadmin-workspace">
             <header class="app-header">
-                <nav class="app-header__breadcrumb" aria-label="Ubicación actual">
-                    <ol class="app-header__crumbs">
-                        <li class="app-header__crumb">TechNova Solutions</li>
-                        <li class="app-header__crumb" aria-current="page">Vista general</li>
-                    </ol>
-                </nav>
+                <div class="app-header__start">
+                    <button class="app-header__menu-button" type="button" data-sidebar-toggle aria-controls="sidebar" aria-expanded="false" aria-label="Open navigation menu">
+                        <img class="app-header__menu-icon" src="./Assets/Icons/menu.svg" width="24" height="24" alt="" />
+                    </button>
+                    <nav class="app-header__breadcrumb" aria-label="Current location">
+                        <ol class="app-header__crumbs">
+                            <li class="app-header__crumb">TechNova Solutions</li>
+                            <li class="app-header__crumb" aria-current="page">Overview</li>
+                        </ol>
+                    </nav>
+                </div>
                 <div class="app-header__user">
                     <span class="app-header__role">Superadmin</span>
                     <span class="app-header__avatar" aria-hidden="true">SA</span>
                 </div>
             </header>
 
-            <main id="overview" class="superadmin-content">
-                <section class="superadmin-empty-state" aria-labelledby="superadmin-title">
-                    <p class="superadmin-empty-state__eyebrow">Administración</p>
-                    <h1 id="superadmin-title" class="superadmin-empty-state__title">Panel de superadministración</h1>
-                    <p class="superadmin-empty-state__description">Las herramientas de gestión de usuarios, permisos y tiquetes estarán disponibles cuando se integren los servicios del backend.</p>
+            <main id="overview" class="superadmin-content superadmin-content--dashboard">
+                <section class="superadmin-dashboard" aria-label="Financial dashboard">
+                    <div data-revenue-chart></div>
                 </section>
             </main>
         </div>
     </div>
+    <template id="revenue-chart-template">
+        <section class="revenue-chart" aria-labelledby="revenue-chart-title">
+            <header class="revenue-chart__header">
+                <div class="revenue-chart__heading">
+                    <p class="revenue-chart__eyebrow">Helpdesk Performance</p>
+                    <h1 id="revenue-chart-title" class="revenue-chart__title">Tickets Created vs. Completed</h1>
+                    <p class="revenue-chart__description">Monthly workflow overview</p>
+                </div>
+                <label class="revenue-chart__range-control">
+                    <span class="revenue-chart__range-label">Date range</span>
+                    <select class="revenue-chart__range-select" data-chart-range aria-label="Select a date range">
+                        <option value="2024">Jan 2024 – Dec 2024</option>
+                        <option value="2025">Jan 2025 – Dec 2025</option>
+                        <option value="2026">Jan 2026 – Dec 2026</option>
+                    </select>
+                </label>
+            </header>
+
+            <div class="revenue-chart__summary" aria-label="Chart series summary">
+                <button class="revenue-chart__series-toggle" type="button" data-series-toggle="revenue" aria-pressed="true">
+                    <span class="revenue-chart__legend-dot revenue-chart__legend-dot--revenue" aria-hidden="true"></span>
+                    <span>Created Tickets</span>
+                    <strong data-summary-revenue>—</strong>
+                </button>
+                <button class="revenue-chart__series-toggle" type="button" data-series-toggle="expenses" aria-pressed="true">
+                    <span class="revenue-chart__legend-dot revenue-chart__legend-dot--expenses" aria-hidden="true"></span>
+                    <span>Completed Tickets</span>
+                    <strong data-summary-expenses>—</strong>
+                </button>
+                <span class="revenue-chart__source" data-chart-status aria-live="polite">Loading live data…</span>
+            </div>
+
+            <div class="revenue-chart__plot" data-chart-plot>
+                <svg class="revenue-chart__svg" data-chart-svg viewBox="0 0 960 420" role="img" aria-label="Created and completed tickets line chart" tabindex="0"></svg>
+                <div class="revenue-chart__tooltip" data-chart-tooltip role="status" aria-live="polite" aria-hidden="true">
+                    <p class="revenue-chart__tooltip-date" data-tooltip-date></p>
+                    <div class="revenue-chart__tooltip-row">
+                        <span><i class="revenue-chart__tooltip-dot revenue-chart__tooltip-dot--revenue"></i>Created Tickets</span>
+                        <strong data-tooltip-revenue></strong>
+                    </div>
+                    <div class="revenue-chart__tooltip-row">
+                        <span><i class="revenue-chart__tooltip-dot revenue-chart__tooltip-dot--expenses"></i>Completed Tickets</span>
+                        <strong data-tooltip-expenses></strong>
+                    </div>
+                    <div class="revenue-chart__tooltip-growth">
+                        <span>Resolution efficiency</span>
+                        <strong data-tooltip-growth></strong>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </template>
+    <script type="module" src="./scripts/modules/sidebar-toggle.js"></script>
+    <script type="module" src="./scripts/modules/superadmin-dashboard.js"></script>
 </body>
 </html>

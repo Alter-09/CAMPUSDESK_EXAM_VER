@@ -8,8 +8,10 @@
 @import url("./components/field.css");
 @import url("./components/button.css");
 @import url("./components/app-header.css");
+@import url("./components/revenue-chart.css");
 @import url("./layouts/login.css");
 @import url("./layouts/superadmin.css");
+
 /* Estructura general de los enlaces del menú */
 .superadmin-nav-link {
   display: flex;
@@ -31,35 +33,23 @@
 
 /* Limpieza absoluta de los iconos para que no tengan "cuadros" molestos */
 .superadmin-nav-link__icon {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
+  flex-shrink: 0;
   width: 20px;
   height: 20px;
   border: none !important;     /* Elimina cualquier borde cuadrado */
   background: none !important; /* Elimina cualquier fondo extraño */
   box-shadow: none !important; /* Elimina sombras internas */
-  .superadmin-nav-link__icon {
-  width: 20px !important;
-  height: 20px !important;
   object-fit: contain;
-}
-/* Los SVG vienen con color fijo; el filtro los vuelve blancos sobre el sidebar oscuro */
-.superadmin-nav-link__icon {
-    flex-shrink: 0;
-    width: 20px;
-    height: 20px;
-    filter: brightness(0) invert(1);
-    opacity: 0.8;
+  filter: brightness(0) invert(1);
+  opacity: 0.8;
 }
 
 .superadmin-nav-link:hover .superadmin-nav-link__icon,
 .superadmin-nav-link[aria-current="page"] .superadmin-nav-link__icon {
-    opacity: 1;
+  opacity: 1;
 }
 
 /* Cerrar sesión: el color rojo se aplica al texto */
 .superadmin-nav-link--danger {
-    color: #f87171;
-}
+  color: #f87171;
 }
