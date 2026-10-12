@@ -1,6 +1,6 @@
 /**
  * Header de aplicación, compartido por las vistas de todos los roles.
- * Estructura: breadcrumb a la izquierda, bloque de usuario a la derecha.
+ * Estructura: grupo inicial (botón de menú + breadcrumb) y bloque de usuario.
  * Lo que cambia por rol es el contenido del HTML; los estilos no cambian.
  * Mobile-first: la base es móvil y se amplía desde 768px.
  */
@@ -17,6 +17,44 @@
   padding: 0 var(--cd-margin);
   background: var(--cd-color-surface-canvas);
   border-bottom: 1px solid var(--cd-color-border-level-1);
+}
+
+/* Grupo inicial */
+.app-header__start {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  gap: var(--cd-space-sm);
+}
+
+/* Botón que abre el menú lateral (el layout decide cuándo se oculta) */
+.app-header__menu-button {
+  display: grid;
+  flex-shrink: 0;
+  width: var(--cd-touch-target);
+  height: var(--cd-touch-target);
+  /* El ícono (24px) queda alineado con el borde izquierdo del contenido */
+  margin-inline-start: calc((var(--cd-touch-target) - 1.5rem) / -2);
+  padding: 0;
+  place-items: center;
+  border: 1px solid transparent;
+  border-radius: var(--cd-radius-md);
+  background: transparent;
+  cursor: pointer;
+}
+
+.app-header__menu-button:hover {
+  background: var(--cd-color-surface-card);
+}
+
+.app-header__menu-icon {
+  width: 1.5rem;
+  height: 1.5rem;
+  opacity: 0.8;
+}
+
+.app-header__menu-button:hover .app-header__menu-icon {
+  opacity: 1;
 }
 
 /* Breadcrumb */
