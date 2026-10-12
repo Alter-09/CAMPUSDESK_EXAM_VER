@@ -1,4 +1,5 @@
-import { apiRequest } from "../config/http-client.js";
+import { assignTicket, reassignTicket, listTickets } from "../services/ticket.service.js";
+import { listTechnicians } from "../services/technician.service.js";
 
 class TicketAssign extends HTMLElement {
   constructor() {
@@ -19,23 +20,19 @@ class TicketAssign extends HTMLElement {
 
   async loadData() {
     try {
-      const ticketsData = await apiRequest("/api/tickets?status=OPEN", { method: "GET" });
-      this.tickets = Array.isArray(ticketsData) ? ticketsData : [];
+      // Cargar tiquetes que pueden ser asignados o reasignados (OPEN y ASSIGNED)
+      const ticketsData = await listTickets();
+      const allTickets = Array.isArray(ticketsData) ? ticketsData : [];
+      this.tickets = allTickets.filter(t => t.status === "OPEN" || t.status === "ASSIGNED");
 
-      const usersData = await apiRequest("/api/user/all", { method: "GET" });
-      const usersList = Array.isArray(usersData) ? usersData : (usersData?.content || usersData?.users || []);
+      // Si había un ticket seleccionado, mantener su referencia actualizada
+      if (this.selectedTicket) {
+        this.selectedTicket = this.tickets.find(t => String(t.id) === String(this.selectedTicket.id)) || null;
+      }
 
-      // FILTRO CORREGIDO: Solo usuarios cuyo rol corresponda a técnico
-      this.technicians = usersList.filter(user => {
-        const role = user.role || user.rol || (user.roles && String(user.roles)) || '';
-        const upperRole = String(role).toUpperCase();
-        
-        // Ajusta las palabras clave según los roles que maneje tu backend para los técnicos
-        return upperRole.includes('TECH') || 
-               upperRole.includes('TECNICO') || 
-               upperRole.includes('TECHNICIAN') || 
-               upperRole.includes('SUPPORT');
-      });
+      // Usar listTechnicians() que combina /api/user/all + /api/technicians
+      // y filtra correctamente por rol TECHNICIAN
+      this.technicians = await listTechnicians();
 
       this.render();
       this.attachEvents();
@@ -84,15 +81,28 @@ class TicketAssign extends HTMLElement {
     this.attachEvents();
 
     try {
-      await apiRequest(`/api/tickets/${ticketId}/transitions`, {
-        method: "POST",
-        body: {
-          action: "ASSIGN",
-          technicianUsername: technicianUsername
+      // El backend Spring Boot dispone de endpoints dedicados:
+      // - PUT /api/tickets/{ticketId}/assign: asigna incidencias en estado OPEN
+      // - PUT /api/tickets/{ticketId}/reassign: reasigna incidencias en estado ASSIGNED
+      if (this.selectedTicket && this.selectedTicket.status === "ASSIGNED") {
+        await reassignTicket(ticketId, technicianUsername, "Reasignación administrativa");
+        this.successMessage = `¡Tiquete #${ticketId} reasignado exitosamente a "${technicianUsername}"!`;
+      } else {
+        try {
+          await assignTicket(ticketId, technicianUsername);
+          this.successMessage = `¡Tiquete #${ticketId} asignado exitosamente a "${technicianUsername}"!`;
+        } catch (assignErr) {
+          // Si ya estaba asignado en el backend, reasignar de forma transparente
+          const errMsg = String(assignErr?.message || "").toLowerCase();
+          if (errMsg.includes("reasign") || errMsg.includes("abierta") || errMsg.includes("assigned")) {
+            await reassignTicket(ticketId, technicianUsername, "Reasignación administrativa");
+            this.successMessage = `¡Tiquete #${ticketId} reasignado exitosamente a "${technicianUsername}"!`;
+          } else {
+            throw assignErr;
+          }
         }
-      });
+      }
 
-      this.successMessage = "¡Tiquete asignado exitosamente al técnico!";
       this.submitting = false;
       this.selectedTicket = null;
       await this.loadData();
@@ -119,15 +129,32 @@ class TicketAssign extends HTMLElement {
   }
 
   render() {
-    const ticketsOptions = this.tickets.map(t => 
-      `<option value="${t.id}" ${this.selectedTicket && String(this.selectedTicket.id) === String(t.id) ? 'selected' : ''}>` +
-      `#${t.id} - ${t.title || t.subject || 'Sin título'} (${t.applicantUsername || t.solicitante || 'Usuario'})</option>`
+    // Campos del TicketDto: id, title, applicantUsername, priority, category, description, status, technicianUsername
+    const ticketsOptions = this.tickets.map(t => {
+      const isSelected = this.selectedTicket && String(this.selectedTicket.id) === String(t.id);
+      const tag = t.status === "ASSIGNED"
+        ? `[Asignado a ${t.technicianUsername || 'técnico'}]`
+        : `[Sin asignar]`;
+      return `<option value="${t.id}" ${isSelected ? 'selected' : ''}>` +
+        `#${t.id} - ${t.title || t.subject || 'Sin título'} (${t.applicantUsername || t.requester || 'Usuario'}) ${tag}</option>`;
+    }).join('');
+
+    // Campos de TechnicianItem: username, email, specialty, availabilityStatus
+    const techOptions = this.technicians.map(tech =>
+      `<option value="${tech.username}">` +
+      `${tech.username} (${tech.email || tech.username})</option>`
     ).join('');
 
-    const techOptions = this.technicians.map(tech => 
-      `<option value="${tech.username || tech.email}">` +
-      `${tech.fullName || tech.name || tech.username || 'Técnico'} (${tech.email || tech.username})</option>`
-    ).join('');
+    const noTechniciansMsg = this.technicians.length === 0
+      ? `<p style="color:#fcd34d; font-size:0.875rem; margin-top:0.5rem;">
+           ⚠ No se encontraron técnicos registrados. Verifica que existan usuarios con rol TECHNICIAN.
+         </p>`
+      : '';
+
+    const isReassign = this.selectedTicket?.status === "ASSIGNED";
+    const buttonText = this.submitting
+      ? 'Procesando...'
+      : (isReassign ? 'Confirmar y Reasignar Tiquete' : 'Confirmar y Asignar Tiquete');
 
     this.shadowRoot.innerHTML = `
       <link rel="stylesheet" href="./stylesheet/components/ticket-assign.css">
@@ -144,10 +171,10 @@ class TicketAssign extends HTMLElement {
           <div class="fields-container">
               
               <div class="field">
-                  <label class="field__label" for="select-ticket">Seleccionar Tiquete Pendiente</label>
+                  <label class="field__label" for="select-ticket">Seleccionar Tiquete</label>
                   <div class="field__control">
                       <select id="select-ticket" class="field__input" required>
-                          <option value="" disabled ${!this.selectedTicket ? 'selected' : ''}>Elige un tiquete sin asignar...</option>
+                          <option value="" disabled ${!this.selectedTicket ? 'selected' : ''}>Elige un tiquete...</option>
                           ${ticketsOptions}
                       </select>
                   </div>
@@ -155,6 +182,8 @@ class TicketAssign extends HTMLElement {
 
               <div class="ticket-details-card" style="${this.selectedTicket ? 'display: block;' : 'display: none;'}">
                   <p class="ticket-details__title">Detalles del caso seleccionado:</p>
+                  <p class="ticket-details__text"><strong>Estado:</strong> ${this.selectedTicket?.status || '---'}</p>
+                  <p class="ticket-details__text"><strong>Técnico Actual:</strong> ${this.selectedTicket?.technicianUsername || 'Sin asignar'}</p>
                   <p class="ticket-details__text"><strong>Prioridad:</strong> ${this.selectedTicket?.priority || '---'}</p>
                   <p class="ticket-details__text"><strong>Categoría:</strong> ${this.selectedTicket?.category || '---'}</p>
                   <p class="ticket-details__text"><strong>Descripción:</strong> ${this.selectedTicket?.description || '---'}</p>
@@ -163,18 +192,19 @@ class TicketAssign extends HTMLElement {
               <div class="field">
                   <label class="field__label" for="select-technician">Asignar Técnico de Soporte</label>
                   <div class="field__control">
-                      <select id="select-technician" class="field__input" required>
+                      <select id="select-technician" class="field__input" required ${this.technicians.length === 0 ? 'disabled' : ''}>
                           <option value="" disabled selected>Selecciona un técnico disponible...</option>
                           ${techOptions}
                       </select>
                   </div>
+                  ${noTechniciansMsg}
               </div>
 
           </div>
 
           <div style="margin-top: 1.5rem;">
-              <button class="button button--primary" type="submit" ${this.submitting ? 'aria-busy="true"' : ''}>
-                  <span class="button__label">${this.submitting ? 'Asignando...' : 'Confirmar y Asignar Tiquete'}</span>
+              <button class="button button--primary" type="submit" ${this.submitting || this.technicians.length === 0 ? 'disabled' : ''}>
+                  <span class="button__label">${buttonText}</span>
               </button>
           </div>
         </form>

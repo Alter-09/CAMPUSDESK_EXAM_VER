@@ -3,15 +3,18 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="Portal de usuario para reportar y consultar tiquetes de soporte en CampusDesk." />
-    <title>CampusDesk | Mi Panel</title>
+    <meta name="description" content="Portal de usuario de CampusDesk — resumen de actividad y acceso rápido a solicitudes de soporte." />
+    <title>CampusDesk | Portal de Usuario</title>
     <link rel="icon" href="./Assets/favicon.svg" type="image/svg+xml" />
     <link rel="stylesheet" href="./stylesheet/main.css" />
 </head>
 <body>
     <div class="superadmin-page" data-shell>
+
+        <!-- ── Sidebar de navegación ───────────────────────────────────── -->
         <aside id="sidebar" class="superadmin-sidebar" data-sidebar aria-label="Navegación principal">
-            <a class="superadmin-brand" href="./user.html" aria-label="CampusDesk, Vista Usuario">
+
+            <a class="superadmin-brand" href="./user.html" aria-label="CampusDesk, Portal de Usuario">
                 <img class="superadmin-brand__mark" src="./Assets/favicon.svg" width="40" height="40" alt="" />
                 <span class="superadmin-brand__copy">
                     <span class="superadmin-brand__name">CAMPUSDESK</span>
@@ -20,21 +23,21 @@
             </a>
 
             <nav class="superadmin-navigation">
-                <section class="superadmin-nav-group" aria-labelledby="general-navigation">
-                    <h2 id="general-navigation" class="superadmin-nav-group__label">General</h2>
-                    <a class="superadmin-nav-link" href="#overview" aria-current="page">
+                <section class="superadmin-nav-group" aria-labelledby="general-nav-label">
+                    <h2 id="general-nav-label" class="superadmin-nav-group__label">General</h2>
+                    <a class="superadmin-nav-link" href="./user.html" aria-current="page" id="nav-overview">
                         <img class="superadmin-nav-link__icon" src="./Assets/Icons/dashboard.svg" width="24" height="24" alt="" />
                         <span class="superadmin-nav-link__text">Inicio</span>
                     </a>
                 </section>
 
-                <section class="superadmin-nav-group" aria-labelledby="tickets-navigation">
-                    <h2 id="tickets-navigation" class="superadmin-nav-group__label">Tiquetes</h2>
-                    <a class="superadmin-nav-link" href="#create-ticket">
+                <section class="superadmin-nav-group" aria-labelledby="tickets-nav-label">
+                    <h2 id="tickets-nav-label" class="superadmin-nav-group__label">Tiquetes</h2>
+                    <a class="superadmin-nav-link" href="./create-ticket.html" id="nav-create">
                         <img class="superadmin-nav-link__icon" src="./Assets/Icons/assign.svg" width="24" height="24" alt="" />
                         <span class="superadmin-nav-link__text">Crear nuevo Tiquete</span>
                     </a>
-                    <a class="superadmin-nav-link" href="#my-tickets">
+                    <a class="superadmin-nav-link" href="./my-tickets.html" id="nav-my-tickets">
                         <img class="superadmin-nav-link__icon" src="./Assets/Icons/search.svg" width="24" height="24" alt="" />
                         <span class="superadmin-nav-link__text">Mis Solicitudes</span>
                     </a>
@@ -42,7 +45,7 @@
             </nav>
 
             <div class="superadmin-sidebar__footer">
-                <a class="superadmin-nav-link superadmin-nav-link--danger" href="./index.html">
+                <a class="superadmin-nav-link superadmin-nav-link--danger" href="./index.html" id="nav-logout">
                     <img class="superadmin-nav-link__icon" src="./Assets/Icons/logout.svg" width="24" height="24" alt="" />
                     <span class="superadmin-nav-link__text">Cerrar sesión</span>
                 </a>
@@ -52,34 +55,64 @@
         <!-- Fondo oscuro del menú lateral en pantallas pequeñas -->
         <div class="superadmin-backdrop" data-sidebar-backdrop></div>
 
+        <!-- ── Área de trabajo ─────────────────────────────────────────── -->
         <div class="superadmin-workspace">
+
+            <!-- Cabecera con breadcrumb y avatar del usuario -->
             <header class="app-header">
                 <div class="app-header__start">
-                    <button class="app-header__menu-button" type="button" data-sidebar-toggle aria-controls="sidebar" aria-expanded="false" aria-label="Abrir menú de navegación">
+                    <button
+                        class="app-header__menu-button"
+                        type="button"
+                        data-sidebar-toggle
+                        aria-controls="sidebar"
+                        aria-expanded="false"
+                        aria-label="Abrir menú de navegación"
+                    >
                         <img class="app-header__menu-icon" src="./Assets/Icons/menu.svg" width="24" height="24" alt="" />
                     </button>
                     <nav class="app-header__breadcrumb" aria-label="Ubicación actual">
                         <ol class="app-header__crumbs">
-                            <li class="app-header__crumb">TechNova Solutions</li>
-                            <li class="app-header__crumb" aria-current="page">Panel de usuario</li>
+                            <li class="app-header__crumb">Portal de Usuario</li>
+                            <li class="app-header__crumb" aria-current="page">Inicio</li>
                         </ol>
                     </nav>
                 </div>
                 <div class="app-header__user">
-                    <span class="app-header__role">Usuario</span>
-                    <span class="app-header__avatar" aria-hidden="true">US</span>
+                    <span class="app-header__role" id="header-role">Usuario</span>
+                    <span class="app-header__avatar" aria-hidden="true" id="header-avatar">US</span>
                 </div>
             </header>
 
-            <main id="overview" class="superadmin-content">
-                <section class="superadmin-empty-state" aria-labelledby="user-title">
-                    <p class="superadmin-empty-state__eyebrow">Soporte y Solicitudes</p>
-                    <h1 id="user-title" class="superadmin-empty-state__title">Bienvenido a tu portal de ayuda</h1>
-                    <p class="superadmin-empty-state__description">El formulario de creación de reportes y el historial de seguimiento de tus tiquetes estarán disponibles cuando se integren los servicios del backend.</p>
+            <!-- ── Contenido principal ─────────────────────────────────── -->
+            <main id="user-main" class="superadmin-content">
+
+                <!-- Sección: Inicio / Dashboard -->
+                <section class="superadmin-empty-state" aria-labelledby="overview-title">
+                    <p class="superadmin-empty-state__eyebrow">Panel Personal</p>
+                    <h1 id="overview-title" class="superadmin-empty-state__title">Bienvenido a tu Portal</h1>
+                    <p class="superadmin-empty-state__description">
+                        Desde aquí puedes crear nuevas solicitudes de soporte o consultar el estado de tus tiquetes actuales.
+                    </p>
+                    <div style="display:flex; gap:1rem; justify-content:center; flex-wrap:wrap; margin-top:1.5rem;">
+                        <a href="./create-ticket.html" class="superadmin-nav-link" style="border:1px solid var(--cd-color-border-subtle); padding:0.75rem 1.5rem; border-radius:var(--cd-radius-md);">
+                            <img src="./Assets/Icons/assign.svg" width="20" height="20" alt="" style="filter:brightness(0) invert(1);opacity:0.8;" />
+                            <span>Crear Tiquete</span>
+                        </a>
+                        <a href="./my-tickets.html" class="superadmin-nav-link" style="border:1px solid var(--cd-color-border-subtle); padding:0.75rem 1.5rem; border-radius:var(--cd-radius-md);">
+                            <img src="./Assets/Icons/search.svg" width="20" height="20" alt="" style="filter:brightness(0) invert(1);opacity:0.8;" />
+                            <span>Mis Solicitudes</span>
+                        </a>
+                    </div>
                 </section>
+
             </main>
         </div>
     </div>
+
+    <!-- Módulo del sidebar responsivo -->
     <script type="module" src="./scripts/modules/sidebar-toggle.js"></script>
+    <!-- Bootstrap de la página: sincroniza cabecera con datos de sesión -->
+    <script type="module" src="./scripts/pages/user-overview.js"></script>
 </body>
 </html>
