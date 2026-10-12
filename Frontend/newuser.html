@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Crear nuevo usuario en CampusDesk." />
+    <title>CampusDesk | Crear nuevo usuario</title>
+    <link rel="icon" href="./Assets/favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="./stylesheet/main.css" />
+</head>
+<body>
+    <div class="superadmin-page">
+        <aside class="superadmin-sidebar" aria-label="Navegación principal">
+            <a class="superadmin-brand" href="./superadmin.html" aria-label="CampusDesk, Vista SuperAdministrador">
+                <img class="superadmin-brand__mark" src="./Assets/favicon.svg" width="40" height="40" alt="" />
+                <span class="superadmin-brand__copy">
+                    <span class="superadmin-brand__name">CAMPUSDESK</span>
+                    <span class="superadmin-brand__view">Vista SuperAdministrador</span>
+                </span>
+            </a>
+            <nav class="superadmin-navigation">
+                <section class="superadmin-nav-group" aria-labelledby="general-navigation">
+                    <h2 id="general-navigation" class="superadmin-nav-group__label">General</h2>
+                    <a class="superadmin-nav-link" href="./superadmin.html">
+                        <img class="superadmin-nav-link__icon" src="./Assets/icons/dashboard.svg" width="24" height="24" alt="" />
+                        <span class="superadmin-nav-link__text">Dashboard</span>
+                    </a>
+                </section>
+                <section class="superadmin-nav-group" aria-labelledby="security-navigation">
+                    <h2 id="security-navigation" class="superadmin-nav-group__label">Seguridad</h2>
+                    <a class="superadmin-nav-link" href="#overview" aria-current="page">
+                        <!-- SLOT: ícono de Crear nuevo usuario -->
+                        <img class="superadmin-nav-link__icon" src="./Assets/icons/user-logo.svg" width="24" height="24" alt="" />
+                        <span class="superadmin-nav-link__text">Crear nuevo usuario</span>
+                    </a>
+                    <a class="superadmin-nav-link" href="./roleselector.html">
+                        <!-- SLOT: ícono de Roles y permisos -->
+                        <img class="superadmin-nav-link__icon" src="./Assets/icons/shieldlock.svg" width="24" height="24" alt="" />
+                        <span class="superadmin-nav-link__text">Roles y permisos</span>
+                    </a>
+                </section>
+
+                <section class="superadmin-nav-group" aria-labelledby="people-navigation">
+                    <h2 id="people-navigation" class="superadmin-nav-group__label">Personal</h2>
+                    <a class="superadmin-nav-link" href="./techguys.html">
+                        <!-- SLOT: ícono de Técnicos -->
+                        <img class="superadmin-nav-link__icon" src="./Assets/icons/technician.svg" width="24" height="24" alt="" />
+                        <span class="superadmin-nav-link__text">Técnicos</span>
+                    </a>
+                    <a class="superadmin-nav-link" href="./userlist.html">
+                        <!-- SLOT: ícono de Usuarios -->
+                        <img class="superadmin-nav-link__icon" src="./Assets/icons/users.svg" width="24" height="24" alt="" />
+                        <span class="superadmin-nav-link__text">Usuarios</span>
+                    </a>
+                </section>
+
+                <section class="superadmin-nav-group" aria-labelledby="tickets-navigation">
+                    <h2 id="tickets-navigation" class="superadmin-nav-group__label">Tiquetes</h2>
+                    <a class="superadmin-nav-link" href="./assignation.html">
+                        <!-- SLOT: ícono de Asignar técnico -->
+                        <img class="superadmin-nav-link__icon" src="./Assets/icons/assign.svg" width="24" height="24" alt="" />
+                        <span class="superadmin-nav-link__text">Asignar técnico</span>
+                    </a>
+                    <a class="superadmin-nav-link" href="./ticketlist.html">
+                        <!-- SLOT: ícono de Estado de tiquetes -->
+                        <img class="superadmin-nav-link__icon" src="./Assets/icons/search.svg" width="24" height="24" alt="" />
+                        <span class="superadmin-nav-link__text">Estado de tiquetes</span>
+                    </a>
+                </section>
+            </nav>
+
+            <div class="superadmin-sidebar__footer">
+                <a class="superadmin-nav-link superadmin-nav-link--danger" href="./index.html">
+                    <!-- SLOT: ícono de Cerrar sesión -->
+                    <img class="superadmin-nav-link__icon" src="./Assets/icons/logout.svg" width="24" height="24" alt="" />
+                    <span class="superadmin-nav-link__text">Cerrar sesión</span>
+                </a>
+            </div>
+        </aside>
+
+        <div class="superadmin-workspace">
+            <header class="app-header">
+                <nav class="app-header__breadcrumb" aria-label="Ubicación actual">
+                    <ol class="app-header__crumbs">
+                        <li class="app-header__crumb">TechNova Solutions</li>
+                        <li class="app-header__crumb" aria-current="page">Crear nuevo usuario</li>
+                    </ol>
+                </nav>
+                <div class="app-header__user">
+                    <span class="app-header__role">Superadmin</span>
+                    <span class="app-header__avatar" aria-hidden="true">SA</span>
+                </div>
+            </header>
+
+            <main id="create-user" class="superadmin-content">
+                <section class="superadmin-empty-state" aria-labelledby="form-title" style="max-width: 600px; margin: 0 auto; text-align: left;">
+                    <p class="superadmin-empty-state__eyebrow" style="text-align: center;">Gestión de accesos</p>
+                    <h1 id="form-title" class="superadmin-empty-state__title" style="font-size: 1.5rem; text-align: center; margin-bottom: 1.5rem;">Registro de Nuevo Usuario</h1>
+                    
+                    <form id="create-user-form" class="login-form" action="#" method="post" novalidate>
+                        <div class="login-form__fields">
+                            <div class="field" style="margin-bottom: 1rem;">
+                                <label class="field__label" for="fullname">Nombre completo</label>
+                                <div class="field__control">
+                                    <input id="fullname" class="field__input" type="text" placeholder="Ej. Ana María Gómez" required />
+                                </div>
+                            </div>
+
+                            <div class="field" style="margin-bottom: 1rem;">
+                                <label class="field__label" for="new-user-email">Correo institucional</label>
+                                <div class="field__control">
+                                    <input id="new-user-email" class="field__input" type="email" placeholder="usuario@campusdesk.edu" required />
+                                </div>
+                            </div>
+
+                            <div class="field" style="margin-bottom: 1rem;">
+                                <label class="field__label" for="user-role">Rol asignado</label>
+                                <div class="field__control">
+                                    <select id="user-role" class="field__input" style="background-color: inherit; color: inherit; cursor: pointer;" required>
+                                        <option value="" disabled selected>Selecciona un rol</option>
+                                        <option value="user" style="color: #000;">Usuario / Solicitante</option>
+                                        <option value="technician" style="color: #000;">Soporte Técnico</option>
+                                        <option value="superadmin" style="color: #000;">Superadministrador</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="field" style="margin-bottom: 1.5rem;">
+                                <label class="field__label" for="temp-password">Contraseña provisional</label>
+                                <div class="field__control">
+                                    <input id="temp-password" class="field__input" type="password" placeholder="••••••••" required />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="login-form__actions">
+                            <button class="button button--primary" type="submit" style="width: 100%;">
+                                <span class="button__label">Registrar usuario</span>
+                            </button>
+                        </div>
+                    </form>
+                </section>
+            </main>
+        </div>
+    </div>
+</body>
+</html>

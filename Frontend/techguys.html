@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Gestión de técnicos en CampusDesk." />
+    <title>CampusDesk | Técnicos</title>
+    <link rel="icon" href="./Assets/favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="./stylesheet/main.css" />
+</head>
+<body>
+    <div class="superadmin-page">
+        <aside class="superadmin-sidebar" aria-label="Navegación principal">
+            <a class="superadmin-brand" href="./superadmin.html" aria-label="CampusDesk, Vista SuperAdministrador">
+                <img class="superadmin-brand__mark" src="./Assets/favicon.svg" width="40" height="40" alt="" />
+                <span class="superadmin-brand__copy">
+                    <span class="superadmin-brand__name">CAMPUSDESK</span>
+                    <span class="superadmin-brand__view">Vista SuperAdministrador</span>
+                </span>
+            </a>
+
+            <nav class="superadmin-navigation">
+                <section class="superadmin-nav-group" aria-labelledby="general-navigation">
+                    <h2 id="general-navigation" class="superadmin-nav-group__label">General</h2>
+                    <a class="superadmin-nav-link" href="./superadmin.html">
+                        <!-- SLOT: ícono del Dashboard -->
+                        <img class="superadmin-nav-link__icon" src="./Assets/icons/dashboard.svg" width="24" height="24" alt="" />
+                        <span class="superadmin-nav-link__text">Dashboard</span>
+                    </a>
+                </section>
+
+                <section class="superadmin-nav-group" aria-labelledby="security-navigation">
+                    <h2 id="security-navigation" class="superadmin-nav-group__label">Seguridad</h2>
+                    <a class="superadmin-nav-link" href="./newuser.html">
+                        <img class="superadmin-nav-link__icon" src="./Assets/icons/user-logo.svg" width="24" height="24" alt="" />
+                        <span class="superadmin-nav-link__text">Crear nuevo usuario</span>
+                    </a>
+                    <a class="superadmin-nav-link" href="./roleselector.html">
+                        <!-- SLOT: ícono de Roles y permisos -->
+                        <img class="superadmin-nav-link__icon" src="./Assets/icons/shieldlock.svg" width="24" height="24" alt="" />
+                        <span class="superadmin-nav-link__text">Roles y permisos</span>
+                    </a>
+                </section>
+                <section class="superadmin-nav-group" aria-labelledby="people-navigation">
+                    <h2 id="people-navigation" class="superadmin-nav-group__label">Personal</h2>
+                    <a class="superadmin-nav-link" href="#overview" aria-current="page">
+                        <!-- SLOT: ícono de Técnicos -->
+                        <img class="superadmin-nav-link__icon" src="./Assets/icons/technician.svg" width="24" height="24" alt="" />
+                        <span class="superadmin-nav-link__text">Técnicos</span>
+                    </a>
+                    <a class="superadmin-nav-link" href="./userlist.html">
+                        <!-- SLOT: ícono de Usuarios -->
+                        <img class="superadmin-nav-link__icon" src="./Assets/icons/users.svg" width="24" height="24" alt="" />
+                        <span class="superadmin-nav-link__text">Usuarios</span>
+                    </a>
+                </section>
+
+                <section class="superadmin-nav-group" aria-labelledby="tickets-navigation">
+                    <h2 id="tickets-navigation" class="superadmin-nav-group__label">Tiquetes</h2>
+                    <a class="superadmin-nav-link" href="./assignation.html">
+                        <!-- SLOT: ícono de Asignar técnico -->
+                        <img class="superadmin-nav-link__icon" src="./Assets/icons/assign.svg" width="24" height="24" alt="" />
+                        <span class="superadmin-nav-link__text">Asignar técnico</span>
+                    </a>
+                    <a class="superadmin-nav-link" href="./ticketlist.html">
+                        <!-- SLOT: ícono de Estado de tiquetes -->
+                        <img class="superadmin-nav-link__icon" src="./Assets/icons/search.svg" width="24" height="24" alt="" />
+                        <span class="superadmin-nav-link__text">Estado de tiquetes</span>
+                    </a>
+                </section>
+            </nav>
+
+            <div class="superadmin-sidebar__footer">
+                <a class="superadmin-nav-link superadmin-nav-link--danger" href="./index.html">
+                    <!-- SLOT: ícono de Cerrar sesión -->
+                    <img class="superadmin-nav-link__icon" src="./Assets/icons/logout.svg" width="24" height="24" alt="" />
+                    <span class="superadmin-nav-link__text">Cerrar sesión</span>
+                </a>
+            </div>
+        </aside>
+
+        <div class="superadmin-workspace">
+            <header class="app-header">
+                <nav class="app-header__breadcrumb" aria-label="Ubicación actual">
+                    <ol class="app-header__crumbs">
+                        <li class="app-header__crumb">TechNova Solutions</li>
+                        <li class="app-header__crumb" aria-current="page">Técnicos</li>
+                    </ol>
+                </nav>
+                <div class="app-header__user">
+                    <span class="app-header__role">Superadmin</span>
+                    <span class="app-header__avatar" aria-hidden="true">SA</span>
+                </div>
+            </header>
+
+            <main id="technicians-list" class="superadmin-content">
+                <section class="superadmin-empty-state" aria-labelledby="technicians-title" style="max-width: 900px; margin: 0 auto; text-align: left;">
+                    <p class="superadmin-empty-state__eyebrow" style="text-align: center;">Personal de Soporte</p>
+                    <h1 id="technicians-title" class="superadmin-empty-state__title" style="font-size: 1.5rem; text-align: center; margin-bottom: 1.5rem;">Lista de Técnicos</h1>
+                    
+                    <div style="background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 8px; overflow: hidden;">
+                        <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 0.9rem;">
+                            <thead>
+                                <tr style="background: rgba(255, 255, 255, 0.05); border-bottom: 1px solid rgba(255, 255, 255, 0.1);">
+                                    <th style="padding: 0.85rem 1rem; color: #94a3b8; font-weight: 600;">Nombre</th>
+                                    <th style="padding: 0.85rem 1rem; color: #94a3b8; font-weight: 600;">Correo Electrónico</th>
+                                    <th style="padding: 0.85rem 1rem; color: #94a3b8; font-weight: 600;">Tiquetes Activos</th>
+                                    <th style="padding: 0.85rem 1rem; color: #94a3b8; font-weight: 600;">Estado</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr style="border-bottom: 1px solid rgba(255, 255, 255, 0.05);">
+                                    <td style="padding: 0.85rem 1rem; color: #f8fafc; font-weight: 500;">Carlos Mendoza</td>
+                                    <td style="padding: 0.85rem 1rem; color: #cbd5e1;">carlos.mendoza@campusdesk.edu</td>
+                                    <td style="padding: 0.85rem 1rem; color: #cbd5e1;">3</td>
+                                    <td style="padding: 0.85rem 1rem;">
+                                        <span style="font-size: 0.75rem; background: rgba(34, 197, 94, 0.2); color: #4ade80; padding: 0.25rem 0.5rem; border-radius: 4px; border: 1px solid rgba(34, 197, 94, 0.3);">En servicio</span>
+                                    </td>
+                                </tr>
+                                <tr style="border-bottom: 1px solid rgba(255, 255, 255, 0.05);">
+                                    <td style="padding: 0.85rem 1rem; color: #f8fafc; font-weight: 500;">Laura Restrepo</td>
+                                    <td style="padding: 0.85rem 1rem; color: #cbd5e1;">laura.restrepo@campusdesk.edu</td>
+                                    <td style="padding: 0.85rem 1rem; color: #cbd5e1;">0</td>
+                                    <td style="padding: 0.85rem 1rem;">
+                                        <span style="font-size: 0.75rem; background: rgba(59, 130, 246, 0.2); color: #60a5fa; padding: 0.25rem 0.5rem; border-radius: 4px; border: 1px solid rgba(59, 130, 246, 0.3);">Disponible</span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 0.85rem 1rem; color: #f8fafc; font-weight: 500;">Felipe Torres</td>
+                                    <td style="padding: 0.85rem 1rem; color: #cbd5e1;">felipe.torres@campusdesk.edu</td>
+                                    <td style="padding: 0.85rem 1rem; color: #cbd5e1;">0</td>
+                                    <td style="padding: 0.85rem 1rem;">
+                                        <span style="font-size: 0.75rem; background: rgba(239, 68, 68, 0.2); color: #f87171; padding: 0.25rem 0.5rem; border-radius: 4px; border: 1px solid rgba(239, 68, 68, 0.3);">Inactivo</span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+            </main>
+        </div>
+    </div>
+</body>
+</html>
