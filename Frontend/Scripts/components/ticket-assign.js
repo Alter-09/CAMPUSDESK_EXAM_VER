@@ -25,10 +25,16 @@ class TicketAssign extends HTMLElement {
       const usersData = await apiRequest("/api/user/all", { method: "GET" });
       const usersList = Array.isArray(usersData) ? usersData : (usersData?.content || usersData?.users || []);
 
+      // FILTRO CORREGIDO: Solo usuarios cuyo rol corresponda a técnico
       this.technicians = usersList.filter(user => {
         const role = user.role || user.rol || (user.roles && String(user.roles)) || '';
         const upperRole = String(role).toUpperCase();
-        return upperRole.includes('TECH') || upperRole.includes('TECNICO') || upperRole.includes('SUPPORT') || true;
+        
+        // Ajusta las palabras clave según los roles que maneje tu backend para los técnicos
+        return upperRole.includes('TECH') || 
+               upperRole.includes('TECNICO') || 
+               upperRole.includes('TECHNICIAN') || 
+               upperRole.includes('SUPPORT');
       });
 
       this.render();
