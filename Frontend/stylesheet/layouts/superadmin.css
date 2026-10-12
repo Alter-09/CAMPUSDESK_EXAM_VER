@@ -184,6 +184,8 @@ html:has(.superadmin-page[data-sidebar-open]) {
 /* El padding horizontal coincide con el del header (components/app-header.css) */
 .superadmin-content {
   display: grid;
+  /* minmax(0, 1fr): sin esto, una tabla o un select ancho estira la columna y la página se desborda */
+  grid-template-columns: minmax(0, 1fr);
   min-height: calc(100vh - var(--cd-header-height));
   min-height: calc(100dvh - var(--cd-header-height));
   place-items: center;

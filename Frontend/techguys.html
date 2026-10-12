@@ -9,8 +9,8 @@
     <link rel="stylesheet" href="./stylesheet/main.css" />
 </head>
 <body>
-    <div class="superadmin-page">
-        <aside class="superadmin-sidebar" aria-label="Navegación principal">
+    <div class="superadmin-page" data-shell>
+        <aside id="sidebar" class="superadmin-sidebar" data-sidebar aria-label="Navegación principal">
             <a class="superadmin-brand" href="./superadmin.html" aria-label="CampusDesk, Vista SuperAdministrador">
                 <img class="superadmin-brand__mark" src="./Assets/favicon.svg" width="40" height="40" alt="" />
                 <span class="superadmin-brand__copy">
@@ -24,7 +24,7 @@
                     <h2 id="general-navigation" class="superadmin-nav-group__label">General</h2>
                     <a class="superadmin-nav-link" href="./superadmin.html">
                         <!-- SLOT: ícono del Dashboard -->
-                        <img class="superadmin-nav-link__icon" src="./Assets/Icons/dashboard.svg" width="24" height="24" alt="" />
+                        <img class="superadmin-nav-link__icon" src="./Assets/icons/dashboard.svg" width="24" height="24" alt="" />
                         <span class="superadmin-nav-link__text">Dashboard</span>
                     </a>
                 </section>
@@ -32,12 +32,12 @@
                 <section class="superadmin-nav-group" aria-labelledby="security-navigation">
                     <h2 id="security-navigation" class="superadmin-nav-group__label">Seguridad</h2>
                     <a class="superadmin-nav-link" href="./newuser.html">
-                        <img class="superadmin-nav-link__icon" src="./Assets/Icons/user-logo.svg" width="24" height="24" alt="" />
+                        <img class="superadmin-nav-link__icon" src="./Assets/icons/user-logo.svg" width="24" height="24" alt="" />
                         <span class="superadmin-nav-link__text">Crear nuevo usuario</span>
                     </a>
                     <a class="superadmin-nav-link" href="./roleselector.html">
                         <!-- SLOT: ícono de Roles y permisos -->
-                        <img class="superadmin-nav-link__icon" src="./Assets/Icons/shieldlock.svg" width="24" height="24" alt="" />
+                        <img class="superadmin-nav-link__icon" src="./Assets/icons/shieldlock.svg" width="24" height="24" alt="" />
                         <span class="superadmin-nav-link__text">Roles y permisos</span>
                     </a>
                 </section>
@@ -45,12 +45,12 @@
                     <h2 id="people-navigation" class="superadmin-nav-group__label">Personal</h2>
                     <a class="superadmin-nav-link" href="#overview" aria-current="page">
                         <!-- SLOT: ícono de Técnicos -->
-                        <img class="superadmin-nav-link__icon" src="./Assets/Icons/technician.svg" width="24" height="24" alt="" />
+                        <img class="superadmin-nav-link__icon" src="./Assets/icons/technician.svg" width="24" height="24" alt="" />
                         <span class="superadmin-nav-link__text">Técnicos</span>
                     </a>
                     <a class="superadmin-nav-link" href="./userlist.html">
                         <!-- SLOT: ícono de Usuarios -->
-                        <img class="superadmin-nav-link__icon" src="./Assets/Icons/users.svg" width="24" height="24" alt="" />
+                        <img class="superadmin-nav-link__icon" src="./Assets/icons/users.svg" width="24" height="24" alt="" />
                         <span class="superadmin-nav-link__text">Usuarios</span>
                     </a>
                 </section>
@@ -59,12 +59,12 @@
                     <h2 id="tickets-navigation" class="superadmin-nav-group__label">Tiquetes</h2>
                     <a class="superadmin-nav-link" href="./assignation.html">
                         <!-- SLOT: ícono de Asignar técnico -->
-                        <img class="superadmin-nav-link__icon" src="./Assets/Icons/assign.svg" width="24" height="24" alt="" />
+                        <img class="superadmin-nav-link__icon" src="./Assets/icons/assign.svg" width="24" height="24" alt="" />
                         <span class="superadmin-nav-link__text">Asignar técnico</span>
                     </a>
                     <a class="superadmin-nav-link" href="./ticketlist.html">
                         <!-- SLOT: ícono de Estado de tiquetes -->
-                        <img class="superadmin-nav-link__icon" src="./Assets/Icons/search.svg" width="24" height="24" alt="" />
+                        <img class="superadmin-nav-link__icon" src="./Assets/icons/search.svg" width="24" height="24" alt="" />
                         <span class="superadmin-nav-link__text">Estado de tiquetes</span>
                     </a>
                 </section>
@@ -73,20 +73,28 @@
             <div class="superadmin-sidebar__footer">
                 <a class="superadmin-nav-link superadmin-nav-link--danger" href="./index.html">
                     <!-- SLOT: ícono de Cerrar sesión -->
-                    <img class="superadmin-nav-link__icon" src="./Assets/Icons/logout.svg" width="24" height="24" alt="" />
+                    <img class="superadmin-nav-link__icon" src="./Assets/icons/logout.svg" width="24" height="24" alt="" />
                     <span class="superadmin-nav-link__text">Cerrar sesión</span>
                 </a>
             </div>
         </aside>
 
+        <!-- Fondo oscuro del menú lateral en pantallas pequeñas -->
+        <div class="superadmin-backdrop" data-sidebar-backdrop></div>
+
         <div class="superadmin-workspace">
             <header class="app-header">
-                <nav class="app-header__breadcrumb" aria-label="Ubicación actual">
-                    <ol class="app-header__crumbs">
-                        <li class="app-header__crumb">TechNova Solutions</li>
-                        <li class="app-header__crumb" aria-current="page">Técnicos</li>
-                    </ol>
-                </nav>
+                <div class="app-header__start">
+                    <button class="app-header__menu-button" type="button" data-sidebar-toggle aria-controls="sidebar" aria-expanded="false" aria-label="Abrir menú de navegación">
+                        <img class="app-header__menu-icon" src="./Assets/icons/menu.svg" width="24" height="24" alt="" />
+                    </button>
+                    <nav class="app-header__breadcrumb" aria-label="Ubicación actual">
+                        <ol class="app-header__crumbs">
+                            <li class="app-header__crumb">TechNova Solutions</li>
+                            <li class="app-header__crumb" aria-current="page">Técnicos</li>
+                        </ol>
+                    </nav>
+                </div>
                 <div class="app-header__user">
                     <span class="app-header__role">Superadmin</span>
                     <span class="app-header__avatar" aria-hidden="true">SA</span>
@@ -98,7 +106,7 @@
                     <p class="superadmin-empty-state__eyebrow" style="text-align: center;">Personal de Soporte</p>
                     <h1 id="technicians-title" class="superadmin-empty-state__title" style="font-size: 1.5rem; text-align: center; margin-bottom: 1.5rem;">Lista de Técnicos</h1>
                     
-                    <div style="background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 8px; overflow: hidden;">
+                    <div role="region" aria-label="Lista de técnicos" tabindex="0" style="background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 8px; overflow-x: auto;">
                         <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 0.9rem;">
                             <thead>
                                 <tr style="background: rgba(255, 255, 255, 0.05); border-bottom: 1px solid rgba(255, 255, 255, 0.1);">
@@ -140,5 +148,6 @@
             </main>
         </div>
     </div>
+    <script type="module" src="./scripts/modules/sidebar-toggle.js"></script>
 </body>
 </html>
