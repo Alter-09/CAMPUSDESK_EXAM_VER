@@ -103,76 +103,11 @@
             </header>
 
             <main id="roles-management" class="superadmin-content">
-                <section class="superadmin-empty-state" aria-labelledby="roles-title" style="max-width: 800px; margin: 0 auto; text-align: left;">
-                    <p class="superadmin-empty-state__eyebrow" style="text-align: center;">Control de Acceso</p>
-                    <h1 id="roles-title" class="superadmin-empty-state__title" style="font-size: 1.5rem; text-align: center; margin-bottom: 1.5rem;">Asignación de Roles y Permisos</h1>
-                    
-                    <form id="roles-form" class="login-form" action="#" method="post" novalidate>
-                        <div class="login-form__fields">
-                            
-                            <!-- Seleccionar Usuario -->
-                            <div class="field" style="margin-bottom: 1rem;">
-                                <label class="field__label" for="select-user">Seleccionar Usuario</label>
-                                <div class="field__control">
-                                    <select id="select-user" class="field__input" style="background-color: inherit; color: inherit; cursor: pointer;" required>
-                                        <option value="" disabled selected>Buscar o seleccionar usuario...</option>
-                                        <option value="1" style="color: #000;">Ana María Gómez (ana.gomez@campusdesk.edu)</option>
-                                        <option value="2" style="color: #000;">Carlos Mendoza (carlos.mendoza@campusdesk.edu)</option>
-                                        <option value="3" style="color: #000;">Laura Restrepo (laura.restrepo@campusdesk.edu)</option>
-                                    </select>
-                                </div>
-                            </div>
-
-                            <!-- Seleccionar Rol -->
-                            <div class="field" style="margin-bottom: 1.5rem;">
-                                <label class="field__label" for="assign-role">Rol a Asignar</label>
-                                <div class="field__control">
-                                    <select id="assign-role" class="field__input" style="background-color: inherit; color: inherit; cursor: pointer;" required>
-                                        <option value="technician" style="color: #000;" selected>Soporte Técnico</option>
-                                        <option value="user" style="color: #000;">Usuario / Solicitante</option>
-                                        <option value="superadmin" style="color: #000;">Superadministrador</option>
-                                    </select>
-                                </div>
-                            </div>
-
-                            <!-- Ventana/Card de Vista Previa de Permisos (Mockup) -->
-                            <div class="permissions-card" style="background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 8px; padding: 1.25rem; margin-bottom: 1.5rem;">
-                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
-                                    <h2 style="font-size: 1rem; font-weight: 600; margin: 0; color: #fff;">Permisos incluidos en este rol:</h2>
-                                    <span style="font-size: 0.75rem; background: rgba(59, 130, 246, 0.2); color: #60a5fa; padding: 0.25rem 0.5rem; border-radius: 4px; border: 1px solid rgba(59, 130, 246, 0.3);">Vista Previa</span>
-                                </div>
-
-                                <ul style="list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 0.6rem; font-size: 0.9rem;">
-                                    <li style="display: flex; align-items: center; gap: 0.5rem; color: #e2e8f0;">
-                                        <span style="color: #4ade80; font-weight: bold;">✓</span> Visualizar tiquetes asignados y cola general
-                                    </li>
-                                    <li style="display: flex; align-items: center; gap: 0.5rem; color: #e2e8f0;">
-                                        <span style="color: #4ade80; font-weight: bold;">✓</span> Cambiar estado de tiquetes (En proceso, Resuelto, Cerrado)
-                                    </li>
-                                    <li style="display: flex; align-items: center; gap: 0.5rem; color: #e2e8f0;">
-                                        <span style="color: #4ade80; font-weight: bold;">✓</span> Agregar notas internas de resolución en tiquetes
-                                    </li>
-                                    <li style="display: flex; align-items: center; gap: 0.5rem; color: #94a3b8; text-decoration: line-through;">
-                                        <span style="color: #f87171; font-weight: bold;">✕</span> Crear o eliminar cuentas de usuario
-                                    </li>
-                                    <li style="display: flex; align-items: center; gap: 0.5rem; color: #94a3b8; text-decoration: line-through;">
-                                        <span style="color: #f87171; font-weight: bold;">✕</span> Modificar permisos del sistema
-                                    </li>
-                                </ul>
-                            </div>
-
-                        </div>
-
-                        <div class="login-form__actions">
-                            <button class="button button--primary" type="submit" style="width: 100%;">
-                                <span class="button__label">Guardar Cambios de Rol</span>
-                            </button>
-                        </div>
-                    </form>
-                </section>
+                <cd-role-assignment></cd-role-assignment>
             </main>
         </div>
     </div>
     <script type="module" src="./scripts/modules/sidebar-toggle.js"></script>
+    <script type="module" src="./scripts/components/role-assignment.js"></script>
 </body>
 </html>
