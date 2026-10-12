@@ -1,22 +1,19 @@
 /**
  * Comportamiento del formulario de login.
- * Valida presencia/formato y emite credenciales limpias (S-01).
+ * Valida presencia y emite credenciales limpias (S-01).
  * El transporte HTTP queda fuera (OCP para cablear AuthService después).
  */
 
 /**
- * @typedef {{ email: string, password: string }} LoginCredentials
+ * @typedef {{ username: string, password: string }} LoginCredentials
  */
-
-const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 /**
  * @param {HTMLFormElement} form
  * @param {{
  *   onSubmit?: (credentials: LoginCredentials) => void | Promise<void>,
  *   messages?: {
- *     emailRequired: string,
- *     emailInvalid: string,
+ *     usernameRequired: string,
  *     passwordRequired: string,
  *     summaryPrefix: string,
  *     submitting: string,
@@ -29,13 +26,13 @@ export function bindLoginForm(form, options = {}) {
     return;
   }
 
-  const emailInput = form.querySelector("#email");
+  const usernameInput = form.querySelector("#username");
   const passwordInput = form.querySelector("#password");
   const submitButton = form.querySelector('[type="submit"]');
   const summary = form.querySelector("#login-form-summary");
   const messages = options.messages;
 
-  if (!(emailInput instanceof HTMLInputElement) || !(passwordInput instanceof HTMLInputElement)) {
+  if (!(usernameInput instanceof HTMLInputElement) || !(passwordInput instanceof HTMLInputElement)) {
     return;
   }
 
@@ -60,7 +57,7 @@ export function bindLoginForm(form, options = {}) {
   };
 
   const clearErrors = () => {
-    setFieldError(emailInput, "");
+    setFieldError(usernameInput, "");
     setFieldError(passwordInput, "");
     if (summary instanceof HTMLElement) {
       summary.textContent = "";
@@ -74,18 +71,14 @@ export function bindLoginForm(form, options = {}) {
   const validate = () => {
     clearErrors();
 
-    const email = emailInput.value.trim();
+    const username = usernameInput.value.trim();
     const password = passwordInput.value;
     /** @type {string[]} */
     const issues = [];
 
-    if (!email) {
-      const message = messages?.emailRequired ?? "El correo electrónico es obligatorio.";
-      setFieldError(emailInput, message);
-      issues.push(message);
-    } else if (!EMAIL_PATTERN.test(email)) {
-      const message = messages?.emailInvalid ?? "Ingresa un correo electrónico válido.";
-      setFieldError(emailInput, message);
+    if (!username) {
+      const message = messages?.usernameRequired ?? "El usuario es obligatorio.";
+      setFieldError(usernameInput, message);
       issues.push(message);
     }
 
@@ -103,19 +96,27 @@ export function bindLoginForm(form, options = {}) {
 
     return {
       valid: issues.length === 0,
-      credentials: { email, password },
+      credentials: { username, password },
     };
   };
 
-  emailInput.addEventListener("input", () => {
-    if (emailInput.getAttribute("aria-invalid") === "true") {
-      setFieldError(emailInput, "");
+  usernameInput.addEventListener("input", () => {
+    if (usernameInput.getAttribute("aria-invalid") === "true") {
+      setFieldError(usernameInput, "");
+    }
+    if (summary instanceof HTMLElement && summary.classList.contains("is-visible")) {
+      summary.textContent = "";
+      summary.classList.remove("is-visible");
     }
   });
 
   passwordInput.addEventListener("input", () => {
     if (passwordInput.getAttribute("aria-invalid") === "true") {
       setFieldError(passwordInput, "");
+    }
+    if (summary instanceof HTMLElement && summary.classList.contains("is-visible")) {
+      summary.textContent = "";
+      summary.classList.remove("is-visible");
     }
   });
 
