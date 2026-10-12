@@ -36,6 +36,12 @@
   --cd-color-data-expenses: #22d3ee;
   --cd-color-data-expenses-bright: #67e8f9;
   --cd-color-data-expenses-fill: rgba(34, 211, 238, 0.2);
+  --cd-color-data-resolved: #34d399;
+  --cd-color-data-resolved-bright: #6ee7b7;
+  --cd-color-data-closed: #fbbf24;
+  --cd-color-data-closed-bright: #fcd34d;
+  --cd-color-data-done: #f472b6;
+  --cd-color-data-done-bright: #f9a8d4;
   --cd-color-chart-grid: rgba(203, 213, 225, 0.1);
   --cd-color-chart-crosshair: rgba(203, 213, 225, 0.45);
 

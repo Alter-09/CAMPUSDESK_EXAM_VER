@@ -37,7 +37,7 @@
                     </a>
                     <a class="superadmin-nav-link" href="./roleselector.html">
                         <img class="superadmin-nav-link__icon" src="./Assets/Icons/shieldlock.svg" width="24" height="24" alt="" />
-                        <span class="superadmin-nav-link__text">Roles y permisos</span>
+                        <span class="superadmin-nav-link__text">Roles y Permisos</span>
                     </a>
                 </section>
                 <section class="superadmin-nav-group" aria-labelledby="people-navigation">
@@ -56,11 +56,11 @@
                     <h2 id="tickets-navigation" class="superadmin-nav-group__label">Tiquetes</h2>
                     <a class="superadmin-nav-link" href="./assignation.html">
                         <img class="superadmin-nav-link__icon" src="./Assets/Icons/assign.svg" width="24" height="24" alt="" />
-                        <span class="superadmin-nav-link__text">Asignar técnico</span>
+                        <span class="superadmin-nav-link__text">Asignar Técnico</span>
                     </a>
                     <a class="superadmin-nav-link" href="./ticketlist.html">
                         <img class="superadmin-nav-link__icon" src="./Assets/Icons/search.svg" width="24" height="24" alt="" />
-                        <span class="superadmin-nav-link__text">Estado de tiquetes</span>
+                        <span class="superadmin-nav-link__text">Estado de Tiquetes</span>
                     </a>
                 </section>
             </nav>
@@ -106,48 +106,40 @@
             <header class="revenue-chart__header">
                 <div class="revenue-chart__heading">
                     <p class="revenue-chart__eyebrow">Rendimiento de Mesa de Ayuda</p>
-                    <h1 id="revenue-chart-title" class="revenue-chart__title">Tiquetes Creados vs. Completados</h1>
-                    <p class="revenue-chart__description">Resumen mensual del flujo de trabajo</p>
+                    <h1 id="revenue-chart-title" class="revenue-chart__title">Tiquetes Abiertos vs. Completados</h1>
+                    <p class="revenue-chart__description">Comparación general del flujo de trabajo</p>
                 </div>
-                <label class="revenue-chart__range-control">
-                    <span class="revenue-chart__range-label">Rango de fechas</span>
-                    <select class="revenue-chart__range-select" data-chart-range aria-label="Selecciona un rango de fechas">
-                        <option value="2024">Ene 2024 – Dic 2024</option>
-                        <option value="2025">Ene 2025 – Dic 2025</option>
-                        <option value="2026">Ene 2026 – Dic 2026</option>
-                    </select>
-                </label>
             </header>
 
             <div class="revenue-chart__summary" aria-label="Resumen de series del gráfico">
-                <button class="revenue-chart__series-toggle" type="button" data-series-toggle="revenue" aria-pressed="true">
+                <div class="revenue-chart__summary-card">
                     <span class="revenue-chart__legend-dot revenue-chart__legend-dot--revenue" aria-hidden="true"></span>
-                    <span>Tiquetes creados</span>
-                    <strong data-summary-revenue>—</strong>
-                </button>
-                <button class="revenue-chart__series-toggle" type="button" data-series-toggle="expenses" aria-pressed="true">
+                    <span class="revenue-chart__summary-label">Tiquetes abiertos</span>
+                    <strong data-summary-opened>—</strong>
+                </div>
+                <div class="revenue-chart__summary-card">
                     <span class="revenue-chart__legend-dot revenue-chart__legend-dot--expenses" aria-hidden="true"></span>
-                    <span>Tiquetes completados</span>
-                    <strong data-summary-expenses>—</strong>
-                </button>
+                    <span class="revenue-chart__summary-label">Tiquetes completados</span>
+                    <strong data-summary-done>—</strong>
+                </div>
                 <span class="revenue-chart__source" data-chart-status aria-live="polite">Cargando datos en vivo…</span>
             </div>
 
             <div class="revenue-chart__plot" data-chart-plot>
-                <svg class="revenue-chart__svg" data-chart-svg viewBox="0 0 960 420" role="img" aria-label="Gráfico de líneas de tiquetes creados y completados" tabindex="0"></svg>
+                <svg class="revenue-chart__svg" data-chart-svg viewBox="0 0 960 420" role="img" aria-label="Gráfico de barras de tiquetes abiertos y completados" tabindex="0"></svg>
                 <div class="revenue-chart__tooltip" data-chart-tooltip role="status" aria-live="polite" aria-hidden="true">
-                    <p class="revenue-chart__tooltip-date" data-tooltip-date></p>
+                    <p class="revenue-chart__tooltip-label" data-tooltip-label></p>
                     <div class="revenue-chart__tooltip-row">
-                        <span><i class="revenue-chart__tooltip-dot revenue-chart__tooltip-dot--revenue"></i>Tiquetes creados</span>
-                        <strong data-tooltip-revenue></strong>
+                        <span>Tiquetes abiertos</span>
+                        <strong data-tooltip-opened></strong>
                     </div>
                     <div class="revenue-chart__tooltip-row">
-                        <span><i class="revenue-chart__tooltip-dot revenue-chart__tooltip-dot--expenses"></i>Tiquetes completados</span>
-                        <strong data-tooltip-expenses></strong>
+                        <span>Tiquetes completados</span>
+                        <strong data-tooltip-done></strong>
                     </div>
                     <div class="revenue-chart__tooltip-growth">
                         <span>Eficiencia de resolución</span>
-                        <strong data-tooltip-growth></strong>
+                        <strong data-tooltip-efficiency></strong>
                     </div>
                 </div>
             </div>
