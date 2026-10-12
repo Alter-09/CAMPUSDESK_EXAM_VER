@@ -29,6 +29,16 @@
   --cd-color-on-signal: #ffffff;
   --cd-color-atmosphere: rgba(231, 92, 105, 0.08);
 
+  /* Data visualization */
+  --cd-color-data-revenue: #9d7cff;
+  --cd-color-data-revenue-bright: #c4b5fd;
+  --cd-color-data-revenue-fill: rgba(157, 124, 255, 0.24);
+  --cd-color-data-expenses: #22d3ee;
+  --cd-color-data-expenses-bright: #67e8f9;
+  --cd-color-data-expenses-fill: rgba(34, 211, 238, 0.2);
+  --cd-color-chart-grid: rgba(203, 213, 225, 0.1);
+  --cd-color-chart-crosshair: rgba(203, 213, 225, 0.45);
+
   /* Tipografía — familias pedidas; sin CDN hasta Q-39 (fuentes autoalojadas) */
   --cd-font-display: "Hanken Grotesk", system-ui, -apple-system, "Segoe UI", sans-serif;
   --cd-font-body: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;

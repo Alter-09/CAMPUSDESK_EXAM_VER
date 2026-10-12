@@ -1,3 +1,5 @@
+import { USERS_MESSAGES } from "./messages.users.es.js";
+
 /**
  * Textos visibles de la interfaz (español).
  * Fuente única para mensajes — evita literales dispersos (C-03, C-05).
@@ -23,4 +25,14 @@ export const MESSAGES = Object.freeze({
     summaryPrefix: "Revisa los siguientes campos:",
     privateHint: "Acceso privado · Solicita tu cuenta al Administrador",
   }),
+  errors: Object.freeze({
+    network: "No se pudo conectar con el servidor. Verifica que el backend esté en ejecución.",
+    unknown: "Ocurrió un error inesperado. Inténtalo de nuevo.",
+    byStatus: Object.freeze({
+      401: "Tu sesión no es válida o expiró. Inicia sesión de nuevo.",
+      403: "No tienes permiso para realizar esta acción.",
+      500: "El servidor tuvo un problema. Inténtalo más tarde.",
+    }),
+  }),
+  users: USERS_MESSAGES,
 });
