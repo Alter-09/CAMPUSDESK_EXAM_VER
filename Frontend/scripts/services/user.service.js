@@ -48,3 +48,15 @@ export function createUser({ username, email, password, role, additionalPermissi
     body: { username, email, password, role, additionalPermissions, ...NEW_USER_DEFAULTS },
   });
 }
+
+/**
+ * DELETE /api/user/delete/{username}
+ * Elimina un usuario por su nombre de usuario.
+ * @param {string} username
+ * @returns {Promise<void>}
+ */
+export function deleteUser(username) {
+  return apiRequest(`/api/user/delete/${encodeURIComponent(username)}`, {
+    method: "DELETE",
+  });
+}

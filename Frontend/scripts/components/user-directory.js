@@ -2,7 +2,7 @@
  * <cd-user-directory>: Directorio general de usuarios basado en la API del backend.
  */
 import { MESSAGES } from "../constants/messages.es.js";
-import { listUsers } from "../services/user.service.js";
+import { listUsers, deleteUser } from "../services/user.service.js";
 import { listRoles } from "../services/role.service.js";
 import { attachStyles } from "../utils/shadow-styles.js";
 
@@ -13,6 +13,7 @@ export class UserDirectory extends HTMLElement {
   #refs = null;
   #initialization = null;
   #requestId = 0;
+  #pendingDeleteUsername = null;
 
   constructor() {
     super();
@@ -60,12 +61,30 @@ export class UserDirectory extends HTMLElement {
                   <th scope="col">Correo Electrónico</th>
                   <th scope="col">Rol</th>
                   <th scope="col">Estado</th>
+                  <th scope="col" class="user-table__cell--center">Acciones</th>
                 </tr>
               </thead>
               <tbody></tbody>
             </table>
           </div>
         </div>
+
+        <!-- Dialogo Modal de Confirmacion -->
+        <dialog class="confirm-dialog" id="confirm-dialog">
+          <div class="confirm-dialog__content">
+            <h2 class="confirm-dialog__title">${TEXT.deleteConfirmTitle ?? "Eliminar usuario"}</h2>
+            <p class="confirm-dialog__message" id="confirm-dialog-msg"></p>
+            <p class="confirm-dialog__error" id="confirm-dialog-error" role="alert" hidden></p>
+            <div class="confirm-dialog__actions">
+              <button class="button button--secondary" type="button" id="dialog-cancel-btn">
+                <span class="button__label">${TEXT.cancelButton ?? "Cancelar"}</span>
+              </button>
+              <button class="button button--danger" type="button" id="dialog-confirm-btn">
+                <span class="button__label">${TEXT.confirmDeleteButton ?? "Sí, eliminar"}</span>
+              </button>
+            </div>
+          </div>
+        </dialog>
       </section>
     `;
     return template.content;
@@ -79,11 +98,27 @@ export class UserDirectory extends HTMLElement {
       retryButton: find(".user-directory__retry"),
       tableWrap: find(".user-directory__table-wrap"),
       tbody: find(".user-table tbody"),
+      dialog: find("#confirm-dialog"),
+      dialogMsg: find("#confirm-dialog-msg"),
+      dialogError: find("#confirm-dialog-error"),
+      dialogCancelBtn: find("#dialog-cancel-btn"),
+      dialogConfirmBtn: find("#dialog-confirm-btn"),
     };
   }
 
   #bindEvents() {
     this.#refs.retryButton.addEventListener("click", () => this.#load());
+
+    this.#refs.dialogCancelBtn.addEventListener("click", () => this.#closeDialog());
+    
+    this.#refs.dialogConfirmBtn.addEventListener("click", () => this.#handleConfirmDelete());
+
+    // Cierre al hacer click fuera del contenido del dialogo
+    this.#refs.dialog.addEventListener("click", (e) => {
+      if (e.target === this.#refs.dialog) {
+        this.#closeDialog();
+      }
+    });
   }
 
   async #load() {
@@ -116,13 +151,13 @@ export class UserDirectory extends HTMLElement {
     tableWrap.hidden = true;
   }
 
-#renderUsers(users, roles) {
+  #renderUsers(users, roles) {
     if (!users || users.length === 0) {
       this.#showMessage(TEXT.empty);
       return;
     }
 
-    // Filtramos para mostrar únicamente los usuarios con rol "USER" (excluyendo ADMIN y TECHNICIAN)
+    // Filtramos para mostrar únicamente los usuarios con rol "USER"
     const standardUsers = users.filter((user) => {
       const role = user.role?.toUpperCase();
       return role === "USER";
@@ -154,7 +189,7 @@ export class UserDirectory extends HTMLElement {
         roleBadge.textContent = MESSAGES.users.roleLabels[user.role] ?? user.role;
         roleCell.append(roleBadge);
 
-        // Estado de Cuenta basado estrictamente en el JSON de la API
+        // Estado de Cuenta
         const statusCell = document.createElement("td");
         const statusBadge = document.createElement("span");
         
@@ -176,7 +211,27 @@ export class UserDirectory extends HTMLElement {
         statusBadge.textContent = statusLabel;
         statusCell.append(statusBadge);
 
-        row.append(userCell, emailCell, roleCell, statusCell);
+        // Acciones (Boton de eliminar)
+        const actionsCell = document.createElement("td");
+        actionsCell.className = "user-table__cell--center";
+
+        const deleteBtn = document.createElement("button");
+        deleteBtn.type = "button";
+        deleteBtn.className = "action-button action-button--danger";
+        deleteBtn.setAttribute("aria-label", `Eliminar usuario ${user.username}`);
+        deleteBtn.innerHTML = `
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="3 6 5 6 21 6"></polyline>
+            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+            <line x1="10" y1="11" x2="10" y2="17"></line>
+            <line x1="14" y1="11" x2="14" y2="17"></line>
+          </svg>
+        `;
+        deleteBtn.addEventListener("click", () => this.#openDeleteDialog(user.username));
+
+        actionsCell.append(deleteBtn);
+
+        row.append(userCell, emailCell, roleCell, statusCell, actionsCell);
         return row;
       })
     );
@@ -184,6 +239,44 @@ export class UserDirectory extends HTMLElement {
     this.#refs.message.hidden = true;
     this.#refs.retryButton.hidden = true;
     this.#refs.tableWrap.hidden = false;
+  }
+
+  #openDeleteDialog(username) {
+    this.#pendingDeleteUsername = username;
+    const msg = TEXT.deleteConfirmMessage
+      ? TEXT.deleteConfirmMessage(username)
+      : `¿Estás seguro de que deseas eliminar al usuario «${username}»?`;
+
+    this.#refs.dialogMsg.textContent = msg;
+    this.#refs.dialogError.hidden = true;
+    this.#refs.dialogConfirmBtn.disabled = false;
+    this.#refs.dialog.showModal();
+  }
+
+  #closeDialog() {
+    this.#pendingDeleteUsername = null;
+    this.#refs.dialog.close();
+  }
+
+  async #handleConfirmDelete() {
+    if (!this.#pendingDeleteUsername) return;
+
+    const username = this.#pendingDeleteUsername;
+    const { dialogConfirmBtn, dialogError } = this.#refs;
+
+    try {
+      dialogConfirmBtn.disabled = true;
+      dialogError.hidden = true;
+
+      await deleteUser(username);
+
+      this.#closeDialog();
+      await this.#load(); // Recarga la lista inmediatamente
+    } catch (error) {
+      dialogConfirmBtn.disabled = false;
+      dialogError.textContent = error?.message || TEXT.deleteError || "Error al eliminar usuario.";
+      dialogError.hidden = false;
+    }
   }
 }
 
