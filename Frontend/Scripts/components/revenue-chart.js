@@ -161,51 +161,72 @@ export class RevenueChart {
     const activeTotal = open + assigned + inProgress;
     const completedTotal = resolved + closed;
 
-    // Factores de curva orgánica que reflejan el ciclo empresarial del año (similar a la curva de referencia)
-    // Octubre (índice 9) refleja el estado en tiempo real de la base de datos
-    const waveDistribution = [
-      { month: 0, openRatio: 0.25, doneRatio: 0.10, growth: "+8.2%" },
-      { month: 1, openRatio: 0.35, doneRatio: 0.18, growth: "+11.0%" },
-      { month: 2, openRatio: 0.22, doneRatio: 0.32, growth: "+14.5%" },
-      { month: 3, openRatio: 0.45, doneRatio: 0.48, growth: "+16.8%" },
-      { month: 4, openRatio: 0.58, doneRatio: 0.62, growth: "+19.2%" },
-      { month: 5, openRatio: 0.40, doneRatio: 0.70, growth: "+15.4%" },
-      { month: 6, openRatio: 0.65, doneRatio: 0.78, growth: "+21.0%" },
-      { month: 7, openRatio: 0.90, doneRatio: 0.85, growth: "+24.6%" },
-      { month: 8, openRatio: 0.75, doneRatio: 0.92, growth: "+18.3%" },
-      { month: 9, openRatio: 1.00, doneRatio: 1.00, growth: "+22.5%" }, // Mes actual (octubre)
-      { month: 10, openRatio: 0.70, doneRatio: 1.15, growth: "+26.0%" },
-      { month: 11, openRatio: 0.80, doneRatio: 1.30, growth: "+28.4%" },
-    ];
+    // Inicializar los 12 meses exclusivamente en cero (sin datos simulados)
+    const buckets = Array.from({ length: 12 }, (_, idx) => ({
+      index: idx,
+      shortLabel: MONTH_LABELS[idx],
+      fullLabel: MONTH_NAMES[idx],
+      cyan: 0,   // Abiertos / En proceso
+      purple: 0, // Resueltos / Cerrados
+      total: 0,
+      growth: "0.0%",
+      efficiency: "0%",
+    }));
 
-    // Escala base basada en los datos reales del backend
-    const baseActive = Math.max(activeTotal, 3);
-    const baseDone = Math.max(completedTotal, 2);
+    // Agrupar los tickets reales obtenidos desde PostgreSQL por su mes de creación
+    let hasRealTicketDates = false;
+    if (Array.isArray(this.tickets) && this.tickets.length > 0) {
+      this.tickets.forEach((ticket) => {
+        const rawDate = ticket.createdAt || ticket.creationDate;
+        if (rawDate) {
+          const d = new Date(rawDate);
+          if (!isNaN(d.getTime())) {
+            const m = d.getMonth();
+            if (m >= 0 && m < 12) {
+              hasRealTicketDates = true;
+              const isResolved = ticket.status === "RESOLVED" || ticket.status === "CLOSED";
+              if (isResolved) {
+                buckets[m].purple += 1;
+              } else {
+                buckets[m].cyan += 1;
+              }
+            }
+          }
+        }
+      });
+    }
 
-    this.monthlyData = waveDistribution.map((w, idx) => {
-      let openVal = Math.round(baseActive * w.openRatio);
-      let doneVal = Math.round(baseDone * w.doneRatio);
+    // Si no hay fechas individuales pero el backend reporta tickets en stats,
+    // reflejarlos en el mes actual del sistema
+    const currentMonth = new Date().getMonth();
+    if (!hasRealTicketDates && total > 0) {
+      buckets[currentMonth].cyan = activeTotal;
+      buckets[currentMonth].purple = completedTotal;
+    }
 
-      // Si es el mes actual (octubre, índice 9), asignamos exactamente los valores actuales
-      if (idx === 9) {
-        openVal = activeTotal;
-        doneVal = completedTotal;
+    // Calcular métricas reales mes a mes
+    let prevTotal = 0;
+    this.monthlyData = buckets.map((b, idx) => {
+      const mTotal = b.cyan + b.purple;
+      b.total = mTotal;
+      const eff = mTotal > 0 ? ((b.purple / mTotal) * 100).toFixed(0) : "0";
+      b.efficiency = `${eff}%`;
+
+      let growth = "0.0%";
+      if (idx > 0) {
+        if (prevTotal === 0 && mTotal > 0) {
+          growth = `+${mTotal * 100}%`;
+        } else if (prevTotal > 0) {
+          const diff = ((mTotal - prevTotal) / prevTotal) * 100;
+          growth = diff >= 0 ? `+${diff.toFixed(1)}%` : `${diff.toFixed(1)}%`;
+        }
       }
-
-      const mTotal = openVal + doneVal;
-      const efficiency = mTotal > 0 ? ((doneVal / mTotal) * 100).toFixed(0) : "0";
-
-      return {
-        index: idx,
-        shortLabel: MONTH_LABELS[idx],
-        fullLabel: MONTH_NAMES[idx],
-        cyan: openVal,     // Abiertos / En proceso
-        purple: doneVal,   // Resueltos / Cerrados
-        total: mTotal,
-        growth: w.growth,
-        efficiency: `${efficiency}%`,
-      };
+      b.growth = growth;
+      prevTotal = mTotal;
+      return b;
     });
+
+    this.activeIndex = currentMonth;
   }
 
   updateKPIs() {
@@ -265,9 +286,9 @@ export class RevenueChart {
       ...this.monthlyData.map((d) => d.cyan),
       ...this.monthlyData.map((d) => d.purple),
     ];
-    const maxVal = Math.max(...allValues, 10);
+    const maxVal = Math.max(...allValues, 2);
     // Techo redondeado agradable (múltiplo de 5 o 10)
-    const ceiling = Math.ceil((maxVal * 1.25) / 5) * 5;
+    const ceiling = Math.max(4, Math.ceil((maxVal * 1.2) / 2) * 2);
 
     const toY = (val) => bounds.bottom - (val / ceiling) * (bounds.bottom - bounds.top);
     const stepX = (bounds.right - bounds.left) / (this.monthlyData.length - 1);
@@ -419,7 +440,7 @@ export class RevenueChart {
 
   handlePointerLeave() {
     // Al salir, dejar posicionado en el mes actual (octubre)
-    this.showTooltipAt(9);
+    this.showTooltipAt(new Date().getMonth());
   }
 
   showTooltipAt(index) {

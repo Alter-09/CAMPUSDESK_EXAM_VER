@@ -10,6 +10,7 @@ export const PASSWORD_MIN_LENGTH = 8;
 
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const WHITESPACE_PATTERN = /\s/;
+const PASSWORD_COMPLEXITY_PATTERN = /^(?=.*[A-Z])(?=.*[^a-zA-Z0-9\s])/;
 
 /**
  * @typedef {{ username: string, email: string, role: string, password: string }} NewUserValues
@@ -62,6 +63,8 @@ export function validateNewUser(rawValues, { assignableRoleNames }, messages) {
     errors.password = messages.passwordRequired;
   } else if (values.password.length < PASSWORD_MIN_LENGTH) {
     errors.password = messages.passwordShort(PASSWORD_MIN_LENGTH);
+  } else if (!PASSWORD_COMPLEXITY_PATTERN.test(values.password)) {
+    errors.password = 'La contraseña debe contener al menos una letra mayúscula y un carácter especial.';
   }
 
   return { values, errors };
