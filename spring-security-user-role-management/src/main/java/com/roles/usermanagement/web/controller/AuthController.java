@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -34,6 +35,8 @@ public class AuthController {
     private final UserRepository users;
     private final UserCrudRepository userCrudRepository;
     private final UserService userService;
+
+    private static final Pattern PASSWORD_PATTERN = Pattern.compile("^(?=.*[A-Z])(?=.*[^a-zA-Z0-9\\s]).{6,}$");
 
     public AuthController(AuthenticationManager authenticationManager, 
                           JwtUtil jwtUtil, 
@@ -71,6 +74,12 @@ public class AuthController {
         String identifier = loginDto.getIdentifier();
         if (identifier == null || loginDto.getPassword() == null || loginDto.getPassword().isBlank()) {
             return ResponseEntity.badRequest().body(Map.of("error", "Usuario/correo y contraseña son obligatorios"));
+        }
+
+        if (!PASSWORD_PATTERN.matcher(loginDto.getPassword()).matches()) {
+            return ResponseEntity.badRequest().body(Map.of(
+                    "error", "La contraseña debe tener al menos 6 caracteres, al menos una letra mayúscula y al menos un carácter especial"
+            ));
         }
         try {
             var authentication = authenticationManager.authenticate(
