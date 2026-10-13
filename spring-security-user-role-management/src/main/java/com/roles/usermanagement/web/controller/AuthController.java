@@ -37,6 +37,7 @@ public class AuthController {
     private final UserService userService;
 
     private static final Pattern PASSWORD_PATTERN = Pattern.compile("^(?=.*[A-Z])(?=.*[^a-zA-Z0-9\\s]).{6,}$");
+    private static final Pattern EMAIL_PATTERN = Pattern.compile("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$");
 
     public AuthController(AuthenticationManager authenticationManager, 
                           JwtUtil jwtUtil, 
@@ -59,6 +60,11 @@ public class AuthController {
                 || registerDto.getPassword() == null || registerDto.getPassword().isBlank()) {
             return ResponseEntity.badRequest().body(Map.of("error", "Todos los campos son obligatorios"));
         }
+
+        if (!EMAIL_PATTERN.matcher(registerDto.getEmail().trim()).matches()) {
+            return ResponseEntity.badRequest().body(Map.of("error", "El correo electrónico debe tener un formato válido"));
+        }
+
         var created = userService.register(registerDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(Map.of(
                 "message", "Usuario registrado exitosamente con rol USER",
