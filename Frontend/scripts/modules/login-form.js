@@ -104,11 +104,19 @@ export function bindLoginForm(form, options = {}) {
     if (usernameInput.getAttribute("aria-invalid") === "true") {
       setFieldError(usernameInput, "");
     }
+    if (summary instanceof HTMLElement && summary.classList.contains("is-visible")) {
+      summary.textContent = "";
+      summary.classList.remove("is-visible");
+    }
   });
 
   passwordInput.addEventListener("input", () => {
     if (passwordInput.getAttribute("aria-invalid") === "true") {
       setFieldError(passwordInput, "");
+    }
+    if (summary instanceof HTMLElement && summary.classList.contains("is-visible")) {
+      summary.textContent = "";
+      summary.classList.remove("is-visible");
     }
   });
 
