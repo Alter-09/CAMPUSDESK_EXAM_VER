@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
- * Endpoints administrativos para asignar y reasignar técnicos.
+ * Administrative endpoints for assigning and reassigning technicians.
  */
 @RestController
 @RequestMapping("/api/tickets")
@@ -29,7 +29,7 @@ public class TicketAssignmentController {
     }
 
     /**
-     * Asigna por primera vez un técnico a una incidencia abierta.
+     * Assigns a technician to an open ticket for the first time.
      */
     @org.springframework.web.bind.annotation.RequestMapping(
             value = "/{ticketId}/assign",
@@ -45,7 +45,7 @@ public class TicketAssignmentController {
     }
 
     /**
-     * Reasigna una incidencia a otro técnico e incluye la justificación administrativa.
+     * Reassigns a ticket to another technician and includes the administrative justification.
      */
     @PutMapping("/{ticketId}/reassign")
     @PreAuthorize("hasRole('ADMIN')")

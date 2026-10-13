@@ -12,8 +12,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 /**
- * Calcula métricas globales o limitadas al solicitante o técnico autenticado,
- * y devuelve un resultado interno independiente del DTO HTTP.
+ * Calculates global metrics or metrics limited to the authenticated requester
+ * or technician, and returns an internal result independent of the HTTP DTO.
  */
 @Service
 public class DashboardService {
@@ -27,7 +27,7 @@ public class DashboardService {
     }
 
     /**
-     * Devuelve los conteos permitidos para el rol y usuario solicitantes.
+     * Returns the counts permitted for the requesting user's role and identity.
      */
     @Transactional(readOnly = true)
     public DashboardMetrics getMetricsForUser(String username) {

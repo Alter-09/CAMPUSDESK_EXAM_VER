@@ -4,7 +4,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
 /**
- * Datos necesarios para reasignar una incidencia a otro técnico.
+ * Data required to reassign a ticket to another technician.
  */
 public record TicketReassignRequest(
         @NotBlank(message = "El usuario del técnico es obligatorio")

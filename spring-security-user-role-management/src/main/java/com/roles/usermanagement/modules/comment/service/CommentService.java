@@ -19,7 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 /**
- * Aplica las reglas de acceso y persistencia del sistema de comentarios.
+ * Applies the access and persistence rules for the comment system.
  */
 @Service
 public class CommentService {
@@ -36,7 +36,7 @@ public class CommentService {
     }
 
     /**
-     * Agrega un comentario a una incidencia activa tras verificar su propietario o técnico asignado.
+     * Adds a comment to an active ticket after verifying its owner or assigned technician.
      */
     @Transactional
     public CommentResponse addComment(Long ticketId, CommentCreateRequest request, String username) {
@@ -68,7 +68,7 @@ public class CommentService {
     }
 
     /**
-     * Lista comentarios en orden cronológico y oculta notas internas a usuarios solicitantes.
+     * Lists comments in chronological order and hides internal notes from requesters.
      */
     @Transactional(readOnly = true)
     public List<CommentResponse> getCommentsForTicket(Long ticketId, String username) {

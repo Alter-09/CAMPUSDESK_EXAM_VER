@@ -5,7 +5,7 @@ import com.roles.usermanagement.modules.dashboard.model.DashboardMetrics;
 import org.springframework.stereotype.Component;
 
 /**
- * Convierte las métricas calculadas por el caso de uso a la respuesta HTTP.
+ * Converts metrics calculated by the use case into the HTTP response.
  */
 @Component
 public class DashboardMapper {

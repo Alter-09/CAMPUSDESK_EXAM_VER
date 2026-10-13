@@ -9,8 +9,8 @@ import lombok.*;
 import java.time.LocalDateTime;
 
 /**
- * Registra la asignación inicial o reasignación de un técnico a una incidencia
- * para mantener su trazabilidad y auditoría (RF-04).
+ * Records the initial assignment or reassignment of a technician to a ticket
+ * for traceability and auditing (RF-04).
  */
 @Getter
 @Setter
@@ -25,22 +25,22 @@ public class TicketAssignmentLog {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    /** Incidencia cuyo técnico fue asignado o reasignado. */
+    /** Ticket whose technician was assigned or reassigned. */
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "ticket_id", nullable = false)
     private Ticket ticket;
 
-    /** Técnico anterior; no tiene valor en una asignación inicial. */
+    /** Previous technician; null for an initial assignment. */
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "previous_technician_username", referencedColumnName = "username")
     private UserEntity previousTechnician;
 
-    /** Técnico que queda responsable de la incidencia. */
+    /** Technician who is responsible for the ticket. */
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "new_technician_username", referencedColumnName = "username", nullable = false)
     private UserEntity newTechnician;
 
-    /** Usuario que ejecutó la operación administrativa. */
+    /** User who performed the administrative operation. */
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "assigned_by_username", referencedColumnName = "username", nullable = false)
     private UserEntity assignedBy;
@@ -55,7 +55,7 @@ public class TicketAssignmentLog {
     @Column(name = "assigned_at", nullable = false, updatable = false)
     private LocalDateTime assignedAt;
 
-    /** Establece la fecha de auditoría al crear el registro. */
+    /** Sets the audit timestamp when the record is created. */
     @PrePersist
     protected void onCreate() {
         this.assignedAt = LocalDateTime.now();

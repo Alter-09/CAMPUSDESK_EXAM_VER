@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
- * Endpoints protegidos para consultar y agregar comentarios de incidencias.
+ * Protected endpoints for retrieving and adding ticket comments.
  */
 @RestController
 @RequestMapping("/api/tickets/{ticketId}/comments")
@@ -32,7 +32,7 @@ public class CommentController {
     }
 
     /**
-     * Crea un comentario y devuelve HTTP 201.
+     * Creates a comment and returns HTTP 201.
      */
     @PostMapping
     public ResponseEntity<CommentResponse> createComment(
@@ -45,7 +45,7 @@ public class CommentController {
     }
 
     /**
-     * Recupera los comentarios visibles para el usuario autenticado.
+     * Retrieves the comments visible to the authenticated user.
      */
     @GetMapping
     public ResponseEntity<List<CommentResponse>> getCommentsByTicket(
