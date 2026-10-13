@@ -70,7 +70,7 @@ class UsermanagementApplicationTests {
     @Test
     @Order(2)
     void authenticatesBootstrapAdmin() throws Exception {
-        String adminToken = login("superadmin", "secret");
+        String adminToken = login("superadmin", "SuperAdmin123!");
         assertThat(adminToken).isNotBlank();
     }
 
@@ -160,7 +160,7 @@ class UsermanagementApplicationTests {
     @Test
     @Order(9)
     void cp08_and_cp07_assignTechnicianRolesAndEndpoints() throws Exception {
-        String adminToken = login("superadmin", "secret");
+        String adminToken = login("superadmin", "SuperAdmin123!");
 
         // Crear técnico con rol TECHNICIAN usando /api/user/add
         String createTechBody = """
@@ -252,7 +252,7 @@ class UsermanagementApplicationTests {
     @Test
     @Order(14)
     void cp14_returnsReportsSummaryAndDashboardMetrics() throws Exception {
-        String adminToken = login("superadmin", "secret");
+        String adminToken = login("superadmin", "SuperAdmin123!");
 
         // RT-03 exige GET /api/reports/summary
         HttpResponse<String> summary = request("GET", "/api/reports/summary", null, adminToken);
@@ -266,7 +266,7 @@ class UsermanagementApplicationTests {
     @Test
     @Order(15)
     void technicianEndpointsAreAccessible() throws Exception {
-        String adminToken = login("superadmin", "secret");
+        String adminToken = login("superadmin", "SuperAdmin123!");
 
         // RT-03 exige GET /api/users/technicians
         HttpResponse<String> usersTech = request("GET", "/api/users/technicians", null, adminToken);

@@ -23,6 +23,7 @@ export const USERS_MESSAGES = Object.freeze({
       role: "Rol",
       status: "Estado",
       actions: "Acciones",
+      permissions: "Permisos",
     }),
     noPermissions: "Sin permisos",
     permissionsSummary: (count) => (count === 1 ? "1 permiso" : `${count} permisos`),
