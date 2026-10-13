@@ -18,11 +18,15 @@ class TicketList extends HTMLElement {
     try {
       const data = await apiRequest("/api/tickets", { method: "GET" });
       
+      // Mapeo con los campos exactos del TicketDto del backend Spring Boot:
+      // applicantUsername, technicianUsername, title, status (enum: OPEN, ASSIGNED, IN_PROGRESS, RESOLVED, CLOSED)
       this.tickets = Array.isArray(data) ? data.map(ticket => ({
-        id: ticket.id || ticket.ticketId || `#${ticket.codigo || '---'}`,
-        requester: ticket.requester || ticket.solicitante || 'Desconocido',
-        subject: ticket.subject || ticket.asunto || ticket.categoria || 'Sin asunto',
-        technician: ticket.technician || (ticket.tecnico ? ticket.tecnico.nombre : 'Sin asignar'),
+        id: ticket.id ?? ticket.ticketId ?? '---',
+        requester: ticket.applicantUsername || ticket.requester || ticket.solicitante || 'Desconocido',
+        subject: ticket.title || ticket.subject || ticket.asunto || 'Sin asunto',
+        technician: ticket.technicianUsername || ticket.technician
+          || (ticket.tecnico ? ticket.tecnico.nombre : null)
+          || 'Sin asignar',
         status: ticket.status || ticket.estado || 'Pendiente',
         statusCode: this.mapStatusCode(ticket.status || ticket.estado)
       })) : [];
@@ -38,11 +42,17 @@ class TicketList extends HTMLElement {
   }
 
   mapStatusCode(statusText) {
-    if (!statusText) return 'pending';
-    const text = statusText.toLowerCase();
-    if (text.includes('proceso') || text.includes('progres')) return 'in-process';
-    if (text.includes('resuelt') || text.includes('complet') || text.includes('cerrad')) return 'resolved';
-    return 'pending';
+    if (!statusText) return 'open';
+    // Mapeo directo con los valores del enum del backend (OPEN, ASSIGNED, IN_PROGRESS, RESOLVED, CLOSED)
+    const STATUS_MAP = {
+      'OPEN':        'open',
+      'ASSIGNED':    'assigned',
+      'IN_PROGRESS': 'in-progress',
+      'RESOLVED':    'resolved',
+      'CLOSED':      'closed',
+    };
+    const upper = statusText.toUpperCase().trim();
+    return STATUS_MAP[upper] ?? 'open';
   }
 
   renderLoading() {
@@ -224,22 +234,39 @@ class TicketList extends HTMLElement {
         letter-spacing: 0.02em;
       }
 
-      .status-badge--in-process {
-        background: rgba(59, 130, 246, 0.2);
-        color: #60a5fa;
-        border: 1px solid rgba(59, 130, 246, 0.3);
+      /* OPEN */
+      .status-badge--open {
+        background: rgba(99, 102, 241, 0.2);
+        color: #a5b4fc;
+        border: 1px solid rgba(99, 102, 241, 0.35);
       }
 
-      .status-badge--pending {
+      /* ASSIGNED */
+      .status-badge--assigned {
         background: rgba(234, 179, 8, 0.2);
-        color: #facc15;
-        border: 1px solid rgba(234, 179, 8, 0.3);
+        color: #fde047;
+        border: 1px solid rgba(234, 179, 8, 0.35);
       }
 
+      /* IN_PROGRESS */
+      .status-badge--in-progress {
+        background: rgba(245, 158, 11, 0.2);
+        color: #fcd34d;
+        border: 1px solid rgba(245, 158, 11, 0.35);
+      }
+
+      /* RESOLVED */
       .status-badge--resolved {
-        background: rgba(34, 197, 94, 0.2);
-        color: #4ade80;
-        border: 1px solid rgba(34, 197, 94, 0.3);
+        background: rgba(16, 185, 129, 0.2);
+        color: #6ee7b7;
+        border: 1px solid rgba(16, 185, 129, 0.35);
+      }
+
+      /* CLOSED */
+      .status-badge--closed {
+        background: rgba(100, 116, 139, 0.2);
+        color: #94a3b8;
+        border: 1px solid rgba(100, 116, 139, 0.35);
       }
 
       @media screen and (max-width: 768px) {
