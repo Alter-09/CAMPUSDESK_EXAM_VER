@@ -8,11 +8,20 @@ import jakarta.validation.constraints.NotNull;
  * El cliente indica QUÉ acción quiere ejecutar; el estado destino lo decide la regla del ciclo de vida.
  */
 public record StateTransitionRequest(
-        @NotNull(message = "La acción es obligatoria")
         TransitionAction action,
-
-        // Solo es obligatorio para ASSIGN y REASSIGN; el service valida ese caso.
-        // En las demás acciones se ignora.
-        String technicianUsername
+        String technicianUsername,
+        String status
 ) {
+    public StateTransitionRequest {
+        if (action == null && status != null && !status.isBlank()) {
+            String s = status.trim().toUpperCase();
+            action = switch (s) {
+                case "IN_PROGRESS", "EN_PROCESO" -> TransitionAction.START_PROGRESS;
+                case "RESOLVED", "RESUELTA" -> TransitionAction.RESOLVE;
+                case "CLOSED", "CERRADA" -> TransitionAction.CONFIRM_CLOSE;
+                case "ASSIGNED", "ASIGNADA" -> TransitionAction.ASSIGN;
+                default -> null;
+            };
+        }
+    }
 }

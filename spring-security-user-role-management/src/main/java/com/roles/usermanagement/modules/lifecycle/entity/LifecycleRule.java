@@ -33,9 +33,11 @@ public class LifecycleRule {
     @Column(name = "required_role", nullable = false, length = 50)
     private String requiredRole; // e.g. "ROLE_ADMIN", "ROLE_TECHNICIAN", "ROLE_USER"
 
+    @Builder.Default
     @Column(name = "must_be_applicant", nullable = false)
     private boolean mustBeApplicant = false;
 
+    @Builder.Default
     @Column(name = "must_be_assigned_technician", nullable = false)
     private boolean mustBeAssignedTechnician = false;
 }
