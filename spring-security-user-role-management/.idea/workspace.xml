@@ -5,9 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="0f2af6fc-9140-43a6-8d5a-ba73add84703" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/../Frontend/Scripts/components/revenue-chart.js" beforeDir="false" afterPath="$PROJECT_DIR$/../Frontend/Scripts/components/revenue-chart.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Frontend/Scripts/components/ticket-assign.js" beforeDir="false" afterPath="$PROJECT_DIR$/../Frontend/Scripts/components/ticket-assign.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Frontend/Scripts/components/ticket-list.js" beforeDir="false" afterPath="$PROJECT_DIR$/../Frontend/Scripts/components/ticket-list.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/application-dev.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/application-dev.properties" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
