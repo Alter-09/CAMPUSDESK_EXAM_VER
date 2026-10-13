@@ -242,7 +242,7 @@ export class RevenueChart {
     const efficiencyRate = total > 0 ? ((done / total) * 100).toFixed(1) : "0.0";
 
     if (this.ui.total) this.ui.total.textContent = total.toLocaleString("es-CO");
-    if (this.ui.growth) this.ui.growth.textContent = total > 0 ? `+${(efficiencyRate * 0.8).toFixed(1)}% ↗` : "0% —";
+    if (this.ui.growth) this.ui.growth.textContent = total > 0 ? `${efficiencyRate}% Eficiencia` : "0.0% —";
     if (this.ui.open) this.ui.open.textContent = open.toLocaleString("es-CO");
     if (this.ui.progress) this.ui.progress.textContent = (assigned + inProgress).toLocaleString("es-CO");
     if (this.ui.done) this.ui.done.textContent = done.toLocaleString("es-CO");
@@ -479,7 +479,7 @@ export class RevenueChart {
     }
 
     // Contenido del tooltip
-    if (this.ui.tooltipDate) this.ui.tooltipDate.textContent = `${item.fullLabel} 2026`;
+    if (this.ui.tooltipDate) this.ui.tooltipDate.textContent = `${item.fullLabel} ${new Date().getFullYear()}`;
     if (this.ui.tooltipTotal) this.ui.tooltipTotal.textContent = `${item.total} incidencias`;
     if (this.ui.tooltipBadge) this.ui.tooltipBadge.textContent = item.growth;
     if (this.ui.tooltipResolved) this.ui.tooltipResolved.textContent = String(item.purple);
