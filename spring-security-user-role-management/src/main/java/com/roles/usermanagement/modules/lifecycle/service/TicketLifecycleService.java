@@ -60,6 +60,10 @@ public class TicketLifecycleService {
 
         TicketStatus previousStatus = ticket.getStatus();
 
+        if (request.action() == null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Acción o estado requerido no válido");
+        }
+
         // 2. Buscar la regla; si no existe, la transición no está permitida -> 409
         LifecycleRule rule = ruleRepository
                 .findByCurrentStatusAndAction(previousStatus, request.action())

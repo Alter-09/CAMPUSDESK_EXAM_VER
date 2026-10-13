@@ -14,6 +14,12 @@ public class LoginDto {
     @Schema(description = "Contraseña de la cuenta", example = "Password123!")
     private String password;
 
+    public void setIdentifier(String identifier) {
+        if (this.username == null) {
+            this.username = identifier;
+        }
+    }
+
     public String getIdentifier() {
         if (email != null && !email.isBlank()) {
             return email.trim();
