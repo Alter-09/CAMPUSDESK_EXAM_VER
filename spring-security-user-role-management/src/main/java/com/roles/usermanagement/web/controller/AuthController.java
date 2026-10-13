@@ -65,6 +65,12 @@ public class AuthController {
             return ResponseEntity.badRequest().body(Map.of("error", "El correo electrónico debe tener un formato válido"));
         }
 
+        if (!PASSWORD_PATTERN.matcher(registerDto.getPassword()).matches()) {
+            return ResponseEntity.badRequest().body(Map.of(
+                    "error", "La contraseña debe tener al menos 6 caracteres, al menos una letra mayúscula y al menos un carácter especial"
+            ));
+        }
+
         var created = userService.register(registerDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(Map.of(
                 "message", "Usuario registrado exitosamente con rol USER",
