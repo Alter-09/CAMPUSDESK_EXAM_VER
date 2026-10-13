@@ -4,7 +4,7 @@ import com.roles.usermanagement.modules.assignment.dto.TicketAssignmentResponse;
 import com.roles.usermanagement.modules.assignment.entity.TicketAssignmentLog;
 import org.springframework.stereotype.Component;
 
-@Component // Crea instancia de la clase y la ingresa a cuando se llama Services.
+@Component // Creates an instance of this class for injection into services.
 public class TicketAssignmentMapper {
 
     public TicketAssignmentResponse toResponse(TicketAssignmentLog talog){

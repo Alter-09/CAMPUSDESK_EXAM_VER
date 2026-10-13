@@ -5,32 +5,32 @@ import com.roles.usermanagement.modules.ticket.entity.Ticket;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 /**
- * Consultas agregadas para calcular indicadores por estado y propietario.
+ * Aggregated queries for calculating metrics by status and owner.
  */
 public interface DashboardReportRepository extends JpaRepository<Ticket, Long> {
 
     /**
-     * Cuenta incidencias asignadas a un técnico.
+     * Counts tickets assigned to a technician.
      */
     long countByTechnician_Username(String username);
 
     /**
-     * Cuenta incidencias asignadas a un técnico en un estado concreto.
+     * Counts tickets assigned to a technician with a specific status.
      */
     long countByTechnician_UsernameAndStatus(String username, TicketStatus status);
 
     /**
-     * Cuenta incidencias creadas por un solicitante.
+     * Counts tickets created by a requester.
      */
     long countByApplicant_Username(String username);
 
     /**
-     * Cuenta incidencias de un solicitante en un estado concreto.
+     * Counts a requester's tickets with a specific status.
      */
     long countByApplicant_UsernameAndStatus(String username, TicketStatus status);
 
     /**
-     * Cuenta todas las incidencias globales en un estado concreto.
+     * Counts all tickets globally with a specific status.
      */
     long countByStatus(TicketStatus status);
 }

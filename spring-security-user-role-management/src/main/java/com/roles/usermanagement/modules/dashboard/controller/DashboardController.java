@@ -11,8 +11,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
- * Adapta las solicitudes HTTP autenticadas y las respuestas del caso de uso
- * dashboard a los tipos del contrato de la API.
+ * Adapts authenticated HTTP requests and dashboard use-case responses to the
+ * API contract types.
  */
 @RestController
 @RequestMapping("/api/dashboard")
@@ -27,7 +27,7 @@ public class DashboardController {
     }
 
     /**
-     * Devuelve estadísticas conforme al alcance del usuario autenticado.
+     * Returns statistics according to the authenticated user's scope.
      */
     @GetMapping("/stats")
     @PreAuthorize("isAuthenticated()")

@@ -9,8 +9,8 @@ import lombok.*;
 import java.time.LocalDateTime;
 
 /**
- * Representa un comentario asociado a una incidencia, su autor y su ámbito de
- * visibilidad (RF-05).
+ * Represents a comment associated with a ticket, its author, and its visibility
+ * scope (RF-05).
  */
 @Getter
 @Setter
@@ -31,14 +31,14 @@ public class Comment {
     private String content;
 
     /**
-     * Usuario autor del comentario.
+     * User who authored the comment.
      */
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "author_username", referencedColumnName = "username", nullable = false)
     private UserEntity author;
 
     /**
-     * Incidencia a la que pertenece el comentario.
+     * Ticket to which the comment belongs.
      */
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "ticket_id", nullable = false)
@@ -51,7 +51,7 @@ public class Comment {
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
-    /** Asigna la fecha de creación y la visibilidad pública predeterminada. */
+    /** Sets the creation timestamp and the default public visibility. */
     @PrePersist
     protected void onCreate() {
         this.createdAt = LocalDateTime.now();

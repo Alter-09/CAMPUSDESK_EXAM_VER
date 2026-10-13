@@ -5,7 +5,7 @@ import com.roles.usermanagement.modules.lifecycle.enums.TicketStatus;
 import java.time.LocalDateTime;
 
 /**
- * Resultado de una asignación o reasignación, incluyendo el estado vigente.
+ * Result of an assignment or reassignment, including the current status.
  */
 public record TicketAssignmentResponse(
         Long id,
