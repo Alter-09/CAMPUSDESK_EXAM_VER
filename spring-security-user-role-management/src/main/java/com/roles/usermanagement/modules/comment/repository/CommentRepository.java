@@ -5,12 +5,12 @@ import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 /**
- * Persistencia de comentarios con recuperación cronológica por incidencia.
+ * Persistence for comments with chronological retrieval by ticket.
  */
 public interface CommentRepository extends JpaRepository<Comment, Long> {
 
     /**
-     * Lista primero los comentarios más antiguos de la incidencia.
+     * Lists the oldest comments for the ticket first.
      */
     List<Comment> findByTicket_IdOrderByCreatedAtAsc(Long ticketId);
 }

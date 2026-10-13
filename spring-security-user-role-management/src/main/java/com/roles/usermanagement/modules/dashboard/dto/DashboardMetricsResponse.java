@@ -1,7 +1,7 @@
 package com.roles.usermanagement.modules.dashboard.dto;
 
 /**
- * Conteos de incidencias visibles para el usuario autenticado.
+ * Counts of tickets visible to the authenticated user.
  */
 public record DashboardMetricsResponse(
         long totalTickets,

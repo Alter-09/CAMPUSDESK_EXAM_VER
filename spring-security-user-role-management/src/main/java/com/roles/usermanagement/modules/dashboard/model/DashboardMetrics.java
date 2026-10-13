@@ -1,7 +1,7 @@
 package com.roles.usermanagement.modules.dashboard.model;
 
 /**
- * Resultado interno del caso de uso dashboard, independiente del formato HTTP.
+ * Internal result of the dashboard use case, independent of the HTTP format.
  */
 public record DashboardMetrics(
         long totalTickets,

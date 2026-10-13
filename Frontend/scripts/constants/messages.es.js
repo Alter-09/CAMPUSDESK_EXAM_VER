@@ -1,5 +1,8 @@
 import { USERS_MESSAGES } from "./messages.users.es.js";
 import { ACCESS_MESSAGES } from "./messages.access.es.js";
+import { TECHNICIANS_MESSAGES } from "./messages.technicians.es.js";
+import { TICKETS_MESSAGES } from "./messages.tickets.es.js";
+import { USER_PORTAL_MESSAGES } from "./messages.user.es.js";
 
 /**
  * Textos visibles de la interfaz (español).
@@ -36,5 +39,8 @@ export const MESSAGES = Object.freeze({
     }),
   }),
   users: USERS_MESSAGES,
+  technicians: TECHNICIANS_MESSAGES,
+  tickets: TICKETS_MESSAGES,
   access: ACCESS_MESSAGES,
+  userPortal: USER_PORTAL_MESSAGES,
 });

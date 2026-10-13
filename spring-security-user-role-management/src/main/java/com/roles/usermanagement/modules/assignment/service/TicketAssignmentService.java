@@ -21,7 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 /**
- * Ejecuta la asignación de técnicos y registra sus trazas de auditoría.
+ * Assigns technicians and records the corresponding audit trail.
  */
 @Service
 public class TicketAssignmentService {
@@ -38,7 +38,7 @@ public class TicketAssignmentService {
     }
 
     /**
-     * Asigna por primera vez una incidencia abierta y registra el cambio de estado.
+     * Assigns an open ticket for the first time and records the status change.
      */
     @Transactional
     public TicketAssignmentResponse assign(Long ticketId, String technicianUsername, String adminUsername) {
@@ -69,7 +69,7 @@ public class TicketAssignmentService {
     }
 
     /**
-     * Reasigna una incidencia asignada a un técnico distinto, de forma atómica.
+     * Atomically reassigns an assigned ticket to a different technician.
      */
     @Transactional
     public TicketAssignmentResponse reassign(
