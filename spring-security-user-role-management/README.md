@@ -1,417 +1,404 @@
-# NEXO · Backend de gestión y seguridad
+# CAMPUSDESK - Plataforma de Soporte Tecnico y Mesa de Ayuda
 
-Plantilla REST con **Java 21, Spring Boot 4.1.1 y PostgreSQL**. Integra autenticación
-JWT, un rol por usuario, permisos individuales y módulos de clientes, productos y
-ventas. El frontend se encuentra en la carpeta hermana `Frontend` y utiliza
-HTML, CSS y JavaScript.
+Backend robusto desarrollado en Java 21 y Spring Boot para la administracion integral de incidentes, mesa de ayuda, asignacion de personal tecnico y control de acceso institucional en entornos de campus universitario o corporativo.
 
-## Contenido
+---
 
-- [Inicio rápido](#inicio-rápido)
-- [Configuración por perfiles y JWT](#configuración-por-perfiles-y-jwt)
-- [Administrador inicial y autenticación](#administrador-inicial-y-autenticación)
-- [Modelo de roles y permisos](#modelo-de-roles-y-permisos)
-- [Endpoints](#endpoints)
-- [Flujo de usuarios y ventas](#flujo-de-usuarios-y-ventas)
-- [Persistencia y estructura](#persistencia-y-estructura)
-- [Frontend y Swagger](#frontend-y-swagger)
-- [Pruebas y extensión](#pruebas-y-extensión)
+## Ficha del Proyecto
 
-## Inicio rápido
+- **Nombre del Sistema:** CAMPUSDESK
+- **Modulo:** API REST Backend
+- **Estado:** En desarrollo activo
+- **Lenguaje Base:** Java 21 LTS
+- **Framework:** Spring Boot 4.1.1
+- **Base de Datos:** PostgreSQL
+- **Seguridad y Tokens:** Spring Security 6 con JWT (HMAC256)
+- **Documentacion Interactiva:** Swagger UI / OpenAPI 3
 
-Requisitos: JDK 21 y PostgreSQL en ejecución. El proyecto incluye Gradle Wrapper
-8.14.3; no necesitas instalar Gradle. En IntelliJ selecciona JDK 21 como Project
-SDK y Gradle JVM.
+---
 
-Crea la base de datos desde PostgreSQL:
+## Creadores e Integrantes del Equipo
+
+Sistema desarrollado por:
+
+- **Sergio Aparicio**
+- **Jhon Reyes**
+- **Sebastian Ayala**
+- **Juan Diego Leon**
+
+---
+
+## Tabla de Contenido
+
+- [Presentacion de CAMPUSDESK](#presentacion-de-campusdesk)
+- [Funcionalidades Implementadas](#funcionalidades-implementadas)
+- [Modulos del Sistema](#modulos-del-sistema)
+- [Flujo de Seguridad y Ciclo de Vida de Contraseñas](#flujo-de-seguridad-y-ciclo-de-vida-de-contraseñas)
+- [Arquitectura de Software](#arquitectura-de-software)
+- [Tecnologias Utilizadas](#tecnologias-utilizadas)
+- [Catalogo de Endpoints REST](#catalogo-de-endpoints-rest)
+- [Configuracion y Variables de Entorno](#configuracion-y-variables-de-entorno)
+- [Requisitos Previos e Instalacion](#requisitos-previos-e-instalacion)
+- [Instrucciones de Ejecucion](#instrucciones-de-ejecucion)
+- [Estructura del Repositorio](#estructura-del-repositorio)
+- [Documentacion Interactiva (Swagger UI)](#documentacion-interactiva-swagger-ui)
+- [Creditos y Reconocimientos](#creditos-y-reconocimientos)
+
+---
+
+## Presentacion de CAMPUSDESK
+
+CAMPUSDESK surge como una respuesta a la necesidad de canalizar, priorizar y resolver incidencias tecnicas dentro de una institucion educativa o corporativa. El sistema permite conectar de forma fluida a tres actores principales:
+
+1. **Usuarios Solicitantes (Estudiantes, Docentes, Personal Administrativo):** Reportan requerimientos de hardware, software, red o infraestructura mediante tickets de servicio.
+2. **Personal Tecnico (Operadores de Soporte):** Reciben tickets asignados segun su especialidad y disponibilidad, registran avances, documentan soluciones y gestionan el cambio de estados.
+3. **Super Administradores y Coordinadores:** Supervisan la mesa de ayuda, crean y habilitan usuarios, asignan roles, administran permisos del sistema y auditan metricas de atencion.
+
+---
+
+## Funcionalidades Implementadas
+
+La version actual del backend de CAMPUSDESK cuenta con las siguientes capacidades implementadas y operativas:
+
+### 1. Mesa de Ayuda y Gestion de Tickets
+- Creacion y recepcion de solicitudes tecnicas con descripcion detallada, categorizacion y prioridad (Baja, Media, Alta, Critica).
+- Clasificacion de incidencias segun el tipo de servicio requerido.
+- Trazabilidad y consulta de tickets en curso e historicos.
+
+### 2. Gestion de Operadores Tecnicos y Asignaciones
+- Registro de perfiles tecnicos con definicion de especialidades.
+- Asignacion formal de tickets a operadores responsables.
+- Modulo preparado para evitar sobrecarga de trabajo y balancear la atencion de casos.
+
+### 3. Trazabilidad, Comentarios e Historial de Estados
+- Bitacora de comentarios publicos e internos asociados a cada ticket.
+- Registro historico e inmutable de cambios de estado para auditoria de tiempos de respuesta.
+- Ciclo de vida estricto para asegurar que un ticket no salte de estados de forma inconsistente.
+
+### 4. Ciclo de Vida de Contraseñas y Gestion de Usuarios
+- **Creacion Asistida por el Super Admin:** Los usuarios son dados de alta por el administrador con una contraseña temporal elegida por este.
+- **Forzado de Cambio en Primer Ingreso (`mustChangePassword`):** Toda cuenta nueva nace con la bandera activada. Al autenticarse, la respuesta de login notifica al cliente que debe forzar la pantalla de cambio de clave antes de ingresar al sistema.
+- **Cambio de Contraseña Autenticado (`/api/auth/change-password`):** El usuario ingresa su clave temporal y define su nueva clave definitiva (minimo 6 caracteres, diferente a la temporal). Al completarse, se apaga la bandera.
+- **Restablecimiento Administrativo de Claves (`/api/user/{username}/reset-password`):** Si un usuario pierde u olvida su contraseña, el Super Admin puede restablecerla asignando una nueva clave provisional y reactivando la obligatoriedad de cambio, sin requerir servidores de correo electronico externos.
+
+### 5. Control de Acceso Basado en Roles (RBAC) y Permisos Dinamicos
+- Cada usuario posee exactamente un rol principal (`ADMIN`, `CUSTOMER`, roles tecnicos personalizados).
+- Soporte para otorgar permisos individuales adicionales que complementan los heredados por el rol.
+- Evaluacion de seguridad dinamica: los permisos efectivos se recalculan en cada peticion contra PostgreSQL.
+
+---
+
+## Modulos del Sistema
+
+El codigo de CAMPUSDESK se estructura modularmente para desacoplar el dominio del negocio de la infraestructura:
+
+```text
+com.roles.usermanagement/
+│
+├── modules/                         # Dominio central de CAMPUSDESK
+│   ├── ticket/                      # Gestion central de incidencias y tickets
+│   ├── assignment/                  # Asignacion de tecnicos a tickets
+│   ├── technician/                  # Catalogo de operadores de soporte
+│   ├── comment/                     # Notas y comentarios por ticket
+│   ├── statushistory/               # Auditoria de transiciones de estado
+│   ├── lifecycle/                   # Maquina de estados del ticket
+│   └── dashboard/                   # Estadisticas y panel de control
+│
+├── domain/                          # Modelos, DTOs y servicios de negocio transversales
+├── persistance/                     # Entidades JPA, repositorios CRUD y mappers
+└── web/                             # Controladores REST, filtros JWT y configuracion de seguridad
+```
+
+---
+
+## Flujo de Seguridad y Ciclo de Vida de Contraseñas
+
+A continuacion se describe el flujo paso a paso del ingreso y gestion de credenciales en CAMPUSDESK:
+
+```text
+PASO 1: SUPER ADMIN CREA EL USUARIO
+POST /api/user/add
+- El Super Admin envia: username, email, role y una password temporal.
+- El backend guarda al usuario con mustChangePassword = true.
+- El Super Admin entrega la contraseña temporal al usuario.
+
+                  │
+                  ▼
+
+PASO 2: PRIMER INGRESO DEL USUARIO
+POST /api/auth/login
+- El usuario ingresa con sus credenciales temporales.
+- El backend responde:
+  {
+    "token": "eyJhbGciOi...",
+    "username": "operador01",
+    "mustChangePassword": true
+  }
+- El frontend identifica mustChangePassword: true y bloquea el acceso al panel,
+  redirigiendo a la vista obligatoria de cambio de clave.
+
+                  │
+                  ▼
+
+PASO 3: CAMBIO OBLIGATORIO DE CONTRASEÑA
+POST /api/auth/change-password
+- Encabezado: Authorization: Bearer <token>
+- Cuerpo: { "currentPassword": "temporal...", "newPassword": "definitiva..." }
+- El servidor valida la clave actual, encripta la nueva con BCrypt y cambia
+  mustChangePassword a false.
+- A partir de este momento, el usuario accede normalmente al dashboard.
+
+                  │
+                  ▼
+
+PASO 4 (CASO DE OLVIDO): RESTABLECIMIENTO POR SUPER ADMIN
+POST /api/user/{username}/reset-password
+- El Super Admin asigna una nueva contraseña temporal.
+- La cuenta se desbloquea automaticamente y se reactiva mustChangePassword = true.
+```
+
+---
+
+## Arquitectura de Software
+
+La aplicacion adopta una arquitectura multicapa desacoplada y sin estado (Stateless):
+
+```text
+[ Cliente Web / Aplicacion Frontend / Swagger UI ]
+                        │
+                        ▼ (HTTP REST + Bearer Token)
+            ┌───────────────────────┐
+            │       JwtFilter       │ ── Valida firma HMAC256 y vigencia
+            └───────────┬───────────┘
+                        │
+                        ▼
+            ┌───────────────────────┐
+            │   Controladores REST  │ ── Endpoints de Auth, User, Tickets
+            └───────────┬───────────┘
+                        │
+                        ▼
+            ┌───────────────────────┐
+            │   Capa de Servicios   │ ── Reglas de negocio y validaciones
+            └───────────┬───────────┘
+                        │
+                        ▼
+            ┌───────────────────────┐
+            │ Capa de Persistencia  │ ── Spring Data JPA y Mappers
+            └───────────┬───────────┘
+                        │
+                        ▼
+            ┌───────────────────────┐
+            │ Base de Datos Postgres│ ── Tablas normalizadas
+            └───────────────────────┘
+```
+
+---
+
+## Tecnologias Utilizadas
+
+- **Java 21 LTS:** Lenguaje principal con caracteristicas avanzadas de tipado y colecciones inmutables.
+- **Spring Boot 4.1.1:** Nucleo del servidor web, inversion de control e inyeccion de dependencias.
+- **Spring Security 6:** Filtros de autorizacion basados en expresiones de seguridad (`@PreAuthorize`).
+- **PostgreSQL:** Sistema de gestion de bases de datos relacional transaccional.
+- **Hibernate / Spring Data JPA:** Mapeo objeto-relacional con creacion de esquema automatica (`ddl-auto=update`).
+- **Auth0 Java JWT:** Firma y verificacion de tokens bajo el algoritmo simetrico HMAC256.
+- **BCrypt:** Codificacion de contraseñas con sal aleatoria (salt).
+- **MapStruct:** Mapeo eficiente de objetos entre entidades JPA y DTOs en tiempo de compilacion.
+- **Lombok:** Generacion automatica de metodos accesores y constructores.
+- **Gradle Wrapper 8.14.3:** Automatizacion de compilacion, empaquetado y ejecucion.
+- **Springdoc OpenAPI 3:** Documentacion de la API en formato Swagger UI.
+
+---
+
+## Catalogo de Endpoints REST
+
+### 1. Autenticacion y Sesion (`/api/auth`)
+
+| Metodo | Ruta | Autorizacion | Descripcion |
+|---|---|---|---|
+| `POST` | `/api/auth/register` | Publico | Registro publico de usuarios. Asigna obligatoriamente el rol `USER` y valida correos duplicados. |
+| `POST` | `/api/auth/login` | Publico | Autentica con correo electronico o usuario y contraseña; retorna JWT y bandera `mustChangePassword`. |
+| `POST` | `/api/auth/change-password` | Autenticado | Actualiza la contraseña actual por una nueva y desactiva el cambio obligatorio. |
+| `GET` | `/api/auth/me` | Autenticado | Devuelve el rol actual, permisos individuales y el consolidado de permisos efectivos. |
+
+### 2. Gestion de Usuarios (`/api/user`)
+
+| Metodo | Ruta | Autorizacion Requerida | Descripcion |
+|---|---|---|---|
+| `GET` | `/api/user/all` | `USER_READ` | Lista todos los usuarios registrados. |
+| `POST` | `/api/user/add` | `USER_CREATE` | Registra una cuenta nueva con `mustChangePassword = true` por defecto. |
+| `PUT` | `/api/user/update` | `USER_UPDATE` | Actualiza correo, bloqueo o estado de habilitacion de un usuario. |
+| `DELETE` | `/api/user/delete/{name}` | `USER_DELETE` | Elimina definitivamente la cuenta de un usuario. |
+| `POST` | `/api/user/{username}/reset-password` | `USER_UPDATE` o `ADMIN` | Asigna clave temporal y obliga al usuario al cambio de contraseña en su siguiente acceso. |
+| `POST` | `/api/user/assignRole` | `ROLE_ASSIGN` | Reemplaza el rol unico asignado al usuario. |
+| `POST` | `/api/user/assignPermission` | `PERMISSION_ASSIGN` | Agrega un permiso individual especifico a un usuario. |
+| `DELETE` | `/api/user/{username}/permissions/{perm}` | `PERMISSION_ASSIGN` | Revoca un permiso individual otorgado a la cuenta. |
+| `GET` | `/api/user/{username}/permissions` | `USER_READ` | Consulta los permisos individuales, heredados y efectivos del usuario. |
+| `GET` | `/api/user/permissions` | `PERMISSION_ASSIGN` | Retorna la lista de todas las autoridades existentes. |
+
+### 3. Catalogos de Seguridad (`/api`)
+
+| Metodo | Ruta | Autorizacion Requerida | Descripcion |
+|---|---|---|---|
+| `GET` | `/api/roles` | `ROLE_MANAGE` | Lista los roles registrados y sus permisos asociados. |
+| `POST` | `/api/roles` | `ROLE_MANAGE` | Registra un nuevo rol asignando su conjunto de permisos. |
+| `GET` | `/api/permissions` | `PERMISSION_MANAGE` | Consulta todas las autoridades base y dinamicas. |
+| `POST` | `/api/permissions` | `PERMISSION_MANAGE` | Da de alta una nueva autoridad en el catalogo. |
+| `PUT` | `/api/roles/{role}/permissions/{perm}` | `ROLE_MANAGE` y `PERMISSION_MANAGE` | Vincula un permiso existente a un rol. |
+| `DELETE` | `/api/roles/{role}/permissions/{perm}` | `ROLE_MANAGE` y `PERMISSION_MANAGE` | Desvincula un permiso de un rol determinado. |
+
+---
+
+## Configuracion y Variables de Entorno
+
+El archivo base de desarrollo se encuentra en `src/main/resources/application-dev.properties`. Puedes parametrizar la conexion mediante las siguientes variables de entorno:
+
+| Variable | Descripcion | Valor Predeterminado en Dev |
+|---|---|---|
+| `DB_URL` | URL JDBC de conexion a PostgreSQL | `jdbc:postgresql://localhost:5432/sistema_gestion_usuarios` |
+| `DB_USERNAME` | Usuario de base de datos | `admin` |
+| `DB_PASSWORD` | Contraseña de base de datos | `admin123` |
+| `JWT_SECRET` | Clave secreta para firma HMAC256 | `User_M4n4gement` |
+| `JWT_ISSUER` | Emisor registrado del token JWT | `User_R0les_M4n4gement` |
+| `JWT_EXPIRATION` | Tiempo de vida del token (`30m`, `8h`, `15d`) | `15d` |
+| `ADMIN_USERNAME` | Usuario administrador del bootstrap | `superadmin` |
+| `ADMIN_EMAIL` | Correo del administrador del bootstrap | `superadmin@localhost` |
+| `ADMIN_PASSWORD` | Contraseña inicial del administrador | `SuperAdmin123!` |
+| `BOOTSTRAP_ADMIN_ENABLED` | Control de creacion de cuenta inicial | `true` |
+
+---
+
+## Requisitos Previos e Instalacion
+
+### Requisitos Minimos
+- JDK 21 (configurado en la variable de entorno `JAVA_HOME`).
+- Servidor PostgreSQL 14 o superior en ejecucion.
+- Git instalado.
+- Terminal compatible con PowerShell (Windows) o Bash (Linux / macOS).
+
+### 1. Clonar el Proyecto
+```bash
+git clone <URL_DEL_REPOSITORIO>
+cd spring-security-user-role-management
+```
+
+### 2. Crear la Base de Datos
+Desde tu cliente PostgreSQL (`psql` o pgAdmin), crea la base de datos requerida:
 
 ```sql
 CREATE DATABASE sistema_gestion_usuarios;
 ```
 
-Desde PowerShell:
+---
+
+## Instrucciones de Ejecucion
+
+### Ejecucion con Gradle Wrapper en Windows (PowerShell)
+
+Define las variables de conexion correspondientes a tu instalacion de PostgreSQL:
 
 ```powershell
-cd 'D:\Spring Boot Proyectos\sguridad java 21\spring-security-user-role-management'
-$env:DB_URL = 'jdbc:postgresql://localhost:5432/sistema_gestion_usuarios'
-$env:DB_USERNAME = 'postgres'
-$env:DB_PASSWORD = '<contraseña de tu PostgreSQL>'
+$env:DB_URL = "jdbc:postgresql://localhost:5432/sistema_gestion_usuarios"
+$env:DB_USERNAME = "postgres"
+$env:DB_PASSWORD = "tu_password_de_postgres"
+
 .\gradlew.bat bootRun
 ```
 
-El perfil predeterminado es `dev` y el puerto es `8050`. Hibernate utiliza
-`ddl-auto=update` para crear o actualizar las tablas dentro de una base existente.
-El banner de arranque identifica el proyecto como CAMPUSDESK y muestra Spring Boot,
-Java y el perfil activo.
+### Ejecucion en Linux o macOS (Bash)
 
-Para generar el ejecutable:
+```bash
+export DB_URL="jdbc:postgresql://localhost:5432/sistema_gestion_usuarios"
+export DB_USERNAME="postgres"
+export DB_PASSWORD="tu_password_de_postgres"
+
+./gradlew bootRun
+```
+
+La aplicacion quedara disponible en el puerto **8050**:
+```text
+http://localhost:8050
+```
+
+### Generacion del Archivo JAR Ejecutable
 
 ```powershell
 .\gradlew.bat clean test bootJar
 java -jar build/libs/usermanagement-0.0.1-SNAPSHOT.jar
 ```
 
-Usa el nombre real del archivo generado en `build/libs` si difiere del ejemplo.
+---
 
-## Configuración por perfiles y JWT
-
-| Archivo | Responsabilidad |
-| --- | --- |
-| [application.properties](src/main/resources/application.properties) | Selección del perfil predeterminado `dev` |
-| [application-dev.properties](src/main/resources/application-dev.properties) | PostgreSQL, puerto, bootstrap y JWT de desarrollo |
-| [application-test.properties](src/test/resources/application-test.properties) | H2 y configuración independiente para pruebas |
-| `application-prod.properties` | Archivo que puedes crear para la configuración de producción |
-
-Configuración JWT en **application-dev.properties**:
-
-```properties
-security.jwt.secret=${JWT_SECRET:User_M4n4gement}
-security.jwt.issuer=${JWT_ISSUER:User_R0les_M4n4gement}
-security.jwt.expiration=${JWT_EXPIRATION:15d}
-```
-
-HMAC256 usa una misma clave para firmar y verificar. La aplicación verifica firma,
-emisor y vencimiento. `expiration` admite `30m`, `8h`, `15d` o ISO-8601, como
-`PT30M`. Debe ser al menos un segundo; clave y emisor no pueden estar vacíos.
-La configuración se valida al arrancar.
-
-Puedes editar el archivo o usar estas variables:
-
-| Variable | Uso |
-| --- | --- |
-| `DB_URL`, `DB_USERNAME`, `DB_PASSWORD` | Conexión PostgreSQL del perfil dev |
-| `JWT_SECRET`, `JWT_ISSUER`, `JWT_EXPIRATION` | Firma, emisor y vigencia del token en dev |
-| `ADMIN_USERNAME`, `ADMIN_EMAIL`, `ADMIN_PASSWORD` | Administrador inicial de dev |
-| `BOOTSTRAP_ADMIN_ENABLED` | Activa/desactiva la creación de esa cuenta en dev |
-| `SPRING_PROFILES_ACTIVE` | Selecciona el perfil que se ejecutará |
-
-Por ejemplo:
-
-```powershell
-$env:JWT_EXPIRATION = '8h'
-.\gradlew.bat bootRun
-```
-
-Reinicia el backend después de modificar propiedades. Cambiar la clave o el emisor
-invalida los tokens anteriores. Cambiar la duración afecta solo a tokens nuevos:
-los existentes conservan su vencimiento original.
-
-Cuando crees `application-prod.properties`, define allí su conexión y sus propias
-propiedades JWT. Puedes usar `security.jwt.secret=${JWT_SECRET}` para exigir una
-clave suministrada por el entorno, sin el valor de desarrollo. Define también
-`security.jwt.issuer` y `security.jwt.expiration`, y activa el perfil con:
-
-```powershell
-$env:SPRING_PROFILES_ACTIVE = 'prod'
-.\gradlew.bat bootRun
-```
-
-Actualmente no se incluye ese archivo. El perfil prod no hereda la configuración
-de `application-dev.properties`; debes definir los valores necesarios. Para un
-despliegue, utiliza una clave JWT propia, credenciales propias y orígenes CORS
-acordes a tu frontend. La configuración actual permite cualquier origen.
-
-## Administrador inicial y autenticación
-
-Al iniciar se completan los catálogos base. ADMIN recibe los **20 permisos base**,
-incluidos los comerciales. CUSTOMER recibe únicamente `random_order`. Los roles
-personalizados y sus permisos se almacenan en la base de datos.
-
-En dev se crea una cuenta inicial si no existe:
-
-| Campo | Valor de desarrollo |
-| --- | --- |
-| Usuario | `superadmin` |
-| Contraseña | `SuperAdmin123!` |
-| Rol | `ADMIN` |
-
-Las credenciales de la aplicación son independientes de las de PostgreSQL.
-Las contraseñas se guardan con BCrypt y no aparecen en las respuestas.
-
-Los reinicios no reemplazan contraseña, correo o estado de la cuenta inicial.
-Cambiar `ADMIN_PASSWORD` después de creada no cambia su contraseña. Si el nombre
-configurado ya pertenece a una cuenta sin ADMIN, el arranque falla para evitar
-convertir esa cuenta en administrador automáticamente. `BOOTSTRAP_ADMIN_ENABLED=false`
-desactiva la creación de la cuenta en dev, pero conserva la inicialización del
-catálogo. Fuera de dev la creación está desactivada por defecto; puede configurarse
-mediante `app.bootstrap.enabled`, `username`, `email` y `password`.
-
-1. Ejecuta `POST /api/auth/login`:
-
-```json
-{"username":"superadmin","password":"SuperAdmin123!"}
-```
-
-2. Recibirás el JWT como **texto**, no como un objeto JSON.
-3. Envía `Authorization: Bearer <token>` en las operaciones protegidas.
-4. `GET /api/auth/me` devuelve tu rol, permisos heredados, individuales y efectivos.
-
-El login valida contraseña y estado de cuenta. Cada petición con JWT vuelve a
-cargar permisos y estado: bloquear, deshabilitar o eliminar una cuenta impide
-seguir usando sus tokens. Cambiar permisos se refleja en la siguiente petición.
-No hay endpoint de renovación ni lista de revocación de tokens; cambiar una
-contraseña no invalida por sí solo los tokens que ya se emitieron.
-
-## Modelo de roles y permisos
-
-Cada cuenta tiene **un único rol**. Sus permisos efectivos son:
+## Estructura del Repositorio
 
 ```text
-permisos del rol + permisos individuales del usuario
+spring-security-user-role-management/
+│
+├── build.gradle                             # Configuracion de dependencias y plugins
+├── settings.gradle                          # Definicion del proyecto
+├── gradlew / gradlew.bat                    # Scripts ejecutables de Gradle Wrapper
+├── README.md                                # Documentacion tecnica principal
+│
+└── src/
+    ├── main/
+    │   ├── java/com/roles/usermanagement/
+    │   │   ├── UsermanagementApplication.java
+    │   │   │
+    │   │   ├── modules/                     # Modulos de soporte CAMPUSDESK
+    │   │   │   ├── ticket/                  # Incidencias y requerimientos
+    │   │   │   ├── assignment/              # Asignaciones tecnicas
+    │   │   │   ├── technician/              # Operadores tecnicos
+    │   │   │   ├── comment/                 # Comentarios en tickets
+    │   │   │   ├── statushistory/           # Historial cronologico de estados
+    │   │   │   ├── lifecycle/               # Maquina de estados del ticket
+    │   │   │   └── dashboard/               # Indicadores y metricas
+    │   │   │
+    │   │   ├── domain/                      # DTOs y logica de dominio transversal
+    │   │   ├── persistance/                 # Entidades, repositorios y mappers
+    │   │   └── web/                         # Controladores REST y filtros de seguridad
+    │   │
+    │   └── resources/
+    │       ├── application.properties       # Perfil activo (dev)
+    │       ├── application-dev.properties   # Parametros de base de datos y JWT
+    │       └── banner.txt                   # Banner de arranque CAMPUSDESK
+    │
+    └── test/                                # Pruebas unitarias e integracion
 ```
 
-Dos cuentas con CUSTOMER pueden tener accesos diferentes. Cambiar el rol conserva
-los permisos individuales. Retirar una concesión individual no retira el mismo
-permiso si también se hereda del rol. Los permisos protegen operaciones completas,
-sin restricciones de propietario o empresa.
+---
 
-El catálogo es dinámico. Crear `REPORT_EXPORT` registra una autoridad, pero no crea
-funcionalidades: el endpoint que la use debe verificarla, por ejemplo:
+## Documentacion Interactiva (Swagger UI)
 
-```java
-@PreAuthorize("hasAuthority('REPORT_EXPORT')")
-```
+Una vez iniciado el servidor, puedes probar visualmente todas las rutas y metodos en:
 
-Los nombres del catálogo son sensibles a mayúsculas y admiten hasta 50 caracteres:
-letras, números y guion bajo, comenzando con una letra. ADMIN no recibe
-automáticamente permisos personalizados. Sus permisos base, y `random_order`
-de CUSTOMER, están reservados por el bootstrap; retirarlos mediante la API
-devuelve 409.
+- **Swagger UI:**  
+  `http://localhost:8050/swagger-ui.html`
 
-## Endpoints
+- **Especificacion OpenAPI (JSON):**  
+  `http://localhost:8050/v3/api-docs`
 
-### Autenticación y usuarios
+### Procedimiento para Autenticarse en Swagger UI
 
-| Método | Ruta | Permiso |
-| --- | --- | --- |
-| POST | `/api/auth/login` | Público |
-| GET | `/api/auth/me` | Usuario autenticado |
-| GET | `/api/user/all` | USER_READ |
-| POST | `/api/user/add` | USER_CREATE; autorizaciones adicionales según el body |
-| PUT | `/api/user/update` | USER_UPDATE; autorizaciones adicionales según el body |
-| DELETE | `/api/user/delete/{name}` | USER_DELETE |
-| POST | `/api/user/assignRole` | ROLE_ASSIGN |
-| POST | `/api/user/assignPermission` | PERMISSION_ASSIGN |
-| DELETE | `/api/user/{username}/permissions/{permission}` | PERMISSION_ASSIGN |
-| GET | `/api/user/{username}/permissions` | USER_READ |
-| GET | `/api/user/permissions` | PERMISSION_ASSIGN |
+1. Ingresa a `http://localhost:8050/swagger-ui.html`.
+2. Ejecuta `POST /api/auth/login` con:
+   ```json
+   {
+     "username": "superadmin",
+     "password": "SuperAdmin123!"
+   }
+   ```
+3. Copia el token recibido en el campo `token` de la respuesta JSON.
+4. En la parte superior derecha de la pagina, haz clic en el boton **Authorize** (marcado con el icono de candado).
+5. Escribe o pega el token en el campo de texto y haz clic en **Authorize**.
+6. Todas las consultas subsecuentes desde Swagger enviaran el token en la cabecera `Authorization: Bearer <token>`.
 
-Crear con un rol explícito requiere ROLE_ASSIGN. Crear con permisos individuales
-no vacíos requiere PERMISSION_ASSIGN. En PUT, enviar `role` o `roles` requiere
-ROLE_ASSIGN; enviar `additionalPermissions`, incluso vacío, requiere
-PERMISSION_ASSIGN.
+---
 
-### Catálogos de seguridad
+## Creditos y Reconocimientos
 
-| Método | Ruta | Permiso |
-| --- | --- | --- |
-| GET | `/api/roles` | ROLE_MANAGE |
-| POST | `/api/roles` | ROLE_MANAGE; PERMISSION_MANAGE si incluye permisos no vacíos |
-| GET | `/api/permissions` | PERMISSION_MANAGE |
-| POST | `/api/permissions` | PERMISSION_MANAGE |
-| PUT | `/api/roles/{role}/permissions/{permission}` | ROLE_MANAGE y PERMISSION_MANAGE |
-| DELETE | `/api/roles/{role}/permissions/{permission}` | ROLE_MANAGE y PERMISSION_MANAGE |
+Este proyecto adopto como punto de partida la plantilla de codigo abierto **spring-security-user-role-management**, reutilizando sus fundamentos tecnicos para:
+- La configuracion base de Spring Security con filtros JWT stateless y algoritmo HMAC256.
+- El modelo relacional inicial de roles unicos y extension dinamica de permisos individuales en PostgreSQL.
+- El servicio de bootstrap para la inicializacion automatica de catalogos del sistema.
 
-Crear un rol con permisos es transaccional: todos deben existir. Repetir una
-vinculación no la duplica. No hay endpoints de eliminación de roles o permisos.
-
-### Clientes, productos y ventas
-
-| Método | Ruta | Permiso |
-| --- | --- | --- |
-| GET | `/api/customers` y `/api/customers/{id}` | CUSTOMER_READ |
-| POST | `/api/customers` | CUSTOMER_CREATE |
-| PUT | `/api/customers/{id}` | CUSTOMER_UPDATE |
-| DELETE | `/api/customers/{id}` | CUSTOMER_DELETE |
-| GET | `/api/products` y `/api/products/{id}` | PRODUCT_READ |
-| POST | `/api/products` | PRODUCT_CREATE |
-| PUT | `/api/products/{id}` | PRODUCT_UPDATE |
-| DELETE | `/api/products/{id}` | PRODUCT_DELETE |
-| GET | `/api/sales` y `/api/sales/{id}` | SALE_READ |
-| POST | `/api/sales` | SALE_CREATE |
-| POST | `/api/sales/{id}/cancel` | SALE_CANCEL |
-
-Listados comerciales paginados: `?page=0&size=20`; `page` comienza en 0 y `size`
-admite de 1 a 100. Incluyen registros inactivos o ventas anuladas. El listado de
-usuarios y los catálogos devuelven listas sin paginación.
-
-DELETE de clientes/productos **desactiva**, sin borrar referencias históricas.
-Actualizar esos registros usa PUT con todos sus campos editables y exige que
-estén activos. Eliminar una cuenta de usuario sí la elimina físicamente.
-
-Respuestas habituales: 201 para altas comerciales/catálogos, 200 para altas de
-usuarios y consultas/modificaciones, 204 al desactivar, 400 para entrada inválida,
-404 para registros inexistentes y 409 para conflictos. Falta de permisos devuelve
-403; login incorrecto devuelve 401. No todas las rutas sin autenticación usan el
-mismo código: pueden responder 401 o 403 según Spring Security.
-
-## Flujo de usuarios y ventas
-
-### Crear, habilitar y asignar accesos
-
-Crea una cuenta con `POST /api/user/add`:
-
-```json
-{"username":"ana","email":"ana@example.com","password":"contraseña propia"}
-```
-
-Recibe CUSTOMER por defecto y queda habilitada si no envías estados. Para habilitar
-y desbloquear una cuenta existente, usa `PUT /api/user/update`:
-
-```json
-{"username":"ana","locked":false,"disabled":false}
-```
-
-PUT conserva los campos omitidos o null. Una contraseña enviada debe ser texto
-nuevo; se codifica con BCrypt. El campo singular `role` es el recomendado. El
-formato anterior `roles` solo admite una entrada; una lista vacía al actualizar
-no puede dejar al usuario sin rol. `additionalPermissions` reemplaza el conjunto
-individual: `[]` lo vacía y omitirlo lo conserva.
-
-Crea un rol con `POST /api/roles`:
-
-```json
-{
-  "name":"VENDEDOR",
-  "permissions":["CUSTOMER_READ","CUSTOMER_CREATE","PRODUCT_READ","SALE_READ","SALE_CREATE"]
-}
-```
-
-Asígnalo con `POST /api/user/assignRole`:
-
-```json
-{"username":"ana","role":"VENDEDOR"}
-```
-
-El endpoint reemplaza el rol anterior. Repetir el mismo no crea otra asignación
-ni modifica su fecha. Para permitir solo a ana anular ventas, utiliza
-`POST /api/user/assignPermission`:
-
-```json
-{"username":"ana","permission":"SALE_CANCEL"}
-```
-
-Consulta el resultado con `GET /api/user/ana/permissions`. Para retirar la
-concesión individual, usa `DELETE /api/user/ana/permissions/SALE_CANCEL`.
-
-### Registrar una venta
-
-Crea un cliente con `POST /api/customers`:
-
-```json
-{"name":"Cliente de ejemplo","email":"cliente@example.com","phone":"3001234567"}
-```
-
-Crea un producto con `POST /api/products`:
-
-```json
-{"name":"Teclado","sku":"TEC-001","price":125000.00,"stock":10}
-```
-
-Usa los IDs devueltos en `POST /api/sales`:
-
-```json
-{"customerId":1,"items":[{"productId":1,"quantity":2}]}
-```
-
-El servidor toma el precio del producto, calcula subtotales y total con
-BigDecimal, y descuenta inventario en una transacción. Cliente y productos deben
-estar activos. No acepta productos repetidos, cantidades no positivas ni stock
-insuficiente. Bloquea productos en orden de ID para serializar cambios; una venta
-fallida revierte también los descuentos parciales.
-
-La venta conserva nombres y precios originales como instantáneas. Editar un
-cliente o producto no altera su detalle histórico. Guarda fechas y usuario que
-registra o anula. `POST /api/sales/{id}/cancel` repone existencias una sola vez,
-conservando el historial; repetirlo no duplica la reposición. No se editan ni
-eliminan ventas. Cada POST de creación representa una venta nueva.
-
-El SKU es único, los precios admiten dos decimales y el stock no puede ser
-negativo. Una venta admite hasta 100 productos y 1.000.000 unidades por línea.
-Una cuenta CUSTOMER de seguridad y un cliente comercial son entidades distintas,
-sin asociación automática. La plantilla no incluye pagos, impuestos, facturación
-fiscal, monedas múltiples, devoluciones parciales ni multitenencia.
-
-## Persistencia y estructura
-
-| Tabla | Función |
-| --- | --- |
-| `"user"` | Cuenta, hash BCrypt y estados |
-| `app_role`, `app_permission` | Catálogos de roles y permisos |
-| `user_role` | Rol por cuenta; username único |
-| `role_permission` | Permisos heredados de un rol |
-| `user_permission` | Permisos individuales |
-| `user_role_history` | Asignaciones retiradas por la migración de roles |
-| `business_customer`, `business_product` | Clientes e inventario |
-| `business_sale`, `business_sale_item` | Venta y sus líneas |
-
-`role_permission.role_name` referencia `app_role.name` y `permission_name`
-referencia `app_permission.name`; su clave compuesta evita parejas repetidas.
-`user_role.role` también referencia el catálogo. Hibernate cita `"user"` para
-compatibilidad con PostgreSQL.
-
-La [migración PostgreSQL](src/main/resources/db/postgresql/single-role-and-user-permissions.sql)
-normaliza cuentas antiguas con varios roles: conserva ADMIN si existe, o el rol
-más antiguo; traslada permisos exclusivos de roles retirados a permisos
-individuales y archiva las asignaciones retiradas. Las cuentas sin rol reciben
-CUSTOMER. Se ejecuta al arrancar antes del bootstrap, puede repetirse y conserva
-contraseñas, correos y estados. No importa automáticamente datos de MySQL.
-
-```text
-src/main/java/com/roles/usermanagement/
-├── domain/          DTO, servicios y contratos de seguridad
-├── persistance/     Entidades, repositorios, CRUD y mapeadores de seguridad
-├── web/             Controladores y configuración JWT, CORS y Swagger
-└── modules/
-    ├── customer/    Entidad, repositorio, DTO, servicio y controlador
-    ├── product/     Entidad, repositorio, DTO, servicio y controlador
-    └── sale/        Venta, líneas, repositorio, DTO, servicio y controlador
-```
-
-Las nuevas entidades comerciales están en `modules`, no en `persistance/entity`.
-Se utiliza Lombok, MapStruct, Spring Data JPA y Jakarta Validation.
-
-## Frontend y Swagger
-
-- [Swagger UI](http://localhost:8050/swagger-ui.html)
-- [OpenAPI JSON](http://localhost:8050/v3/api-docs)
-- [OpenAPI YAML](http://localhost:8050/v3/api-docs.yaml)
-
-La documentación es pública. En Swagger ejecuta el login y pega el JWT en
-**Authorize**, sin escribir Bearer; Swagger añade la cabecera.
-
-El frontend está en `D:\Spring Boot Proyectos\sguridad java 21\Frontend`.
-Abre su `index.html` o sírvelo con un servidor estático. En «Conexión al servidor»
-usa `http://localhost:8050`, sin `/api` al final. Consulta la
-[guía del frontend](../Frontend/README.md). La interfaz usa `/api/auth/me` para
-mostrar las acciones disponibles; el backend verifica siempre los permisos.
-
-## Pruebas y extensión
-
-```powershell
-.\gradlew.bat test
-.\gradlew.bat test bootJar
-```
-
-El perfil test usa H2 en modo PostgreSQL y credenciales JWT propias. Las pruebas
-cubren bootstrap, login, Swagger, CRUD y permisos dinámicos, sesión actual,
-contraseñas BCrypt, estados de cuenta, JWT configurable, ventas concurrentes,
-rollback y anulación. No necesitan modificar la base de desarrollo.
-
-Para ejecutar contra un esquema PostgreSQL **aislado y descartable**, configura
-`TEST_DB_URL` (con `currentSchema`), `TEST_DB_DRIVER=org.postgresql.Driver`,
-`TEST_DB_USERNAME`, `TEST_DB_PASSWORD` y opcionalmente `TEST_DB_DDL`. Crea el esquema
-antes y elimínalo después de verificar; no apuntes estas pruebas a tus datos reales.
-
-La seguridad se verificó anteriormente en esquemas PostgreSQL aislados. Los módulos
-comerciales y la configuración JWT más reciente se comprobaron con H2; la última
-instancia PostgreSQL local estaba apagada. El frontend se probó contra una instancia
-Spring Boot/H2 temporal, sin guardar esos registros en PostgreSQL.
-
-Para ampliar la plantilla, toma un módulo como referencia: entidad y repositorio,
-DTO validados, servicio transaccional y controlador protegido con `@PreAuthorize`.
-Registra sus permisos en `UserRoles.Authority` si son parte del catálogo base o
-créales entradas mediante la API si son dinámicos. Devuelve DTO en lugar de
-entidades y mantiene cambios relacionados en una misma transacción.
-
-Consulta [la guía de módulos](docs/PLANTILLA_MODULOS.md) para más ejemplos.
+Sobre dicha base, los creadores de este proyecto diseñaron, desarrollaron e integraron toda la logica de negocio de **CAMPUSDESK**: la gestion de tickets de soporte tecnico, operadores tecnicos, asignaciones, historial de estados, y la politica de seguridad para el ciclo de vida de contraseñas (contraseñas temporales, forzado de cambio en primer ingreso y restablecimiento administrativo).

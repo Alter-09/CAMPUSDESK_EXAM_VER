@@ -46,7 +46,7 @@ public class TicketAssignmentService {
         requireRole(admin, "ADMIN", "Solo un ADMIN puede asignar incidencias");
 
         Ticket ticket = findTicket(ticketId);
-        if (ticket.getStatus() != TicketStatus.ABIERTA) {
+        if (ticket.getStatus() != TicketStatus.OPEN) {
             throw badRequest("Solo se pueden asignar incidencias en estado ABIERTA");
         }
 
@@ -54,7 +54,7 @@ public class TicketAssignmentService {
         requireRole(technician, "TECHNICIAN", "El usuario seleccionado no tiene el rol TECHNICIAN");
 
         ticket.setTechnician(technician);
-        ticket.setStatus(TicketStatus.ASIGNADA);
+        ticket.setStatus(TicketStatus.ASSIGNED);
 
         TicketAssignmentLog log = TicketAssignmentLog.builder()
                 .ticket(ticket)
@@ -63,7 +63,7 @@ public class TicketAssignmentService {
                 .assignmentType(AssignmentType.INITIAL)
                 .build();
         TicketAssignmentLog saved = assignmentLogs.save(log);
-        recordStatusHistory(ticket, admin, TicketStatus.ABIERTA, ticket.getStatus());
+        recordStatusHistory(ticket, admin, TicketStatus.OPEN, ticket.getStatus());
 
         return toResponse(saved, ticket);
     }
@@ -82,7 +82,7 @@ public class TicketAssignmentService {
         requireRole(admin, "ADMIN", "Solo un ADMIN puede reasignar incidencias");
 
         Ticket ticket = findTicket(ticketId);
-        if (ticket.getStatus() != TicketStatus.ASIGNADA) {
+        if (ticket.getStatus() != TicketStatus.ASSIGNED) {
             throw badRequest("Solo se pueden reasignar incidencias en estado ASIGNADA");
         }
 
@@ -107,7 +107,7 @@ public class TicketAssignmentService {
                 .justification(justification.trim())
                 .build();
         TicketAssignmentLog saved = assignmentLogs.save(log);
-        recordStatusHistory(ticket, admin, TicketStatus.ASIGNADA, ticket.getStatus());
+        recordStatusHistory(ticket, admin, TicketStatus.ASSIGNED, ticket.getStatus());
 
         return toResponse(saved, ticket);
     }
@@ -117,7 +117,7 @@ public class TicketAssignmentService {
         if (ticket == null) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "La incidencia no existe");
         }
-        if (ticket.getStatus() == TicketStatus.CERRADA) {
+        if (ticket.getStatus() == TicketStatus.CLOSED) {
             throw badRequest("No se puede asignar un técnico a una incidencia cerrada");
         }
         return ticket;
@@ -146,7 +146,7 @@ public class TicketAssignmentService {
                 .previousStatus(previous)
                 .newStatus(current)
                 .changedBy(admin)
-                .action(StatusHistoryAction.ASSIGMENT)
+                .action(StatusHistoryAction.ASSIGNMENT)
                 .build();
         entityManager.persist(history);
     }

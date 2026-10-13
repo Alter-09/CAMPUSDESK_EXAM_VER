@@ -1,0 +1,902 @@
+/* ==========================================================================
+   <cd-user-portal> Shadow DOM Styles
+   Mobile-first responsive design following CampusDesk design tokens
+   ========================================================================== */
+
+:host {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+/* ==========================================================================
+   Layout de sección principal
+   ========================================================================== */
+
+.portal-section {
+  width: 100%;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: var(--cd-space-xl);
+}
+
+/* ==========================================================================
+   Cabecera del portal
+   ========================================================================== */
+
+.portal-header {
+  background-color: var(--cd-color-surface-card);
+  border: 1px solid var(--cd-color-border-subtle);
+  border-radius: var(--cd-radius-xl);
+  padding: var(--cd-space-xl);
+  box-shadow: var(--cd-elevation-float);
+  display: flex;
+  flex-direction: column;
+  gap: var(--cd-space-md);
+}
+
+.portal-header__eyebrow {
+  font-family: var(--cd-font-display);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--cd-color-brand-accent);
+  font-weight: var(--cd-font-weight-semibold);
+  margin: 0;
+}
+
+.portal-header__title {
+  font-family: var(--cd-font-display);
+  font-size: 1.625rem;
+  font-weight: var(--cd-font-weight-bold);
+  color: var(--cd-color-slate-titanium-100);
+  margin: 0;
+}
+
+.portal-header__subtitle {
+  color: var(--cd-color-slate-titanium-300);
+  font-size: 0.9375rem;
+  margin: 0;
+}
+
+/* ==========================================================================
+   Formulario: Crear Tiquete
+   ========================================================================== */
+
+.create-form-panel {
+  background-color: var(--cd-color-surface-card);
+  border: 1px solid var(--cd-color-border-subtle);
+  border-radius: var(--cd-radius-xl);
+  padding: var(--cd-space-xl);
+  box-shadow: var(--cd-elevation-float);
+  display: flex;
+  flex-direction: column;
+  gap: var(--cd-space-lg);
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--cd-space-lg);
+}
+
+@media (min-width: 640px) {
+  .form-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+  .form-grid__full {
+    grid-column: 1 / -1;
+  }
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--cd-space-xs);
+}
+
+.field__label {
+  font-size: 0.875rem;
+  font-weight: var(--cd-font-weight-semibold);
+  color: var(--cd-color-slate-titanium-200);
+  font-family: var(--cd-font-sans);
+}
+
+.field__label--required::after {
+  content: " *";
+  color: var(--cd-color-signal-coral);
+}
+
+.field__input,
+.field__textarea,
+.field__select {
+  background: rgba(1, 14, 36, 0.5);
+  border: 1.5px solid var(--cd-color-border-level-1);
+  border-radius: var(--cd-radius-md);
+  color: var(--cd-color-slate-titanium-100);
+  font-family: var(--cd-font-sans);
+  font-size: 0.9375rem;
+  padding: 0.625rem 0.875rem;
+  transition: border-color 0.18s ease, box-shadow 0.18s ease;
+  width: 100%;
+  box-sizing: border-box;
+  outline: none;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.field__input:focus,
+.field__textarea:focus,
+.field__select:focus {
+  border-color: var(--cd-color-brand-accent);
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.18);
+}
+
+.field__input::placeholder,
+.field__textarea::placeholder {
+  color: var(--cd-color-slate-titanium-400);
+  opacity: 1;
+}
+
+.field__textarea {
+  resize: vertical;
+  min-height: 7rem;
+  line-height: 1.6;
+}
+
+.field__select option {
+  background: #1a1f2e;
+  color: var(--cd-color-slate-titanium-100);
+}
+
+.field__error {
+  font-size: 0.8125rem;
+  color: var(--cd-color-signal-coral);
+  font-family: var(--cd-font-sans);
+  min-height: 1.1em;
+}
+
+.char-count {
+  font-size: 0.75rem;
+  color: var(--cd-color-slate-titanium-400);
+  text-align: right;
+}
+
+.char-count--warn {
+  color: var(--cd-color-signal-amber);
+}
+
+/* ==========================================================================
+   Botones del formulario
+   ========================================================================== */
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--cd-space-md);
+  padding-top: var(--cd-space-md);
+  border-top: 1px solid var(--cd-color-border-level-1);
+}
+
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  font-family: var(--cd-font-sans);
+  font-size: 0.9375rem;
+  font-weight: var(--cd-font-weight-semibold);
+  border: none;
+  border-radius: var(--cd-radius-md);
+  cursor: pointer;
+  padding: 0.625rem 1.375rem;
+  transition: background-color 0.18s ease, transform 0.12s ease, opacity 0.18s ease;
+  line-height: 1.4;
+  white-space: nowrap;
+}
+
+.button:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.button--primary {
+  background: linear-gradient(135deg, var(--cd-color-brand-accent) 0%, #7c3aed 100%);
+  color: #ffffff;
+}
+
+.button--primary:hover:not(:disabled) {
+  filter: brightness(1.1);
+  transform: translateY(-1px);
+}
+
+.button--secondary {
+  background: rgba(99, 102, 241, 0.12);
+  color: var(--cd-color-brand-accent);
+  border: 1.5px solid rgba(99, 102, 241, 0.3);
+}
+
+.button--secondary:hover:not(:disabled) {
+  background: rgba(99, 102, 241, 0.22);
+}
+
+.button--danger {
+  background: rgba(239, 68, 68, 0.12);
+  color: #f87171;
+  border: 1.5px solid rgba(239, 68, 68, 0.3);
+}
+
+.button--confirm-close {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  color: #fff;
+}
+
+.button--confirm-close:hover:not(:disabled) {
+  filter: brightness(1.1);
+  transform: translateY(-1px);
+}
+
+/* ==========================================================================
+   Estado de éxito después de crear
+   ========================================================================== */
+
+.success-state {
+  text-align: center;
+  padding: var(--cd-space-xl) var(--cd-space-lg);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--cd-space-md);
+}
+
+.success-state__icon {
+  font-size: 3rem;
+  line-height: 1;
+}
+
+.success-state__heading {
+  font-family: var(--cd-font-display);
+  font-size: 1.375rem;
+  font-weight: var(--cd-font-weight-bold);
+  color: #34d399;
+  margin: 0;
+}
+
+.success-state__message {
+  color: var(--cd-color-slate-titanium-300);
+  font-size: 0.9375rem;
+  margin: 0;
+  max-width: 36ch;
+}
+
+/* ==========================================================================
+   Lista de tickets del usuario (Mis Solicitudes)
+   ========================================================================== */
+
+.my-tickets-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--cd-space-md);
+  margin-top: var(--cd-space-sm);
+  padding-top: var(--cd-space-md);
+  border-top: 1px solid var(--cd-color-border-level-1);
+}
+
+.filter-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--cd-space-xs);
+  background: rgba(1, 14, 36, 0.4);
+  padding: 0.25rem;
+  border-radius: var(--cd-radius-lg);
+  border: 1px solid var(--cd-color-border-subtle);
+}
+
+.filter-tab {
+  background: transparent;
+  border: none;
+  color: var(--cd-color-slate-titanium-300);
+  font-family: var(--cd-font-sans);
+  font-size: 0.8125rem;
+  font-weight: var(--cd-font-weight-medium);
+  padding: 0.35rem 0.85rem;
+  border-radius: var(--cd-radius-md);
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease;
+  white-space: nowrap;
+}
+
+.filter-tab:hover {
+  color: var(--cd-color-slate-titanium-100);
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.filter-tab.is-active {
+  background: var(--cd-color-brand-accent);
+  color: #fff;
+  font-weight: var(--cd-font-weight-semibold);
+}
+
+.search-input-wrap {
+  flex: 1;
+  min-width: 200px;
+  max-width: 320px;
+}
+
+.search-input {
+  width: 100%;
+  box-sizing: border-box;
+  background: rgba(1, 14, 36, 0.5);
+  border: 1.5px solid var(--cd-color-border-level-1);
+  border-radius: var(--cd-radius-md);
+  color: var(--cd-color-slate-titanium-100);
+  font-family: var(--cd-font-sans);
+  font-size: 0.875rem;
+  padding: 0.5rem 0.875rem;
+  outline: none;
+  transition: border-color 0.18s ease;
+}
+
+.search-input:focus {
+  border-color: var(--cd-color-brand-accent);
+}
+
+.search-input::placeholder {
+  color: var(--cd-color-slate-titanium-400);
+}
+
+/* ==========================================================================
+   Grid de tarjetas de tickets
+   ========================================================================== */
+
+.tickets-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--cd-space-md);
+}
+
+@media (min-width: 540px) {
+  .tickets-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 900px) {
+  .tickets-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.ticket-card {
+  background-color: var(--cd-color-surface-card);
+  border: 1px solid var(--cd-color-border-subtle);
+  border-radius: var(--cd-radius-xl);
+  padding: var(--cd-space-lg);
+  cursor: pointer;
+  transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
+  display: flex;
+  flex-direction: column;
+  gap: var(--cd-space-sm);
+  -webkit-tap-highlight-color: transparent;
+}
+
+.ticket-card:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--cd-elevation-hover);
+  border-color: var(--cd-color-brand-accent);
+}
+
+.ticket-card:focus-visible {
+  outline: 2.5px solid var(--cd-color-brand-accent);
+  outline-offset: 3px;
+}
+
+.ticket-card__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.ticket-card__code {
+  font-family: var(--cd-font-display);
+  font-size: 0.8125rem;
+  font-weight: var(--cd-font-weight-bold);
+  color: var(--cd-color-brand-accent);
+  letter-spacing: 0.02em;
+}
+
+.ticket-card__badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.375rem;
+}
+
+.ticket-card__title {
+  font-family: var(--cd-font-display);
+  font-size: 1rem;
+  font-weight: var(--cd-font-weight-semibold);
+  color: var(--cd-color-slate-titanium-100);
+  margin: 0;
+  line-height: 1.4;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.ticket-card__description {
+  font-size: 0.875rem;
+  color: var(--cd-color-slate-titanium-300);
+  margin: 0;
+  line-height: 1.55;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  flex: 1;
+}
+
+.ticket-card__meta {
+  margin-top: auto;
+  padding-top: var(--cd-space-sm);
+  border-top: 1px solid var(--cd-color-border-level-1);
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  font-size: 0.8125rem;
+  color: var(--cd-color-slate-titanium-400);
+}
+
+.ticket-card__meta time {
+  color: var(--cd-color-slate-titanium-400);
+}
+
+.ticket-card__action-hint {
+  color: var(--cd-color-brand-accent);
+  font-size: 0.8125rem;
+  font-weight: var(--cd-font-weight-semibold);
+  margin-top: 0.25rem;
+}
+
+/* ==========================================================================
+   Estado vacío / cargando / error
+   ========================================================================== */
+
+.portal-message {
+  text-align: center;
+  padding: var(--cd-space-xl) var(--cd-space-lg);
+  color: var(--cd-color-slate-titanium-300);
+  font-size: 0.9375rem;
+  font-family: var(--cd-font-sans);
+}
+
+/* ==========================================================================
+   Badges de estado y prioridad
+   ========================================================================== */
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  font-family: var(--cd-font-sans);
+  font-size: 0.6875rem;
+  font-weight: var(--cd-font-weight-semibold);
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  border-radius: var(--cd-radius-full);
+  padding: 0.2rem 0.625rem;
+  white-space: nowrap;
+}
+
+.badge--status-open        { background: rgba(99,102,241,0.18); color: #a5b4fc; }
+.badge--status-assigned    { background: rgba(234,179,8,0.18);  color: #fde047; }
+.badge--status-in-progress { background: rgba(245,158,11,0.18); color: #fcd34d; }
+.badge--status-resolved    { background: rgba(16,185,129,0.18); color: #6ee7b7; }
+.badge--status-closed      { background: rgba(100,116,139,0.18);color: #94a3b8; }
+
+.badge--prio-low      { background: rgba(34,197,94,0.18);  color: #86efac; }
+.badge--prio-medium   { background: rgba(234,179,8,0.18);  color: #fde047; }
+.badge--prio-high     { background: rgba(239,68,68,0.18);  color: #fca5a5; }
+.badge--prio-critical { background: rgba(220,38,38,0.28);  color: #f87171; border: 1px solid rgba(220,38,38,0.5); }
+
+.badge--category { background: rgba(99,102,241,0.12); color: #a5b4fc; }
+
+/* ==========================================================================
+   Modal de Detalle del Ticket
+   ========================================================================== */
+
+.ticket-modal {
+  padding: 0;
+  border: 1px solid var(--cd-color-border-subtle);
+  border-radius: var(--cd-radius-xl);
+  background: var(--cd-color-surface-navy-deep, #0d1526);
+  color: var(--cd-color-slate-titanium-100);
+  font-family: var(--cd-font-sans);
+  max-width: min(96vw, 780px);
+  width: 100%;
+  max-height: 92dvh;
+  box-shadow: 0 24px 48px -12px rgba(1, 14, 36, 0.85), 0 0 0 1px rgba(255, 255, 255, 0.08);
+  box-sizing: border-box;
+  /* NO display:flex here — the browser hides <dialog> with display:none when closed.
+     Setting display:flex would make the modal always visible. */
+}
+
+.ticket-modal::backdrop {
+  background: rgba(1, 14, 36, 0.72);
+  backdrop-filter: blur(4px);
+}
+
+.modal-layout {
+  display: flex;
+  flex-direction: column;
+  max-height: 92dvh;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+.modal-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--cd-space-md);
+  padding: var(--cd-space-lg) var(--cd-space-xl);
+  border-bottom: 1px solid var(--cd-color-border-subtle);
+  /* sticky so the ✕ button is always reachable when scrolling */
+  position: sticky;
+  top: 0;
+  background: var(--cd-color-surface-navy-deep, #0d1526);
+  z-index: 2;
+}
+
+.modal-header__main {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  min-width: 0;
+}
+
+.modal-header__eyebrow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.modal-header__title {
+  font-family: var(--cd-font-display);
+  font-size: 1.1875rem;
+  font-weight: var(--cd-font-weight-bold);
+  color: var(--cd-color-slate-titanium-100);
+  margin: 0;
+  line-height: 1.3;
+}
+
+.modal-close-btn {
+  background: transparent;
+  border: 1px solid var(--cd-color-border-subtle);
+  border-radius: var(--cd-radius-md);
+  color: var(--cd-color-slate-titanium-300);
+  cursor: pointer;
+  font-size: 1.25rem;
+  line-height: 1;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s ease;
+  flex-shrink: 0;
+}
+
+.modal-close-btn:hover {
+  color: var(--cd-color-slate-titanium-100);
+  background: rgba(255, 255, 255, 0.08);
+  border-color: var(--cd-color-border-active);
+}
+
+.modal-body {
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+  flex: 1;
+  padding: var(--cd-space-xl);
+  display: flex;
+  flex-direction: column;
+  gap: var(--cd-space-xl);
+  box-sizing: border-box;
+}
+
+/* ==========================================================================
+   Paneles de detalle dentro del modal
+   ========================================================================== */
+
+.detail-panel {
+  background: rgba(1, 14, 36, 0.3);
+  border: 1px solid var(--cd-color-border-level-1);
+  border-radius: var(--cd-radius-lg);
+  padding: var(--cd-space-lg);
+  display: flex;
+  flex-direction: column;
+  gap: var(--cd-space-md);
+}
+
+.detail-panel__heading {
+  font-family: var(--cd-font-display);
+  font-size: 0.8125rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--cd-color-brand-accent);
+  font-weight: var(--cd-font-weight-semibold);
+  margin: 0;
+  padding-bottom: var(--cd-space-sm);
+  border-bottom: 1px solid var(--cd-color-border-level-1);
+}
+
+.detail-panel__text {
+  color: var(--cd-color-slate-titanium-200);
+  line-height: 1.7;
+  margin: 0;
+  font-size: 0.9375rem;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.metadata-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--cd-space-sm) var(--cd-space-lg);
+}
+
+.metadata-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.metadata-item__label {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--cd-color-slate-titanium-400);
+  font-weight: var(--cd-font-weight-medium);
+}
+
+.metadata-item__value {
+  font-size: 0.9375rem;
+  color: var(--cd-color-slate-titanium-200);
+  font-weight: var(--cd-font-weight-medium);
+}
+
+/* ==========================================================================
+   Transiciones / Estado del ciclo de vida (usuario: CONFIRM_CLOSE)
+   ========================================================================== */
+
+.lifecycle-actions {
+  display: flex;
+  flex-direction: column;
+  gap: var(--cd-space-sm);
+}
+
+.status-notice {
+  background: rgba(99,102,241,0.08);
+  border: 1px solid rgba(99,102,241,0.2);
+  border-radius: var(--cd-radius-md);
+  color: var(--cd-color-slate-titanium-200);
+  font-size: 0.9375rem;
+  padding: var(--cd-space-md);
+  line-height: 1.6;
+}
+
+.status-notice--success {
+  background: rgba(16,185,129,0.1);
+  border-color: rgba(16,185,129,0.25);
+  color: #6ee7b7;
+}
+
+/* ==========================================================================
+   Formulario de edición dentro del modal
+   ========================================================================== */
+
+.edit-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--cd-space-md);
+}
+
+.edit-form-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--cd-space-md);
+}
+
+@media (min-width: 540px) {
+  .edit-form-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+  .edit-form-grid__full {
+    grid-column: 1 / -1;
+  }
+}
+
+.edit-form .field__input,
+.edit-form .field__textarea,
+.edit-form .field__select {
+  background: rgba(1, 14, 36, 0.5);
+  border: 1.5px solid var(--cd-color-border-level-1);
+  border-radius: var(--cd-radius-md);
+  color: var(--cd-color-slate-titanium-100);
+  font-family: var(--cd-font-sans);
+  font-size: 0.9375rem;
+  padding: 0.5rem 0.75rem;
+  transition: border-color 0.18s ease;
+  width: 100%;
+  box-sizing: border-box;
+  outline: none;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.edit-form .field__input:focus,
+.edit-form .field__textarea:focus,
+.edit-form .field__select:focus {
+  border-color: var(--cd-color-brand-accent);
+}
+
+.edit-form .field__textarea {
+  resize: vertical;
+  min-height: 5rem;
+}
+
+/* ==========================================================================
+   Sección de comentarios
+   ========================================================================== */
+
+.comments-feed {
+  display: flex;
+  flex-direction: column;
+  gap: var(--cd-space-sm);
+  max-height: 280px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding-right: 0.25rem;
+}
+
+.comment-card {
+  background: rgba(1, 14, 36, 0.5);
+  border: 1px solid var(--cd-color-border-level-1);
+  border-radius: var(--cd-radius-md);
+  padding: var(--cd-space-md);
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.comment-card__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.comment-card__author {
+  font-size: 0.875rem;
+  font-weight: var(--cd-font-weight-semibold);
+  color: var(--cd-color-slate-titanium-100);
+}
+
+.comment-card__header time {
+  font-size: 0.75rem;
+  color: var(--cd-color-slate-titanium-400);
+}
+
+.comment-card__content {
+  font-size: 0.9rem;
+  color: var(--cd-color-slate-titanium-200);
+  line-height: 1.65;
+  margin: 0;
+  word-break: break-word;
+  white-space: pre-wrap;
+}
+
+.comment-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--cd-space-sm);
+  margin-top: var(--cd-space-xs);
+}
+
+.comment-textarea {
+  background: rgba(1, 14, 36, 0.5);
+  border: 1.5px solid var(--cd-color-border-level-1);
+  border-radius: var(--cd-radius-md);
+  color: var(--cd-color-slate-titanium-100);
+  font-family: var(--cd-font-sans);
+  font-size: 0.9rem;
+  padding: 0.625rem 0.875rem;
+  resize: vertical;
+  width: 100%;
+  box-sizing: border-box;
+  outline: none;
+  transition: border-color 0.18s ease;
+}
+
+.comment-textarea:focus {
+  border-color: var(--cd-color-brand-accent);
+}
+
+.comment-textarea::placeholder {
+  color: var(--cd-color-slate-titanium-400);
+}
+
+.comment-form-footer {
+  display: flex;
+  justify-content: flex-end;
+}
+
+/* ==========================================================================
+   Historial de cambios
+   ========================================================================== */
+
+.history-timeline {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.history-item {
+  display: grid;
+  grid-template-columns: 1.25rem 1fr;
+  gap: 0 var(--cd-space-sm);
+  position: relative;
+  padding-bottom: var(--cd-space-md);
+}
+
+.history-item:last-child {
+  padding-bottom: 0;
+}
+
+.history-item__dot {
+  width: 0.625rem;
+  height: 0.625rem;
+  background: var(--cd-color-brand-accent);
+  border-radius: 50%;
+  margin-top: 0.3rem;
+  position: relative;
+  z-index: 1;
+  flex-shrink: 0;
+}
+
+.history-item:not(:last-child) .history-item__dot::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 100%;
+  transform: translateX(-50%);
+  width: 2px;
+  height: calc(100% + var(--cd-space-md));
+  background: var(--cd-color-border-level-1);
+}
+
+.history-item__body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.history-item__change {
+  font-size: 0.875rem;
+  font-weight: var(--cd-font-weight-semibold);
+  color: var(--cd-color-slate-titanium-100);
+}
+
+.history-item__meta {
+  font-size: 0.8125rem;
+  color: var(--cd-color-slate-titanium-400);
+}

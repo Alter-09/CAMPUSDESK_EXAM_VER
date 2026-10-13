@@ -31,7 +31,10 @@ public class TicketAssignmentController {
     /**
      * Assigns a technician to an open ticket for the first time.
      */
-    @PutMapping("/{ticketId}/assign")
+    @org.springframework.web.bind.annotation.RequestMapping(
+            value = "/{ticketId}/assign",
+            method = {org.springframework.web.bind.annotation.RequestMethod.PUT, org.springframework.web.bind.annotation.RequestMethod.PATCH}
+    )
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<TicketAssignmentResponse> assign(
             @PathVariable @Positive Long ticketId,

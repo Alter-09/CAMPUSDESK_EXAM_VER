@@ -40,11 +40,11 @@ public class DashboardService {
         if (hasRole(user, "ADMIN")) {
             return new DashboardMetrics(
                     reports.count(),
-                    reports.countByStatus(TicketStatus.ABIERTA),
-                    reports.countByStatus(TicketStatus.ASIGNADA),
-                    reports.countByStatus(TicketStatus.EN_PROCESO),
-                    reports.countByStatus(TicketStatus.RESUELTA),
-                    reports.countByStatus(TicketStatus.CERRADA)
+                    reports.countByStatus(TicketStatus.OPEN),
+                    reports.countByStatus(TicketStatus.ASSIGNED),
+                    reports.countByStatus(TicketStatus.IN_PROGRESS),
+                    reports.countByStatus(TicketStatus.RESOLVED),
+                    reports.countByStatus(TicketStatus.CLOSED)
             );
         }
 
@@ -53,10 +53,10 @@ public class DashboardService {
             return new DashboardMetrics(
                     reports.countByTechnician_Username(technicianUsername),
                     0,
-                    reports.countByTechnician_UsernameAndStatus(technicianUsername, TicketStatus.ASIGNADA),
-                    reports.countByTechnician_UsernameAndStatus(technicianUsername, TicketStatus.EN_PROCESO),
-                    reports.countByTechnician_UsernameAndStatus(technicianUsername, TicketStatus.RESUELTA),
-                    reports.countByTechnician_UsernameAndStatus(technicianUsername, TicketStatus.CERRADA)
+                    reports.countByTechnician_UsernameAndStatus(technicianUsername, TicketStatus.ASSIGNED),
+                    reports.countByTechnician_UsernameAndStatus(technicianUsername, TicketStatus.IN_PROGRESS),
+                    reports.countByTechnician_UsernameAndStatus(technicianUsername, TicketStatus.RESOLVED),
+                    reports.countByTechnician_UsernameAndStatus(technicianUsername, TicketStatus.CLOSED)
             );
         }
 
@@ -64,11 +64,11 @@ public class DashboardService {
             String applicantUsername = user.getUsername();
             return new DashboardMetrics(
                     reports.countByApplicant_Username(applicantUsername),
-                    reports.countByApplicant_UsernameAndStatus(applicantUsername, TicketStatus.ABIERTA),
-                    reports.countByApplicant_UsernameAndStatus(applicantUsername, TicketStatus.ASIGNADA),
-                    reports.countByApplicant_UsernameAndStatus(applicantUsername, TicketStatus.EN_PROCESO),
-                    reports.countByApplicant_UsernameAndStatus(applicantUsername, TicketStatus.RESUELTA),
-                    reports.countByApplicant_UsernameAndStatus(applicantUsername, TicketStatus.CERRADA)
+                    reports.countByApplicant_UsernameAndStatus(applicantUsername, TicketStatus.OPEN),
+                    reports.countByApplicant_UsernameAndStatus(applicantUsername, TicketStatus.ASSIGNED),
+                    reports.countByApplicant_UsernameAndStatus(applicantUsername, TicketStatus.IN_PROGRESS),
+                    reports.countByApplicant_UsernameAndStatus(applicantUsername, TicketStatus.RESOLVED),
+                    reports.countByApplicant_UsernameAndStatus(applicantUsername, TicketStatus.CLOSED)
             );
         }
 

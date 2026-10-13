@@ -50,4 +50,16 @@ public class UserService {
   public UserRoleDto assignRoleToUser(UserRoleDto userRoleDto) {
     return userRoleRepository.save(userRoleDto);
   }
+
+  public void changePassword(String username, String currentPassword, String newPassword) {
+    userRepository.changeUserPassword(username, currentPassword, newPassword);
+  }
+
+  public void adminResetPassword(String targetUsername, String temporaryPassword) {
+    userRepository.adminResetPassword(targetUsername, temporaryPassword);
+  }
+
+  public UserDto register(com.roles.usermanagement.domain.dto.RegisterDto dto) {
+    return userRepository.register(dto);
+  }
 }

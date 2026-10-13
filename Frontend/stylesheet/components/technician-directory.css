@@ -1,0 +1,282 @@
+:host {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+.technician-directory {
+  width: 100%;
+  box-sizing: border-box;
+  background-color: var(--cd-color-surface-card);
+  border: 1px solid var(--cd-color-border-subtle);
+  border-radius: var(--cd-radius-xl);
+  padding: var(--cd-space-xl);
+  box-shadow: var(--cd-elevation-float);
+  overflow-x: hidden;
+}
+
+.technician-directory__header {
+  margin-bottom: var(--cd-space-lg);
+}
+
+.technician-directory__eyebrow {
+  font-family: var(--cd-font-display);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--cd-color-signal-coral);
+  font-weight: var(--cd-font-weight-semibold);
+  margin-bottom: var(--cd-space-xs);
+}
+
+.technician-directory__title {
+  font-family: var(--cd-font-display);
+  font-size: 1.5rem;
+  font-weight: var(--cd-font-weight-bold);
+  color: var(--cd-color-slate-titanium-100);
+  margin: 0;
+}
+
+.technician-directory__message {
+  color: var(--cd-color-slate-titanium-300);
+  font-size: 0.95rem;
+  padding: var(--cd-space-md) 0;
+}
+
+.technician-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+.technician-table th,
+.technician-table td {
+  padding: var(--cd-space-md);
+  vertical-align: middle;
+  border-bottom: 1px solid var(--cd-color-border-level-1);
+}
+
+.technician-table th {
+  font-family: var(--cd-font-display);
+  font-size: 0.8125rem;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  color: var(--cd-color-slate-titanium-300);
+  font-weight: var(--cd-font-weight-semibold);
+}
+
+.technician-table th[scope="row"] {
+  font-weight: var(--cd-font-weight-semibold);
+  color: var(--cd-color-slate-titanium-100);
+}
+
+.technician-table td {
+  color: var(--cd-color-slate-titanium-300);
+  font-size: 0.9rem;
+}
+
+.technician-table__cell--center {
+  text-align: center;
+  width: 5rem;
+}
+
+/* ==========================================================================
+   Badges y Botones
+   ========================================================================== */
+
+.tickets-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 1.75rem;
+  height: 1.75rem;
+  padding: 0 0.5rem;
+  font-size: 0.8125rem;
+  font-weight: var(--cd-font-weight-semibold);
+  border-radius: 9999px;
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--cd-color-slate-titanium-100);
+  border: 1px solid var(--cd-color-border-subtle);
+}
+
+.status-badge {
+  display: inline-block;
+  padding: var(--cd-space-xs) var(--cd-space-sm);
+  font-size: 0.75rem;
+  font-weight: var(--cd-font-weight-semibold);
+  border-radius: 9999px;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+}
+
+.status-badge--success {
+  background: rgba(16, 185, 129, 0.15);
+  color: #34d399;
+  border: 1px solid rgba(16, 185, 129, 0.3);
+}
+
+.status-badge--warning {
+  background: rgba(245, 158, 11, 0.15);
+  color: #fbbf24;
+  border: 1px solid rgba(245, 158, 11, 0.3);
+}
+
+.status-badge--info {
+  background: rgba(59, 130, 246, 0.15);
+  color: #60a5fa;
+  border: 1px solid rgba(59, 130, 246, 0.3);
+}
+
+.status-badge--danger {
+  background: var(--cd-color-signal-coral-muted);
+  color: var(--cd-color-signal-coral-glow);
+  border: 1px solid var(--cd-color-border-active);
+}
+
+.action-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  border-radius: var(--cd-radius-md);
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--cd-color-slate-titanium-300);
+  cursor: pointer;
+  transition: all var(--cd-transition-fast);
+}
+
+.action-button--danger:hover,
+.action-button--danger:focus-visible {
+  color: var(--cd-color-signal-coral-glow);
+  background: var(--cd-color-signal-coral-muted);
+  border-color: var(--cd-color-border-active);
+}
+
+/* ==========================================================================
+   Modal de Confirmación
+   ========================================================================== */
+
+.confirm-dialog {
+  padding: 0;
+  border: 1px solid var(--cd-color-border-subtle);
+  border-radius: var(--cd-radius-xl);
+  background: var(--cd-color-surface-navy-deep);
+  color: var(--cd-color-slate-titanium-100);
+  max-width: 28rem;
+  width: 90%;
+  box-shadow: var(--cd-elevation-float);
+}
+
+.confirm-dialog::backdrop {
+  background: rgba(1, 14, 36, 0.75);
+  backdrop-filter: blur(4px);
+}
+
+.confirm-dialog__content {
+  padding: var(--cd-space-lg);
+  display: flex;
+  flex-direction: column;
+  gap: var(--cd-space-md);
+}
+
+.confirm-dialog__title {
+  margin: 0;
+  font-family: var(--cd-font-display);
+  font-size: 1.25rem;
+  font-weight: var(--cd-font-weight-semibold);
+  color: var(--cd-color-slate-titanium-100);
+}
+
+.confirm-dialog__message {
+  margin: 0;
+  font-size: 0.9375rem;
+  color: var(--cd-color-slate-titanium-300);
+  line-height: 1.5;
+}
+
+.confirm-dialog__error {
+  margin: 0;
+  font-size: 0.85rem;
+  color: var(--cd-color-signal-coral-glow);
+  background: var(--cd-color-signal-coral-muted);
+  padding: 0.5rem 0.75rem;
+  border-radius: var(--cd-radius-md);
+  border: 1px solid var(--cd-color-border-active);
+}
+
+.confirm-dialog__actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--cd-space-sm);
+  margin-top: var(--cd-space-sm);
+}
+
+.button--secondary {
+  background: rgba(203, 213, 225, 0.08);
+  color: var(--cd-color-slate-titanium-100);
+  border: 1px solid var(--cd-color-border-button);
+  padding: 0.5rem 1rem;
+  border-radius: var(--cd-radius-md);
+  cursor: pointer;
+}
+
+.button--secondary:hover {
+  background: rgba(203, 213, 225, 0.15);
+}
+
+.button--danger {
+  background: var(--cd-color-signal-coral);
+  color: var(--cd-color-on-signal);
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: var(--cd-radius-md);
+  font-weight: var(--cd-font-weight-medium);
+  cursor: pointer;
+}
+
+.button--danger:hover {
+  background: var(--cd-color-signal-coral-glow);
+}
+
+.button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* ==========================================================================
+   Responsive Móvil Primero para Tablas
+   ========================================================================== */
+
+@media screen and (max-width: 768px) {
+  .technician-directory {
+    padding: var(--cd-space-md);
+  }
+
+  .technician-directory__title {
+    font-size: 1.25rem;
+  }
+
+  .technician-table {
+    display: block;
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    white-space: nowrap;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+
+  .technician-table::-webkit-scrollbar {
+    display: none;
+  }
+
+  .technician-table th,
+  .technician-table td {
+    padding: 0.6rem 0.75rem;
+    font-size: 0.825rem;
+  }
+}

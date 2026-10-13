@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RestController;
  * API contract types.
  */
 @RestController
-@RequestMapping("/api/dashboard")
 public class DashboardController {
 
     private final DashboardService dashboardService;
@@ -29,7 +28,7 @@ public class DashboardController {
     /**
      * Returns statistics according to the authenticated user's scope.
      */
-    @GetMapping("/stats")
+    @GetMapping({"/api/dashboard/stats", "/api/reports/summary"})
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<DashboardMetricsResponse> getDashboardStats(
             @AuthenticationPrincipal String username

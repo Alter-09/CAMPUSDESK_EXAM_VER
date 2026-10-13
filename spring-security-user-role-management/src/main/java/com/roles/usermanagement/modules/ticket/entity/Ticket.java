@@ -67,7 +67,7 @@ public class Ticket {
         this.createdAt = LocalDateTime.now();
         this.updatedAt = LocalDateTime.now();
         if (this.status == null) {
-            this.status = TicketStatus.ABIERTA;
+            this.status = TicketStatus.OPEN;
         }
     }
 

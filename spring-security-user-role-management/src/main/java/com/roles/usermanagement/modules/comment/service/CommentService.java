@@ -43,7 +43,7 @@ public class CommentService {
         UserEntity author = findUser(username);
         Ticket ticket = findTicket(ticketId);
         String role = authorizedRole(ticket, author);
-        if (ticket.getStatus() == TicketStatus.CERRADA) {
+        if (ticket.getStatus() == TicketStatus.CLOSED) {
             throw badRequest("No se pueden agregar comentarios a una incidencia cerrada");
         }
         if (request == null || request.content() == null || request.content().isBlank()) {

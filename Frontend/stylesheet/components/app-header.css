@@ -1,0 +1,143 @@
+/**
+ * Header de aplicación, compartido por las vistas de todos los roles.
+ * Estructura: grupo inicial (botón de menú + breadcrumb) y bloque de usuario.
+ * Lo que cambia por rol es el contenido del HTML; los estilos no cambian.
+ * Mobile-first: la base es móvil y se amplía desde 768px.
+ */
+.app-header {
+  display: flex;
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--cd-space-md);
+  /* Misma altura que el bloque de marca del sidebar: las dos líneas inferiores quedan alineadas */
+  min-height: var(--cd-header-height);
+  padding: 0 var(--cd-margin);
+  background: var(--cd-color-surface-canvas);
+  border-bottom: 1px solid var(--cd-color-border-level-1);
+}
+
+/* Grupo inicial */
+.app-header__start {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  gap: var(--cd-space-sm);
+}
+
+/* Botón que abre el menú lateral (el layout decide cuándo se oculta) */
+.app-header__menu-button {
+  display: grid;
+  flex-shrink: 0;
+  width: var(--cd-touch-target);
+  height: var(--cd-touch-target);
+  /* El ícono (24px) queda alineado con el borde izquierdo del contenido */
+  margin-inline-start: calc((var(--cd-touch-target) - 1.5rem) / -2);
+  padding: 0;
+  place-items: center;
+  border: 1px solid transparent;
+  border-radius: var(--cd-radius-md);
+  background: transparent;
+  cursor: pointer;
+}
+
+.app-header__menu-button:hover {
+  background: var(--cd-color-surface-card);
+}
+
+.app-header__menu-icon {
+  width: 1.5rem;
+  height: 1.5rem;
+  opacity: 0.8;
+}
+
+.app-header__menu-button:hover .app-header__menu-icon {
+  opacity: 1;
+}
+
+/* Breadcrumb */
+.app-header__breadcrumb {
+  min-width: 0;
+}
+
+.app-header__crumbs {
+  display: flex;
+  align-items: center;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: 0.875rem;
+}
+
+/* En móvil solo se ve la página actual; el recorrido completo aparece desde 768px */
+.app-header__crumb {
+  display: none;
+  color: var(--cd-color-slate-titanium-300);
+  white-space: nowrap;
+}
+
+.app-header__crumb[aria-current="page"] {
+  display: block;
+  overflow: hidden;
+  color: var(--cd-color-slate-titanium-100);
+  font-weight: var(--cd-font-weight-medium);
+  text-overflow: ellipsis;
+}
+
+.app-header__crumb + .app-header__crumb::before {
+  display: none;
+  margin-inline: var(--cd-space-sm);
+  color: var(--cd-color-slate-titanium-500);
+  font-weight: var(--cd-font-weight-regular);
+  content: "/";
+  /* El segundo valor es el texto alternativo: los lectores de pantalla no leen "barra" */
+  content: "/" / "";
+}
+
+/* Bloque de usuario */
+.app-header__user {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  gap: var(--cd-space-md);
+}
+
+.app-header__role {
+  padding: var(--cd-space-xs) var(--cd-space-sm);
+  border: 1px solid var(--cd-color-border-subtle);
+  border-radius: var(--cd-radius-md);
+  color: var(--cd-color-slate-titanium-300);
+  font-family: var(--cd-font-mono);
+  font-size: 0.625rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.app-header__avatar {
+  display: grid;
+  width: 2.25rem;
+  height: 2.25rem;
+  place-items: center;
+  border: 1px solid var(--cd-color-border-active);
+  border-radius: 50%;
+  background: var(--cd-color-surface-card);
+  color: var(--cd-color-signal-coral);
+  font-size: 0.75rem;
+  font-weight: var(--cd-font-weight-bold);
+}
+
+@media (min-width: 768px) {
+  .app-header {
+    padding-inline: var(--cd-margin-lg);
+  }
+
+  .app-header__crumb {
+    display: block;
+  }
+
+  .app-header__crumb + .app-header__crumb::before {
+    display: inline;
+  }
+}
