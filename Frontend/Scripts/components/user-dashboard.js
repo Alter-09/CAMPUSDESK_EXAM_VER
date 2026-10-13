@@ -62,7 +62,7 @@ class UserDashboard extends HTMLElement {
     this.monthlyData = [];
     this.pointsCyan = [];
     this.pointsPurple = [];
-    this.activeIndex = 9; // Octubre (mes actual)
+    this.activeIndex = new Date().getMonth();
     this.loading = true;
   }
 
@@ -115,47 +115,72 @@ class UserDashboard extends HTMLElement {
     const activeTotal = open + assigned + inProgress;
     const completedTotal = resolved + closed;
 
-    const baseActive = Math.max(activeTotal, 2);
-    const baseDone = Math.max(completedTotal, 2);
+    // Inicializar los 12 meses exclusivamente en cero (sin datos simulados)
+    const buckets = Array.from({ length: 12 }, (_, idx) => ({
+      index: idx,
+      shortLabel: MONTH_LABELS[idx],
+      fullLabel: MONTH_NAMES[idx],
+      cyan: 0,   // Solicitudes abiertas o en curso
+      purple: 0, // Solicitudes resueltas o cerradas
+      total: 0,
+      growth: "0.0%",
+      efficiency: "0%",
+    }));
 
-    const curveDistribution = [
-      { month: 0, activeRatio: 0.15, doneRatio: 0.10, growth: "+5.0%" },
-      { month: 1, activeRatio: 0.25, doneRatio: 0.20, growth: "+8.2%" },
-      { month: 2, activeRatio: 0.20, doneRatio: 0.35, growth: "+12.1%" },
-      { month: 3, activeRatio: 0.45, doneRatio: 0.45, growth: "+15.0%" },
-      { month: 4, activeRatio: 0.50, doneRatio: 0.60, growth: "+18.3%" },
-      { month: 5, activeRatio: 0.35, doneRatio: 0.65, growth: "+14.0%" },
-      { month: 6, activeRatio: 0.60, doneRatio: 0.75, growth: "+20.5%" },
-      { month: 7, activeRatio: 0.75, doneRatio: 0.85, growth: "+22.0%" },
-      { month: 8, activeRatio: 0.55, doneRatio: 0.90, growth: "+19.0%" },
-      { month: 9, activeRatio: 1.00, doneRatio: 1.00, growth: "+23.5%" }, // Octubre (mes actual)
-      { month: 10, activeRatio: 0.70, doneRatio: 1.15, growth: "+25.8%" },
-      { month: 11, activeRatio: 0.80, doneRatio: 1.25, growth: "+28.0%" },
-    ];
+    // Agrupar los tickets reales obtenidos desde PostgreSQL por su mes de creación
+    let hasRealTicketDates = false;
+    if (Array.isArray(this.tickets) && this.tickets.length > 0) {
+      this.tickets.forEach((ticket) => {
+        const rawDate = ticket.createdAt || ticket.creationDate;
+        if (rawDate) {
+          const d = new Date(rawDate);
+          if (!isNaN(d.getTime())) {
+            const m = d.getMonth();
+            if (m >= 0 && m < 12) {
+              hasRealTicketDates = true;
+              const isResolved = ticket.status === "RESOLVED" || ticket.status === "CLOSED";
+              if (isResolved) {
+                buckets[m].purple += 1;
+              } else {
+                buckets[m].cyan += 1;
+              }
+            }
+          }
+        }
+      });
+    }
 
-    this.monthlyData = curveDistribution.map((w, idx) => {
-      let activeVal = Math.round(baseActive * w.activeRatio);
-      let doneVal = Math.round(baseDone * w.doneRatio);
+    // Si no hay fechas individuales pero la API de métricas reporta solicitudes,
+    // reflejarlas fielmente en el mes actual del sistema
+    const currentMonth = new Date().getMonth();
+    if (!hasRealTicketDates && total > 0) {
+      buckets[currentMonth].cyan = activeTotal;
+      buckets[currentMonth].purple = completedTotal;
+    }
 
-      if (idx === 9) {
-        activeVal = activeTotal;
-        doneVal = completedTotal;
+    // Calcular métricas reales mes a mes basadas 100% en datos reales
+    let prevTotal = 0;
+    this.monthlyData = buckets.map((b, idx) => {
+      const mTotal = b.cyan + b.purple;
+      b.total = mTotal;
+      const eff = mTotal > 0 ? ((b.purple / mTotal) * 100).toFixed(0) : "0";
+      b.efficiency = `${eff}%`;
+
+      let growth = "0.0%";
+      if (idx > 0) {
+        if (prevTotal === 0 && mTotal > 0) {
+          growth = `+${mTotal * 100}%`;
+        } else if (prevTotal > 0) {
+          const diff = ((mTotal - prevTotal) / prevTotal) * 100;
+          growth = diff >= 0 ? `+${diff.toFixed(1)}%` : `${diff.toFixed(1)}%`;
+        }
       }
-
-      const totalM = activeVal + doneVal;
-      const efficiency = totalM > 0 ? ((doneVal / totalM) * 100).toFixed(0) : "0";
-
-      return {
-        index: idx,
-        shortLabel: MONTH_LABELS[idx],
-        fullLabel: MONTH_NAMES[idx],
-        cyan: activeVal,
-        purple: doneVal,
-        total: totalM,
-        growth: w.growth,
-        efficiency: `${efficiency}%`,
-      };
+      b.growth = growth;
+      prevTotal = mTotal;
+      return b;
     });
+
+    this.activeIndex = currentMonth;
   }
 
   renderLoading() {
@@ -188,7 +213,7 @@ class UserDashboard extends HTMLElement {
 
     const active = open + assigned + inProgress;
     const completed = resolved + closed;
-    const efficiency = total > 0 ? Math.round((completed / total) * 100) : 100;
+    const efficiency = total > 0 ? Math.round((completed / total) * 100) : 0;
 
     const pctOpen = total > 0 ? Math.min(100, Math.round((open / total) * 100)) : 0;
     const pctActive = total > 0 ? Math.min(100, Math.round(((assigned + inProgress) / total) * 100)) : 0;
@@ -357,7 +382,7 @@ class UserDashboard extends HTMLElement {
                 <p class="revenue-chart__tooltip-date" id="utt-date">Octubre 2026</p>
                 <div class="revenue-chart__tooltip-top">
                   <strong class="revenue-chart__tooltip-total" id="utt-total">0 solicitudes</strong>
-                  <span class="revenue-chart__tooltip-growth" id="utt-badge">+20% ↗</span>
+                  <span class="revenue-chart__tooltip-growth" id="utt-badge">0.0%</span>
                 </div>
                 <div class="revenue-chart__tooltip-divider"></div>
                 <div class="revenue-chart__tooltip-row">
@@ -448,8 +473,8 @@ class UserDashboard extends HTMLElement {
       ...this.monthlyData.map((d) => d.cyan),
       ...this.monthlyData.map((d) => d.purple),
     ];
-    const maxVal = Math.max(...allValues, 6);
-    const ceiling = Math.ceil((maxVal * 1.3) / 2) * 2;
+    const maxVal = Math.max(...allValues, 2);
+    const ceiling = Math.max(4, Math.ceil((maxVal * 1.2) / 2) * 2);
 
     const toY = (val) => bounds.bottom - (val / ceiling) * (bounds.bottom - bounds.top);
     const stepX = (bounds.right - bounds.left) / (this.monthlyData.length - 1);
@@ -543,7 +568,7 @@ class UserDashboard extends HTMLElement {
       const ttResolved = this.shadowRoot.getElementById("utt-resolved");
       const ttActive = this.shadowRoot.getElementById("utt-active");
 
-      if (ttDate) ttDate.textContent = `${item.fullLabel} 2026`;
+      if (ttDate) ttDate.textContent = `${item.fullLabel} ${new Date().getFullYear()}`;
       if (ttTotal) ttTotal.textContent = `${item.total} solicitudes`;
       if (ttBadge) ttBadge.textContent = item.growth;
       if (ttResolved) ttResolved.textContent = String(item.purple);
@@ -570,7 +595,7 @@ class UserDashboard extends HTMLElement {
     });
 
     svg.addEventListener("pointerleave", () => {
-      showTooltip(9);
+      showTooltip(this.activeIndex);
     });
 
     showTooltip(activeIdx);

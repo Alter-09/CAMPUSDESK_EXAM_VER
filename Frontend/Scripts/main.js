@@ -1,3 +1,4 @@
+import './components/change-password-modal.js';
 /**
  * Arranque de la página de login y enrutamiento según rol.
  */
@@ -179,7 +180,21 @@ function initLoginPage() {
             }
           }
 
-          // Guardar información relevante en sessionStorage
+                    // Interceptar primer ingreso si el usuario debe cambiar su contraseña
+          if (dataResult && dataResult.mustChangePassword) {
+            let pwdModal = document.querySelector("cd-change-password-modal");
+            if (!pwdModal) {
+              pwdModal = document.createElement("cd-change-password-modal");
+              document.body.appendChild(pwdModal);
+            }
+            await pwdModal.promptChangePassword({
+              token,
+              username: credentials.username,
+              currentPassword: credentials.password
+            });
+          }
+
+// Guardar información relevante en sessionStorage
           if (role) {
             sessionStorage.setItem("userRole", role);
           }
