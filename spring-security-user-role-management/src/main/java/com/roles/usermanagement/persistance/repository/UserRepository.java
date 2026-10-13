@@ -7,6 +7,7 @@ import com.roles.usermanagement.persistance.entity.*;
 import com.roles.usermanagement.persistance.mapper.UserMapper;
 import jakarta.persistence.EntityManager;
 import java.util.*;
+import java.util.regex.Pattern;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Repository;
@@ -15,6 +16,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 @Repository
 public class UserRepository implements IUserRepository {
+  private static final Pattern PASSWORD_PATTERN = Pattern.compile("^(?=.*[A-Z])(?=.*[^a-zA-Z0-9\\s]).{6,}$");
   private final UserCrudRepository users;
   private final UserRoleCrudRepository userRoles;
   private final RoleCrudRepository roles;
@@ -86,7 +88,8 @@ public class UserRepository implements IUserRepository {
       throw invalid("El usuario es obligatorio y debe tener como máximo 50 caracteres");
     if(users.existsById(dto.getUsername())) throw new ResponseStatusException(HttpStatus.CONFLICT,"El usuario ya existe");
     if(dto.getEmail()==null || dto.getEmail().isBlank()) throw invalid("El correo es obligatorio");
-    if(dto.getPassword()==null || dto.getPassword().isBlank()) throw invalid("La contraseña es obligatoria");
+    if(dto.getPassword()==null || !PASSWORD_PATTERN.matcher(dto.getPassword()).matches())
+      throw invalid("La contraseña es obligatoria, debe tener al menos 6 caracteres, al menos una letra mayúscula y al menos un carácter especial");
     String role=requestedRole(dto,true);
     UserEntity user=new UserEntity(); user.setUsername(dto.getUsername()); user.setEmail(dto.getEmail());
     user.setPassword(encoder.encode(dto.getPassword())); user.setLocked(Boolean.TRUE.equals(dto.getLocked()));
@@ -169,8 +172,8 @@ public class UserRepository implements IUserRepository {
     if (dto.getEmail() == null || dto.getEmail().isBlank()) {
       throw invalid("El correo electrónico es obligatorio");
     }
-    if (dto.getPassword() == null || dto.getPassword().isBlank() || dto.getPassword().length() < 6) {
-      throw invalid("La contraseña es obligatoria y debe tener al menos 6 caracteres");
+    if (dto.getPassword() == null || !PASSWORD_PATTERN.matcher(dto.getPassword()).matches()) {
+      throw invalid("La contraseña es obligatoria, debe tener al menos 6 caracteres, al menos una letra mayúscula y al menos un carácter especial");
     }
     String cleanUsername = dto.getUsername().trim();
     String cleanEmail = dto.getEmail().trim().toLowerCase();

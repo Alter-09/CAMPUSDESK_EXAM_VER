@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.roles.usermanagement.UsermanagementApplicationTests" tests="16" skipped="0" failures="0" errors="0" timestamp="2026-10-13T22:26:44.862Z" hostname="SERGIOAPARICIO" time="3.626">
+  <properties/>
+  <testcase name="exposesSwaggerUiAndOpenApiDocs()" classname="com.roles.usermanagement.UsermanagementApplicationTests" time="1.672"/>
+  <testcase name="authenticatesBootstrapAdmin()" classname="com.roles.usermanagement.UsermanagementApplicationTests" time="0.231"/>
+  <testcase name="cp01_registersValidUserWithRoleUser()" classname="com.roles.usermanagement.UsermanagementApplicationTests" time="0.102"/>
+  <testcase name="cp02_rejectsDuplicateEmailWithConflict()" classname="com.roles.usermanagement.UsermanagementApplicationTests" time="0.034"/>
+  <testcase name="cp03_logsInSuccessfullyAndReturnsJwt()" classname="com.roles.usermanagement.UsermanagementApplicationTests" time="0.067"/>
+  <testcase name="cp04_rejectsProtectedEndpointWithoutToken()" classname="com.roles.usermanagement.UsermanagementApplicationTests" time="0.017"/>
+  <testcase name="cp05_createsTicketInOpenStatus()" classname="com.roles.usermanagement.UsermanagementApplicationTests" time="0.119"/>
+  <testcase name="cp06_rejectsViewingOtherUsersTicket()" classname="com.roles.usermanagement.UsermanagementApplicationTests" time="0.16"/>
+  <testcase name="cp08_and_cp07_assignTechnicianRolesAndEndpoints()" classname="com.roles.usermanagement.UsermanagementApplicationTests" time="0.293"/>
+  <testcase name="cp09_rejectsModificationOfTicketByTechnician()" classname="com.roles.usermanagement.UsermanagementApplicationTests" time="0.086"/>
+  <testcase name="cp10_rejectsResolvingTicketWithoutInProgress()" classname="com.roles.usermanagement.UsermanagementApplicationTests" time="0.142"/>
+  <testcase name="cp11_and_cp12_transitionsThroughLifecycleAndClosesTicket()" classname="com.roles.usermanagement.UsermanagementApplicationTests" time="0.284"/>
+  <testcase name="cp13_rejectsCommentsOnClosedTicket()" classname="com.roles.usermanagement.UsermanagementApplicationTests" time="0.122"/>
+  <testcase name="cp14_returnsReportsSummaryAndDashboardMetrics()" classname="com.roles.usermanagement.UsermanagementApplicationTests" time="0.128"/>
+  <testcase name="technicianEndpointsAreAccessible()" classname="com.roles.usermanagement.UsermanagementApplicationTests" time="0.106"/>
+  <testcase name="cp16_rejectsInvalidOrExpiredJwt()" classname="com.roles.usermanagement.UsermanagementApplicationTests" time="0.007"/>
+  <system-out><![CDATA[17:26:32.277 [Test worker] INFO org.springframework.test.context.support.AnnotationConfigContextLoaderUtils -- Could not detect default configuration classes for test class [com.roles.usermanagement.UsermanagementApplicationTests]: UsermanagementApplicationTests does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+17:26:32.491 [Test worker] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper -- Found @SpringBootConfiguration com.roles.usermanagement.UsermanagementApplication for test class com.roles.usermanagement.UsermanagementApplicationTests
+17:26:32.609 [Test worker] INFO org.springframework.test.context.support.AnnotationConfigContextLoaderUtils -- Could not detect default configuration classes for test class [com.roles.usermanagement.UsermanagementApplicationTests]: UsermanagementApplicationTests does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+17:26:32.612 [Test worker] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper -- Found @SpringBootConfiguration com.roles.usermanagement.UsermanagementApplication for test class com.roles.usermanagement.UsermanagementApplicationTests
+                          =====================                                 
+                  ==================================                            
+              =====================================                             
+           ========================================      ===                    
+          ==   ================== =========================                     
+       == ==  ================ =  =============    == ===                       
+     ==== ==================== =  ========     ==   ===                         
+    ===== ===  =============== = =====    =========== ===        =              
+   ====== === ====  ================    =====       ===                         
+  ======= ===  ===  ===============   ======     ===================            
+  =====  ====  ==    ========  ==   ======      ====================            
+  == == ===    ==    ========= =========      ==========                        
+        ==                  ==========================          ==              
+       ===          ==========  =====================================           
+     ===       == ===   ======  =====================================           
+   ================       === ========================================          
+==========================  ===== ======================================        
+=======                  ==============================================         
+=====                    ==================================      ======         
+ ==  == ==     =  ==     ======== =======================           ======      
+     == ==  =  == ==     === ==      ========== =============================+  
+                         ===== ============ ==  ===          ============       
+     == ==  == == ==         ==== ====== == ====================================
+     =         == ==         ==== =========   =========================== == == 
+                           ==   ================================= ========      
+     == ==  == == ==       ======================   ==        = =========       
+                            == ===========================================      
+       ================= =    ========================    =  ==============     
+         ===========   ===  == ============================================     
+          =========      ==      ======     =     ================= =======     
+            ===== ===    ====== === ====   ====================  =========      
+            ===== ====== == ============ === = ==================     ===       
+            =====  =  ===   ========== =================== =========            
+            ===== ================================== =       ============       
+            ======= ========  =  =========================================      
+           ====== ==========  ============================================      
+            ============ ============ ===========  =====                        
+            ===  ======= == == ==== =   ==  ==   =====+==          =            
+           ====== ======= =============================                         
+          =======   ==================================                          
+          =========   ==============================+                           
+         ===========================================                            
+         ===========================================                            
+         ===========================================                            
+
+   ____    _    __  __ ____  _   _ ____  ____  _____ ____  _  __
+  / ___|  / \  |  \/  |  _ \| | | / ___||  _ \| ____/ ___|| |/ /
+ | |     / _ \ | |\/| | |_) | | | \___ \| | | |  _| \___ \| ' / 
+ | |___ / ___ \| |  | |  __/| |_| |___) | |_| | |___ ___) | . \ 
+  \____/_/   \_\_|  |_|_|    \___/|____/|____/|_____|____/|_|\_\
+
+ ================================================================
+  CAMPUSDESK | Plataforma de Gestión de Incidencias Tecnológicas
+  Organización: TechNova Solutions | Mesa de Ayuda TI
+ ================================================================
+  Roles: ADMIN | TECHNICIAN | USER
+  Flujo: ABIERTA -> ASIGNADA -> EN_PROCESO -> RESUELTA -> CERRADA
+  Módulos: Tickets • Asignaciones • Ciclo de Vida • Comentarios • Historial • Métricas
+  Seguridad: Spring Security • JWT • BCrypt • Autorización por Roles
+  Persistencia: PostgreSQL • Spring Data JPA
+ ----------------------------------------------------------------
+  Spring Boot 4.1.1 | Java 21.0.11
+  Perfil Activo: dev
+ ================================================================
+
+2026-10-13T17:26:33.262-05:00  INFO 30936 --- [    Test worker] c.r.u.UsermanagementApplicationTests     : Starting UsermanagementApplicationTests using Java 21.0.11 with PID 30936 (started by sergi in C:\Users\sergi\OneDrive\Desktop\springboot\PROYECTO\CAMPUSDESK\spring-security-user-role-management)
+2026-10-13T17:26:33.265-05:00  INFO 30936 --- [    Test worker] c.r.u.UsermanagementApplicationTests     : The following 1 profile is active: "test"
+2026-10-13T17:26:34.617-05:00  INFO 30936 --- [    Test worker] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-10-13T17:26:34.825-05:00  INFO 30936 --- [    Test worker] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 189 ms. Found 11 JPA repository interfaces.
+2026-10-13T17:26:36.458-05:00  INFO 30936 --- [    Test worker] o.s.boot.tomcat.TomcatWebServer          : Tomcat initialized with port 0 (http)
+2026-10-13T17:26:36.493-05:00  INFO 30936 --- [    Test worker] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2026-10-13T17:26:36.493-05:00  INFO 30936 --- [    Test worker] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/11.0.24]
+2026-10-13T17:26:36.634-05:00  INFO 30936 --- [    Test worker] b.w.c.s.WebApplicationContextInitializer : Root WebApplicationContext: initialization completed in 3350 ms
+2026-10-13T17:26:37.251-05:00  INFO 30936 --- [    Test worker] org.hibernate.orm.jpa                    : HHH008540: Processing PersistenceUnitInfo [name: default]
+2026-10-13T17:26:37.374-05:00  INFO 30936 --- [    Test worker] org.hibernate.orm.core                   : HHH000001: Hibernate ORM core version 7.4.5.Final
+2026-10-13T17:26:38.171-05:00  INFO 30936 --- [    Test worker] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-10-13T17:26:38.219-05:00  INFO 30936 --- [    Test worker] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2026-10-13T17:26:38.543-05:00  INFO 30936 --- [    Test worker] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection conn0: url=jdbc:h2:mem:userroles user=SA
+2026-10-13T17:26:38.546-05:00  INFO 30936 --- [    Test worker] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2026-10-13T17:26:38.649-05:00  INFO 30936 --- [    Test worker] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
+	Database JDBC URL [jdbc:h2:mem:userroles]
+	Database driver: H2 JDBC Driver
+	Database dialect: H2Dialect
+	Database version: 2.4.240
+	Default catalog/schema: USERROLES/PUBLIC
+	Autocommit mode: undefined/unknown
+	Isolation level: READ_COMMITTED [default READ_COMMITTED]
+	JDBC fetch size: 100
+	Pool: DataSourceConnectionProvider
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2026-10-13T17:26:40.611-05:00  INFO 30936 --- [    Test worker] org.hibernate.orm.core                   : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-10-13T17:26:40.763-05:00  INFO 30936 --- [    Test worker] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-10-13T17:26:40.901-05:00  INFO 30936 --- [    Test worker] o.s.d.j.r.query.QueryEnhancerFactories   : Hibernate is in classpath; If applicable, HQL parser will be used.
+2026-10-13T17:26:42.754-05:00  INFO 30936 --- [    Test worker] r$InitializeUserDetailsManagerConfigurer : Global AuthenticationManager configured with UserDetailsService bean with name userSecurityService
+2026-10-13T17:26:42.996-05:00  WARN 30936 --- [    Test worker] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2026-10-13T17:26:44.322-05:00  INFO 30936 --- [    Test worker] o.s.boot.tomcat.TomcatWebServer          : Tomcat started on port 65121 (http) with context path '/'
+2026-10-13T17:26:44.333-05:00  INFO 30936 --- [    Test worker] c.r.u.UsermanagementApplicationTests     : Started UsermanagementApplicationTests in 11.433 seconds (process running for 13.695)
+2026-10-13T17:26:44.856-05:00  WARN 30936 --- [    Test worker] o.s.core.events.SpringDocAppInitializer  : SpringDoc /v3/api-docs endpoint is enabled by default. To disable it in production, set the property 'springdoc.api-docs.enabled=false'
+2026-10-13T17:26:44.857-05:00  WARN 30936 --- [    Test worker] o.s.core.events.SpringDocAppInitializer  : SpringDoc /swagger-ui.html endpoint is enabled by default. To disable it in production, set the property 'springdoc.swagger-ui.enabled=false'
+2026-10-13T17:26:45.369-05:00  INFO 30936 --- [o-auto-1-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-10-13T17:26:45.370-05:00  INFO 30936 --- [o-auto-1-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2026-10-13T17:26:45.371-05:00  INFO 30936 --- [o-auto-1-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 1 ms
+2026-10-13T17:26:46.423-05:00  INFO 30936 --- [o-auto-1-exec-1] o.springdoc.api.AbstractOpenApiResource  : Init duration for springdoc-openapi is: 985 ms
+]]></system-out>
+  <system-err><![CDATA[Mockito is currently self-attaching to enable the inline-mock-maker. This will no longer work in future releases of the JDK. Please add Mockito as an agent to your build as described in Mockito's documentation: https://javadoc.io/doc/org.mockito/mockito-core/latest/org.mockito/org/mockito/Mockito.html#0.3
+WARNING: A Java agent has been loaded dynamically (C:\Users\sergi\.gradle\caches\modules-2\files-2.1\net.bytebuddy\byte-buddy-agent\1.18.11\82212e5b3633e7a65fca8bec525762cfb6c9bae4\byte-buddy-agent-1.18.11.jar)
+WARNING: If a serviceability tool is in use, please run with -XX:+EnableDynamicAgentLoading to hide this warning
+WARNING: If a serviceability tool is not in use, please run with -Djdk.instrument.traceUsage for more information
+WARNING: Dynamic loading of agents will be disallowed by default in a future release
+]]></system-err>
+</testsuite>
