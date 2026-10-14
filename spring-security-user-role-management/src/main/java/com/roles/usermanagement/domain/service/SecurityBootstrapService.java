@@ -107,7 +107,7 @@ public class SecurityBootstrapService {
         }
         UserEntity admin = new UserEntity();
         admin.setUsername(username);
-        admin.setEmail(email);
+        admin.setEmail(email.trim().toLowerCase());
         admin.setPassword(encoder.encode(password));
         admin.setLocked(false);
         admin.setDisabled(false);
