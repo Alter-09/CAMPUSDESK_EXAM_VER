@@ -1,7 +1,3 @@
-/**
- * <cd-technician-directory>: Directorio de técnicos basado en la API del backend.
- * Sigue la misma arquitectura que <cd-user-directory>, aplicando SOLID, DRY, CRUD y Mobile First.
- */
 import { MESSAGES } from "../constants/messages.es.js";
 import { listTechnicians, deleteTechnician } from "../services/technician.service.js";
 import { attachStyles } from "../utils/shadow-styles.js";

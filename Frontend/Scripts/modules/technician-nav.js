@@ -1,8 +1,3 @@
-/**
- * Módulo de navegación e integración de vistas para technician.html.
- * Maneja el cambio de secciones por hash de URL y sincroniza la cabecera.
- */
-
 function setupTechnicianNavigation() {
   const links = document.querySelectorAll(".superadmin-navigation a[href^='#']");
   const assignedSection = document.getElementById("section-assigned-tickets");
@@ -11,8 +6,6 @@ function setupTechnicianNavigation() {
   const breadcrumbCurrent = document.querySelector(".app-header__crumbs [aria-current='page']");
   const headerRole = document.querySelector(".app-header__role");
   const headerAvatar = document.querySelector(".app-header__avatar");
-
-  // Mostrar el nombre real o iniciales del técnico si está logueado
   try {
     const userJson = sessionStorage.getItem("currentUser");
     const storedUsername = sessionStorage.getItem("username");

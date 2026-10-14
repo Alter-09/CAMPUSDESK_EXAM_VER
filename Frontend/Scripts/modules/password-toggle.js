@@ -1,12 +1,3 @@
-/**
- * Alternar visibilidad de contraseña.
- * Una sola responsabilidad: sincronizar aria-pressed con el type del input.
- */
-
-/**
- * @param {HTMLButtonElement} button
- * @param {HTMLInputElement} input
- */
 export function bindPasswordToggle(button, input) {
   if (!(button instanceof HTMLButtonElement) || !(input instanceof HTMLInputElement)) {
     return;

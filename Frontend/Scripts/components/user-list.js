@@ -1,14 +1,3 @@
-/**
- * <cd-user-list>: listado de usuarios con su rol y el combo de permisos.
- *
- * Contrato:
- *  - Emite "user-add-requested" cuando se pulsa el botón de agregar usuario.
- *  - reload(): vuelve a consultar la API y repinta.
- *  - notify(mensaje): muestra un aviso de operación exitosa.
- *
- * Los textos son constantes de MESSAGES; los datos de la API se insertan
- * siempre con textContent (nunca como HTML).
- */
 import { MESSAGES } from "../constants/messages.es.js";
 import { listUsers } from "../services/user.service.js";
 import { listRoles } from "../services/role.service.js";

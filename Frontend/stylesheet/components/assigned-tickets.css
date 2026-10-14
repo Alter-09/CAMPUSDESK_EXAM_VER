@@ -12,11 +12,6 @@
   flex-direction: column;
   gap: var(--cd-space-xl);
 }
-
-/* ==========================================================================
-   Cabecera y Filtros
-   ========================================================================== */
-
 .assigned-header {
   background-color: var(--cd-color-surface-card);
   border: 1px solid var(--cd-color-border-subtle);

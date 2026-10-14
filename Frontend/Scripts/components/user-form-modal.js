@@ -1,13 +1,3 @@
-/**
- * <cd-user-form-modal>: ventana para registrar un usuario y darle permisos.
- *
- * Contrato:
- *  - open(): abre el modal, reinicia el formulario y carga roles y permisos.
- *  - close(): lo cierra (no hace nada mientras se está enviando).
- *  - Emite "user-created" con detail.username cuando la API crea el usuario.
- *
- * Usa <dialog> nativo: Escape para cerrar, foco atrapado y capa superior sin código extra.
- */
 import { MESSAGES } from "../constants/messages.es.js";
 import { createUser } from "../services/user.service.js";
 import { listAssignableRoles } from "../services/role.service.js";

@@ -1,16 +1,9 @@
-/* ==========================================================================
-   Role Dashboards (Technician & User) — Fortify360 / Titan Meridian Design
-   Tailored KPI cards with progress bars, priority queue, and responsive grid.
-   ========================================================================== */
-
 .role-dashboard {
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
   width: 100%;
 }
-
-/* Header greeting */
 .role-dashboard__header {
   display: flex;
   align-items: flex-start;

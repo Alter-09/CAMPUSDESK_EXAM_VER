@@ -1,5 +1,3 @@
-/* <cd-user-list>: móvil primero; tarjetas bajo 48rem y tabla desde 48rem. */
-
 :host {
   display: block;
   color: var(--cd-text);
@@ -9,7 +7,7 @@
   display: flex;
   flex-direction: column;
   gap: 1.25rem;
-  max-width: 100%; /* Cambia esto de 68rem a 100% o un valor más amplio como 85rem */
+  max-width: 100%;
   width: 100%;
   margin-inline: auto;
   padding: 1.25rem;

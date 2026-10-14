@@ -1,7 +1,3 @@
-/**
- * Textos y etiquetas para la gestión de tiquetes e incidencias (interfaz en español).
- * Se integra en MESSAGES con: tickets: TICKETS_MESSAGES
- */
 export const TICKETS_MESSAGES = Object.freeze({
   categories: Object.freeze({
     HARDWARE: "Hardware",

@@ -1,19 +1,9 @@
-/* ==========================================================================
-   <cd-user-portal> Shadow DOM Styles
-   Mobile-first responsive design following CampusDesk design tokens
-   ========================================================================== */
-
 :host {
   display: block;
   width: 100%;
   max-width: 100%;
   box-sizing: border-box;
 }
-
-/* ==========================================================================
-   Layout de sección principal
-   ========================================================================== */
-
 .portal-section {
   width: 100%;
   box-sizing: border-box;
@@ -21,11 +11,6 @@
   flex-direction: column;
   gap: var(--cd-space-xl);
 }
-
-/* ==========================================================================
-   Cabecera del portal
-   ========================================================================== */
-
 .portal-header {
   background-color: var(--cd-color-surface-card);
   border: 1px solid var(--cd-color-border-subtle);

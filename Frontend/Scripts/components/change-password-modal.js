@@ -1,8 +1,3 @@
-/**
- * <cd-change-password-modal>: Web Component con Shadow DOM para cambio obligatorio de clave.
- * Bloquea la navegación e interacción hasta que el usuario actualice su contraseña mediante
- * POST /api/auth/change-password.
- */
 import { API_BASE_URL, TOKEN_STORAGE_KEY } from "../config/api.config.js";
 import { attachStyles } from "../utils/shadow-styles.js";
 
@@ -98,8 +93,6 @@ export class ChangePasswordModal extends HTMLElement {
     this.#confirmInput = this.#root.querySelector("#confirm-password");
     this.#summaryEl = this.#root.querySelector("#modal-summary");
     this.#submitBtn = this.#root.querySelector("#submit-btn");
-
-    // Impedir cierre al presionar ESC (modal estrictamente bloqueante)
     this.#dialog.addEventListener("cancel", (event) => {
       event.preventDefault();
     });
@@ -119,12 +112,7 @@ export class ChangePasswordModal extends HTMLElement {
     });
   }
 
-  /**
-   * Abre el modal y retorna una Promesa que resuelve solo cuando la contraseña
-   * se ha cambiado exitosamente en la API.
-   * @param {{ token: string, username: string, currentPassword?: string }} options
-   * @returns {Promise<void>}
-   */
+
   async promptChangePassword({ token, username, currentPassword = "" }) {
     await this.#initialized;
     this.#token = token;

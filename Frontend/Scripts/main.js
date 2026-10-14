@@ -1,17 +1,8 @@
 import './components/change-password-modal.js';
-/**
- * Arranque de la página de login y enrutamiento según rol.
- */
 import { bindPasswordToggle } from "./modules/password-toggle.js";
 import { bindLoginForm } from "./modules/login-form.js";
 import { MESSAGES } from "./constants/messages.es.js";
 import { API_BASE_URL, TOKEN_STORAGE_KEY } from "./config/api.config.js";
-
-/**
- * Determina la URL de redirección según el rol de usuario.
- * @param {string} role
- * @returns {string}
- */
 export function getRedirectUrlForRole(role) {
   const upperRole = String(role || "").toUpperCase().trim();
 

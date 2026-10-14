@@ -1,6 +1,3 @@
-/**
- * Campo de formulario reutilizable (label + control + acción opcional).
- */
 .field {
   display: flex;
   flex-direction: column;

@@ -1,26 +1,3 @@
-/**
- * Comportamiento del formulario de login.
- * Valida presencia y emite credenciales limpias (S-01).
- * El transporte HTTP queda fuera (OCP para cablear AuthService después).
- */
-
-/**
- * @typedef {{ username: string, password: string }} LoginCredentials
- */
-
-/**
- * @param {HTMLFormElement} form
- * @param {{
- *   onSubmit?: (credentials: LoginCredentials) => void | Promise<void>,
- *   messages?: {
- *     usernameRequired: string,
- *     passwordRequired: string,
- *     summaryPrefix: string,
- *     submitting: string,
- *     submit: string,
- *   },
- * }} [options]
- */
 export function bindLoginForm(form, options = {}) {
   if (!(form instanceof HTMLFormElement)) {
     return;
@@ -35,11 +12,6 @@ export function bindLoginForm(form, options = {}) {
   if (!(usernameInput instanceof HTMLInputElement) || !(passwordInput instanceof HTMLInputElement)) {
     return;
   }
-
-  /**
-   * @param {HTMLInputElement} input
-   * @param {string} message
-   */
   const setFieldError = (input, message) => {
     const errorId = `${input.id}-error`;
     const errorNode = form.querySelector(`#${errorId}`);

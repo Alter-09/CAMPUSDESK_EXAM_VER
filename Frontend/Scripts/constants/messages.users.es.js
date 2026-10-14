@@ -1,7 +1,3 @@
-/**
- * Textos de la gestión de usuarios (interfaz en español).
- * Se integra en MESSAGES con: users: USERS_MESSAGES
- */
 export const USERS_MESSAGES = Object.freeze({
   roleLabels: Object.freeze({
     ADMIN: "Superadministrador",

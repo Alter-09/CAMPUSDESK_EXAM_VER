@@ -1,14 +1,6 @@
-/**
- * <cd-role-assignment>: móvil primero.
- * Referencia directamente los tokens de tokens.css (atraviesan el Shadow DOM);
- * .field y .button vienen de main.css, enlazado por attachStyles.
- */
-
 :host {
   display: block;
   color: var(--cd-color-slate-titanium-100);
-
-  /* tokens.css no define colores de estado; se toman de la plantilla original. */
   --ra-success: #4ade80;
   --ra-danger: #f87171;
 }

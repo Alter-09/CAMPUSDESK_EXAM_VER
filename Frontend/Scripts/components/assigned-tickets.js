@@ -1,7 +1,3 @@
-/**
- * <cd-assigned-tickets>: Componente Web responsivo con Shadow DOM para la gestión
- * de incidencias asignadas al técnico según los requerimientos de CAMPUSDESK_SPRINGBOOT.md.
- */
 import { MESSAGES } from "../constants/messages.es.js";
 import {
   listTickets,
@@ -246,21 +242,17 @@ export class AssignedTickets extends HTMLElement {
       });
     });
 
-    // Búsqueda en tiempo real
     this.#refs.searchInput.addEventListener("input", (e) => {
       this.#searchQuery = e.target.value.toLowerCase().trim();
       this.#renderGrid();
     });
 
-    // Cierre del modal
     this.#refs.modalCloseBtn.addEventListener("click", () => this.#closeDetail());
     this.#refs.modal.addEventListener("click", (e) => {
       if (e.target === this.#refs.modal) {
         this.#closeDetail();
       }
     });
-
-    // Envío de comentario
     this.#refs.commentForm.addEventListener("submit", (e) => {
       e.preventDefault();
       this.#handleCommentSubmit();
@@ -288,7 +280,6 @@ export class AssignedTickets extends HTMLElement {
   #renderGrid() {
     const { grid, statusMessage, retryBtn } = this.#refs;
 
-    // Filtrar tiquetes según la pestaña seleccionada
     let filtered = this.#tickets;
     if (this.#activeFilter !== "ALL") {
       filtered = filtered.filter((t) => {
@@ -297,7 +288,6 @@ export class AssignedTickets extends HTMLElement {
       });
     }
 
-    // Filtrar por término de búsqueda
     if (this.#searchQuery) {
       filtered = filtered.filter((t) => {
         const idMatch = String(t.id).includes(this.#searchQuery);
@@ -411,13 +401,9 @@ export class AssignedTickets extends HTMLElement {
     this.#refs.modalCreated.textContent = formatDate(ticket.createdAt);
     this.#refs.modalUpdated.textContent = formatDate(ticket.updatedAt);
 
-    // Actualizar sección de ciclo de vida (transiciones RF-04)
     this.#renderLifecycleActions(ticket);
 
-    // Mostrar modal
     this.#refs.modal.showModal();
-
-    // Cargar comentarios e historial en paralelo
     this.#loadComments(ticket.id);
     this.#loadHistory(ticket.id);
   }
@@ -468,11 +454,9 @@ export class AssignedTickets extends HTMLElement {
       this.#refs.lifecycleActions.innerHTML = `<span class="status-notice">Actualizando estado…</span>`;
       await transitionTicket(ticketId, action);
 
-      // Recargar tiquete actual y la cuadrícula general
       this.#currentTicket = await getTicketById(ticketId);
       await this.#load();
 
-      // Refrescar modal con nuevos datos
       this.#openDetail(ticketId);
     } catch (err) {
       console.error("Error en transición de estado:", err);

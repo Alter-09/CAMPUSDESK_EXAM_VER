@@ -1,6 +1,3 @@
-/**
- * Superficie de tarjeta — Nivel 2 Titan Meridian.
- */
 .card {
   background-color: var(--cd-color-surface-card);
   border: 1px solid var(--cd-color-border-subtle);

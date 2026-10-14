@@ -1,32 +1,15 @@
-/**
- * Cliente HTTP único del frontend.
- * Agrega el token, interpreta la respuesta (JSON o texto plano)
- * y convierte cualquier fallo en un ApiError con mensaje listo para mostrar.
- */
 import { API_BASE_URL, TOKEN_STORAGE_KEY } from "../config/api.config.js";
 import { MESSAGES } from "../constants/messages.es.js";
 
 const JSON_CONTENT_TYPE = "application/json";
 
 export class ApiError extends Error {
-  /**
-   * @param {number} status Código HTTP (0 si no hubo conexión).
-   * @param {string} message Mensaje legible para el usuario.
-   */
   constructor(status, message) {
     super(message);
     this.name = "ApiError";
     this.status = status;
   }
 }
-
-/**
- * El backend responde errores en texto plano (ej. 409 "El usuario ya existe"),
- * pero se contempla también un JSON con message/error.
- * @param {unknown} payload
- * @param {number} status
- * @returns {string}
- */
 function extractMessage(payload, status) {
   if (typeof payload === "string" && payload.trim()) {
     return payload.trim();
