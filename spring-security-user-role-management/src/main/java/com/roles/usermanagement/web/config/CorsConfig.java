@@ -25,7 +25,12 @@ public class CorsConfig {
         CorsConfiguration corsConfiguration = new CorsConfiguration();
 
         // Allow all requests from any origin (can be restricted to specific origins here)
-        corsConfiguration.setAllowedOrigins(Arrays.asList("*")); // Can be changed to a list of allowed origins e.g.: http://localhost:4200
+        corsConfiguration.setAllowedOrigins(Arrays.asList(
+            "http://localhost:5500",
+            "http://127.0.0.1:5500",
+            "http://localhost:5501",
+            "http://127.0.0.1:5501"
+        )); // Can be changed to a list of allowed origins e.g.: http://localhost:4200
 
         // Allow specific HTTP methods (GET, POST, PUT, PATCH, DELETE, OPTIONS)
         corsConfiguration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
