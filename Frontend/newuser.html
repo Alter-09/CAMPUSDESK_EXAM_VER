@@ -29,63 +29,50 @@
                 <section class="superadmin-nav-group" aria-labelledby="security-navigation">
                     <h2 id="security-navigation" class="superadmin-nav-group__label">Seguridad</h2>
                     <a class="superadmin-nav-link" href="#overview" aria-current="page">
-                        <!-- SLOT: ícono de Crear nuevo usuario -->
                         <img class="superadmin-nav-link__icon" src="./Assets/icons/user-logo.svg" width="24" height="24" alt="" />
                         <span class="superadmin-nav-link__text">Crear nuevo Usuario</span>
                     </a>
                     <a class="superadmin-nav-link" href="./roleselector.html">
-                        <!-- SLOT: ícono de Roles y permisos -->
                         <img class="superadmin-nav-link__icon" src="./Assets/icons/shieldlock.svg" width="24" height="24" alt="" />
                         <span class="superadmin-nav-link__text">Roles y Permisos</span>
                     </a>
                 </section>
-
                 <section class="superadmin-nav-group" aria-labelledby="people-navigation">
                     <h2 id="people-navigation" class="superadmin-nav-group__label">Personal</h2>
                     <a class="superadmin-nav-link" href="./techguys.html">
-                        <!-- SLOT: ícono de Técnicos -->
                         <img class="superadmin-nav-link__icon" src="./Assets/icons/technician.svg" width="24" height="24" alt="" />
                         <span class="superadmin-nav-link__text">Técnicos</span>
                     </a>
                     <a class="superadmin-nav-link" href="./userlist.html">
-                        <!-- SLOT: ícono de Usuarios -->
                         <img class="superadmin-nav-link__icon" src="./Assets/icons/users.svg" width="24" height="24" alt="" />
                         <span class="superadmin-nav-link__text">Usuarios</span>
                     </a>
                 </section>
-
                 <section class="superadmin-nav-group" aria-labelledby="tickets-navigation">
                     <h2 id="tickets-navigation" class="superadmin-nav-group__label">Tiquetes</h2>
                     <a class="superadmin-nav-link" href="./assignation.html">
-                        <!-- SLOT: ícono de Asignar técnico -->
                         <img class="superadmin-nav-link__icon" src="./Assets/icons/assign.svg" width="24" height="24" alt="" />
                         <span class="superadmin-nav-link__text">Asignar Técnico</span>
                     </a>
                     <a class="superadmin-nav-link" href="./ticketlist.html">
-                        <!-- SLOT: ícono de Estado de tiquetes -->
                         <img class="superadmin-nav-link__icon" src="./Assets/icons/search.svg" width="24" height="24" alt="" />
                         <span class="superadmin-nav-link__text">Estado de Tiquetes</span>
                     </a>
                 </section>
             </nav>
-
             <div class="superadmin-sidebar__footer">
                 <a class="superadmin-nav-link superadmin-nav-link--danger" href="./index.html">
-                    <!-- SLOT: ícono de Cerrar sesión -->
                     <img class="superadmin-nav-link__icon" src="./Assets/icons/logout.svg" width="24" height="24" alt="" />
                     <span class="superadmin-nav-link__text">Cerrar sesión</span>
                 </a>
             </div>
         </aside>
-
-        <!-- Fondo oscuro del menú lateral en pantallas pequeñas -->
         <div class="superadmin-backdrop" data-sidebar-backdrop></div>
-
         <div class="superadmin-workspace">
             <header class="app-header">
                 <div class="app-header__start">
                     <button class="app-header__menu-button" type="button" data-sidebar-toggle aria-controls="sidebar" aria-expanded="false" aria-label="Abrir menú de navegación">
-                        <img class="app-header__menu-icon" src="./Assets/icons/menu.svg" width="24" height="24" alt="" />
+                        <img class="app-header__menu-icon" src="./Assets/icons/menu.svg" width="24" height="24" alt="menu icon" />
                     </button>
                     <nav class="app-header__breadcrumb" aria-label="Ubicación actual">
                         <ol class="app-header__crumbs">
@@ -96,10 +83,9 @@
                 </div>
                 <div class="app-header__user">
                     <span class="app-header__role">Superadmin</span>
-                    <img class="app-header__menu-icon" src="./Assets/Icons/user.svg" width="24" height="24" alt="" />
+                    <img class="app-header__menu-icon" src="./Assets/Icons/user.svg" width="24" height="24" alt="user icon" />
                 </div>
             </header>
-
             <main id="create-user" class="superadmin-content">
                 <cd-user-list></cd-user-list>
                 <cd-user-form-modal></cd-user-form-modal>
