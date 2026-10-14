@@ -86,12 +86,15 @@ public class UserRepository implements IUserRepository {
   public UserDto save(UserDto dto) {
     if(dto.getUsername()==null || dto.getUsername().isBlank() || dto.getUsername().length()>50)
       throw invalid("El usuario es obligatorio y debe tener como máximo 50 caracteres");
-    if(users.existsById(dto.getUsername())) throw new ResponseStatusException(HttpStatus.CONFLICT,"El usuario ya existe");
+    String cleanUsername = dto.getUsername().trim();
+    if(users.existsById(cleanUsername)) throw new ResponseStatusException(HttpStatus.CONFLICT,"El usuario ya existe");
     if(dto.getEmail()==null || dto.getEmail().isBlank()) throw invalid("El correo es obligatorio");
+    String cleanEmail = dto.getEmail().trim().toLowerCase();
+    if(users.existsByEmail(cleanEmail)) throw new ResponseStatusException(HttpStatus.CONFLICT,"El correo electrónico ya se encuentra registrado");
     if(dto.getPassword()==null || !PASSWORD_PATTERN.matcher(dto.getPassword()).matches())
       throw invalid("La contraseña es obligatoria, debe tener al menos 6 caracteres, al menos una letra mayúscula y al menos un carácter especial");
     String role=requestedRole(dto,true);
-    UserEntity user=new UserEntity(); user.setUsername(dto.getUsername()); user.setEmail(dto.getEmail());
+    UserEntity user=new UserEntity(); user.setUsername(cleanUsername); user.setEmail(cleanEmail);
     user.setPassword(encoder.encode(dto.getPassword())); user.setLocked(Boolean.TRUE.equals(dto.getLocked()));
     user.setDisabled(Boolean.TRUE.equals(dto.getDisabled()));
     user.setMustChangePassword(dto.getMustChangePassword() != null ? dto.getMustChangePassword() : true);
@@ -105,9 +108,10 @@ public class UserRepository implements IUserRepository {
     String role=requestedRole(dto,false);
     if(dto.getEmail()!=null) {
       if(dto.getEmail().isBlank()) throw invalid("El correo no puede estar vacío");
-      if(users.existsByEmailAndUsernameNot(dto.getEmail(),dto.getUsername()))
+      String cleanEmail = dto.getEmail().trim().toLowerCase();
+      if(users.existsByEmailAndUsernameNot(cleanEmail,dto.getUsername()))
         throw new ResponseStatusException(HttpStatus.CONFLICT,"El correo ya pertenece a otro usuario");
-      user.setEmail(dto.getEmail());
+      user.setEmail(cleanEmail);
     }
     if(dto.getLocked()!=null) user.setLocked(dto.getLocked());
     if(dto.getDisabled()!=null) user.setDisabled(dto.getDisabled());

@@ -22,7 +22,7 @@ public class LoginDto {
 
     public String getIdentifier() {
         if (email != null && !email.isBlank()) {
-            return email.trim();
+            return email.trim().toLowerCase();
         }
         if (username != null && !username.isBlank()) {
             return username.trim();
