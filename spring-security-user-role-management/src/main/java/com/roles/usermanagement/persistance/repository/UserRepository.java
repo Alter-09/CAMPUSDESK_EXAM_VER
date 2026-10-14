@@ -200,7 +200,7 @@ public class UserRepository implements IUserRepository {
     return mapper.toUserDto(user);
   }
 
-  @Transactional // metodo nuevo agregado. verifica las caracteristicas de la contraseña
+  @Transactional // newly added method. verifies password characteristics
   public void changeUserPassword(String username, String currentPassword, String newPassword) {
     if (newPassword == null || newPassword.isBlank() || newPassword.length() < 6) {
       throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "La nueva contraseña debe tener al menos 6 caracteres");
@@ -219,7 +219,7 @@ public class UserRepository implements IUserRepository {
     users.save(user);
   }
 
-  @Transactional//metodo nuevo agregado, Comprueba que la contraseña temporal suministrada no sea nula, no esté vacía y tenga al menos 6 caracteres.
+  @Transactional// newly added method, verifies that the supplied temporary password is not null, not empty, and has at least 6 characters.
   public void adminResetPassword(String username, String newTemporaryPassword) {
     if (newTemporaryPassword == null || newTemporaryPassword.isBlank() || newTemporaryPassword.length() < 6) {
       throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "La contraseña temporal debe tener al menos 6 caracteres");

@@ -4,8 +4,8 @@ import com.roles.usermanagement.modules.technician.enums.TechnicianAvailabilityS
 import java.time.LocalDateTime;
 
 /**
- * Ficha completa de un técnico para consulta del administrador.
- * El usuario aparece solo por su username; nunca se expone el UserEntity.
+ * Complete technician profile for administrator inquiry.
+ * User is identified only by username; UserEntity is never exposed.
  */
 public record TechnicianResponse(
         String username,

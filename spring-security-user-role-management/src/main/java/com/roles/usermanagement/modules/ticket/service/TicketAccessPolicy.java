@@ -6,60 +6,60 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 import org.springframework.web.server.ResponseStatusException;
 
-// @Component: Spring crea una instancia y la entrega a quien la pida por constructor
+// @Component: Spring creates an instance and injects it via constructor
 @Component
 public class TicketAccessPolicy {
 
-    /** Nombres de rol guardados en un solo lugar; Spring los guarda con el prefijo ROLE_ */
+    /** Role names centralized in one place; Spring stores them with ROLE_ prefix */
     public static final String ROLE_ADMIN = "ROLE_ADMIN";
     public static final String ROLE_TECHNICIAN = "ROLE_TECHNICIAN";
 
-    /** ¿El usuario autenticado es administrador? */
+    /** Is the authenticated user an administrator? */
     public boolean isAdmin(Authentication auth) {
-        // getAuthorities(): lista de roles y permisos del usuario
+        // getAuthorities(): list of user roles and permissions
         return auth.getAuthorities().stream()
-                // anyMatch: true si AL MENOS UNO cumple la condición
+                // anyMatch: true if AT LEAST ONE matches the condition
                 .anyMatch(authority -> ROLE_ADMIN.equals(authority.getAuthority()));
     }
 
-    /** ¿El usuario autenticado es técnico? */
+    /** Is the authenticated user a technician? */
     public boolean isTechnician(Authentication auth) {
         return auth.getAuthorities().stream()
                 .anyMatch(authority -> ROLE_TECHNICIAN.equals(authority.getAuthority()));
     }
 
-    /** ¿El usuario autenticado fue quien creó el ticket? */
+    /** Did the authenticated user create the ticket? */
     public boolean isApplicant(Ticket ticket, Authentication auth) {
-        // Compara el username del solicitante del ticket con el de quien hace la petición
+        // Compares applicant username with the requesting user
         return ticket.getApplicant().getUsername().equals(auth.getName());
     }
 
-    /** ¿El usuario autenticado es el técnico asignado al ticket? */
+    /** Is the authenticated user the assigned technician for the ticket? */
     public boolean isAssignedTechnician(Ticket ticket, Authentication auth) {
-        // Primero se verifica que haya técnico (puede ser null si el ticket está OPEN)
+        // First checks technician presence (can be null if ticket is OPEN)
         return ticket.getTechnician() != null
-                // El && corta aquí si es null, así evitamos un NullPointerException
+                // Short-circuit prevents NullPointerException if technician is null
                 && ticket.getTechnician().getUsername().equals(auth.getName());
     }
 
-    /** ¿Puede ver el ticket? Admin, o solicitante, o técnico asignado */
+    /** Can view ticket? Admin, requester, or assigned technician */
     public boolean canView(Ticket ticket, Authentication auth) {
-        // || significa "o": basta con que una de las tres se cumpla
+        // || operator: true if any of the three conditions is satisfied
         return isAdmin(auth) || isApplicant(ticket, auth) || isAssignedTechnician(ticket, auth);
     }
 
-    /** Si NO puede ver el ticket, detiene todo lanzando un error 403 */
+    /** If user CANNOT view ticket, halts execution throwing 403 */
     public void assertCanView(Ticket ticket, Authentication auth) {
-        // El ! invierte el resultado: "si NO puede ver"
+        // Logical NOT: "if CANNOT view"
         if (!canView(ticket, auth)) {
-            // 403 = tienes sesión, pero no tienes permiso para esto
+            // 403 = authenticated session, but forbidden for this resource
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You do not have access to this ticket");
         }
-        // Si puede, no hace nada y el método que lo llamó continúa
+        // If permitted, execution continues uninterrupted
     }
 
-    // Indica si el usuario autenticado tiene el rol indicado (por ejemplo "ROLE_ADMIN")
-// Indica si el usuario autenticado tiene el rol indicado (por ejemplo "ROLE_ADMIN")
+    // Indicates whether authenticated user has the specified role (e.g. "ROLE_ADMIN")
+// Indicates whether authenticated user has the specified role (e.g. "ROLE_ADMIN")
     public boolean hasRole(Authentication auth, String role) {
         return auth != null && auth.getAuthorities().stream()
                 .anyMatch(a -> role.equals(a.getAuthority()));

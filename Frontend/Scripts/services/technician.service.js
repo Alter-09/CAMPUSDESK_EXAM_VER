@@ -53,7 +53,7 @@ export async function listTechnicians() {
 }
 
 /**
- * Elimina un técnico por su nombre de usuario.
+ * Deletes a technician by username.
  * @param {string} username
  * @returns {Promise<void>}
  */

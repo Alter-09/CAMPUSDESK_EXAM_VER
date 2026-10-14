@@ -20,18 +20,18 @@ class TicketAssign extends HTMLElement {
 
   async loadData() {
     try {
-      // Cargar tiquetes que pueden ser asignados o reasignados (OPEN y ASSIGNED)
+      // Load tickets that can be assigned or reassigned (OPEN and ASSIGNED)
       const ticketsData = await listTickets();
       const allTickets = Array.isArray(ticketsData) ? ticketsData : [];
       this.tickets = allTickets.filter(t => t.status === "OPEN" || t.status === "ASSIGNED");
 
-      // Si había un ticket seleccionado, mantener su referencia actualizada
+      // If a ticket was selected, keep its reference updated
       if (this.selectedTicket) {
         this.selectedTicket = this.tickets.find(t => String(t.id) === String(this.selectedTicket.id)) || null;
       }
 
-      // Usar listTechnicians() que combina /api/user/all + /api/technicians
-      // y filtra correctamente por rol TECHNICIAN
+      // Use listTechnicians() which combines /api/user/all + /api/technicians
+      // and properly filters by TECHNICIAN role
       this.technicians = await listTechnicians();
 
       this.render();
@@ -81,7 +81,7 @@ class TicketAssign extends HTMLElement {
     this.attachEvents();
 
     try {
-      // El backend Spring Boot dispone de endpoints dedicados:
+      // The Spring Boot backend provides dedicated endpoints:
       // - PUT /api/tickets/{ticketId}/assign: asigna incidencias en estado OPEN
       // - PUT /api/tickets/{ticketId}/reassign: reasigna incidencias en estado ASSIGNED
       if (this.selectedTicket && this.selectedTicket.status === "ASSIGNED") {
@@ -92,7 +92,7 @@ class TicketAssign extends HTMLElement {
           await assignTicket(ticketId, technicianUsername);
           this.successMessage = `¡Tiquete #${ticketId} asignado exitosamente a "${technicianUsername}"!`;
         } catch (assignErr) {
-          // Si ya estaba asignado en el backend, reasignar de forma transparente
+          // If already assigned in backend, reassign transparently
           const errMsg = String(assignErr?.message || "").toLowerCase();
           if (errMsg.includes("reasign") || errMsg.includes("abierta") || errMsg.includes("assigned")) {
             await reassignTicket(ticketId, technicianUsername, "Reasignación administrativa");
@@ -129,7 +129,7 @@ class TicketAssign extends HTMLElement {
   }
 
   render() {
-    // Campos del TicketDto: id, title, applicantUsername, priority, category, description, status, technicianUsername
+    // TicketDto fields: id, title, applicantUsername, priority, category, description, status, technicianUsername
     const ticketsOptions = this.tickets.map(t => {
       const isSelected = this.selectedTicket && String(this.selectedTicket.id) === String(t.id);
       const tag = t.status === "ASSIGNED"
@@ -139,7 +139,7 @@ class TicketAssign extends HTMLElement {
         `#${t.id} - ${t.title || t.subject || 'Sin título'} (${t.applicantUsername || t.requester || 'Usuario'}) ${tag}</option>`;
     }).join('');
 
-    // Campos de TechnicianItem: username, email, specialty, availabilityStatus
+    // TechnicianItem fields: username, email, specialty, availabilityStatus
     const techOptions = this.technicians.map(tech =>
       `<option value="${tech.username}">` +
       `${tech.username} (${tech.email || tech.username})</option>`

@@ -110,7 +110,7 @@ export class UserDirectory extends HTMLElement {
     
     this.#refs.dialogConfirmBtn.addEventListener("click", () => this.#handleConfirmDelete());
 
-    // Cierre al hacer click fuera del contenido del dialogo
+    // Close when clicking outside dialog content
     this.#refs.dialog.addEventListener("click", (e) => {
       if (e.target === this.#refs.dialog) {
         this.#closeDialog();
@@ -154,7 +154,7 @@ export class UserDirectory extends HTMLElement {
       return;
     }
 
-    // Filtramos para mostrar únicamente los usuarios con rol "USER"
+    // Filter to display only users with "USER" role
     const standardUsers = users.filter((user) => {
       const role = user.role?.toUpperCase();
       return role === "USER";
@@ -174,7 +174,7 @@ export class UserDirectory extends HTMLElement {
         userCell.scope = "row";
         userCell.textContent = user.username;
 
-        // Correo Electrónico
+        // Email
         const emailCell = document.createElement("td");
         emailCell.textContent = user.email || "—";
 
@@ -186,7 +186,7 @@ export class UserDirectory extends HTMLElement {
         roleBadge.textContent = MESSAGES.users.roleLabels[user.role] ?? user.role;
         roleCell.append(roleBadge);
 
-        // Estado de Cuenta
+        // Account Status
         const statusCell = document.createElement("td");
         const statusBadge = document.createElement("span");
         
@@ -208,7 +208,7 @@ export class UserDirectory extends HTMLElement {
         statusBadge.textContent = statusLabel;
         statusCell.append(statusBadge);
 
-        // Acciones (Boton de eliminar)
+        // Actions (Delete button)
         const actionsCell = document.createElement("td");
         actionsCell.className = "user-table__cell--center";
 
@@ -268,7 +268,7 @@ export class UserDirectory extends HTMLElement {
       await deleteUser(username);
 
       this.#closeDialog();
-      await this.#load(); // Recarga la lista inmediatamente
+      await this.#load(); // Reloads list immediately
     } catch (error) {
       dialogConfirmBtn.disabled = false;
       dialogError.textContent = error?.message || TEXT.deleteError || "Error al eliminar usuario.";

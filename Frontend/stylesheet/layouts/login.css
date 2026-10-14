@@ -1,6 +1,6 @@
 /**
- * Composición de la página de login.
- * Desktop: panel (formulario) + marca. Mobile: columna con huecos fluidos (sin márgenes negativos).
+ * Composition of the login page.
+ * Desktop: panel (form) + brand. Mobile: column with fluid gaps (no negative margins).
  */
 
 .login-page {
@@ -12,7 +12,7 @@
   background-color: var(--cd-color-surface-canvas);
 }
 
-/* Atmósfera: profundidad tonal sin competir con el CTA */
+/* Atmosphere: tonal depth without competing with CTA */
 .login-page__atmosphere {
   position: absolute;
   inset: 0;
@@ -73,7 +73,7 @@
   display: none;
 }
 
-/* En desktop el panel ES la tarjeta (bienvenida + formulario juntos) */
+/* On desktop the panel IS the card (welcome + form together) */
 .login-panel {
   width: 100%;
   max-width: var(--cd-login-card-width);
@@ -206,7 +206,7 @@
   }
 }
 
-/* Mobile — columna con gaps reales; el panel deja de ser la tarjeta */
+/* Mobile — column with real gaps; panel ceases to be the card */
 @media (max-width: 767px) {
   .login-page__inner {
     grid-template-columns: 1fr;
@@ -272,7 +272,7 @@
   }
 }
 
-/* Alturas muy bajas (landscape móvil): compactar marca */
+/* Very low viewport heights (mobile landscape): compact brand */
 @media (max-width: 767px) and (max-height: 700px) {
   .login-page__brand {
     width: min(100%, 9.5rem);
@@ -287,7 +287,7 @@
     padding-block: var(--cd-space-lg);
   }
 }
-/* Forzar el fondo oscuro y texto claro cuando el navegador autocompleta el input */
+/* Force dark background and light text when browser autofills input */
 .field__input:-webkit-autofill,
 .field__input:-webkit-autofill:hover,
 .field__input:-webkit-autofill:focus {
@@ -295,7 +295,7 @@
   -webkit-text-fill-color: var(--cd-color-slate-titanium-100, #ffffff) !important;
   transition: background-color 5000s ease-in-out 0s;
 }
-/* Forzar color de texto claro y fondo oscuro en autocompletados y sugerencias de Chrome */
+/* Force light text color and dark background on Chrome autofill and suggestions */
 .field__input:-webkit-autofill,
 .field__input:-webkit-autofill:hover,
 .field__input:-webkit-autofill:focus,

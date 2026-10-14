@@ -50,7 +50,7 @@ export class UserFormModal extends HTMLElement {
     this.#initialization ??= this.#initialize();
   }
 
-  /** Abre el modal con el formulario limpio. Requiere que el elemento esté en el DOM. */
+  /** Opens modal with reset form. Requires element to be in DOM. */
   async open() {
     await this.#initialization;
 
@@ -168,7 +168,7 @@ export class UserFormModal extends HTMLElement {
     cancelButton.addEventListener("click", () => this.close());
     retryButton.addEventListener("click", () => this.#loadCatalogs());
 
-    // Escape no debe cerrar el modal mientras se envía el formulario.
+    // Escape must not close modal while form is submitting.
     dialog.addEventListener("cancel", (event) => {
       if (this.#submitting) event.preventDefault();
     });
@@ -183,7 +183,7 @@ export class UserFormModal extends HTMLElement {
     pickerGrid.addEventListener("change", () => this.#updatePickerCount());
   }
 
-  /* ---------- Carga de roles y permisos ---------- */
+  /* ---------- Role and permission loading ---------- */
 
   async #loadCatalogs() {
     const requestId = ++this.#catalogRequestId;
@@ -213,7 +213,7 @@ export class UserFormModal extends HTMLElement {
   }
 
   /**
-   * @param {string} message Vacío oculta el aviso.
+   * @param {string} message Empty hides notice.
    * @param {{ retry?: boolean }} [options]
    */
   #showCatalogStatus(message, { retry = false } = {}) {
@@ -234,7 +234,7 @@ export class UserFormModal extends HTMLElement {
 
   /* ---------- Permisos adicionales ---------- */
 
-  /** Solo se ofrecen los permisos que el rol elegido todavía no trae. */
+  /** Offers only permissions not already granted by selected role. */
   #renderPermissionOptions() {
     const { pickerGrid, pickerHint, inputs } = this.#refs;
     const { permissions: text } = TEXT.fields;
@@ -291,7 +291,7 @@ export class UserFormModal extends HTMLElement {
     this.#refs.pickerCount.textContent = count > 0 ? TEXT.fields.permissions.selected(count) : "";
   }
 
-  /* ---------- Envío ---------- */
+  /* ---------- Submission ---------- */
 
   /** @param {SubmitEvent} event */
   async #handleSubmit(event) {
@@ -368,7 +368,7 @@ export class UserFormModal extends HTMLElement {
     this.#syncControls();
   }
 
-  /** Habilita o bloquea los controles según haya catálogos cargados o un envío en curso. */
+  /** Enables or disables controls based on loaded catalogs or ongoing submission. */
   #syncControls() {
     const { submitButton, cancelButton, closeButton, inputs } = this.#refs;
 
@@ -378,11 +378,11 @@ export class UserFormModal extends HTMLElement {
     closeButton.disabled = this.#submitting;
   }
 
-  /* ---------- Errores y reinicio (mismo patrón que login-form.js) ---------- */
+  /* ---------- Errors and reset (same pattern as login-form.js) ---------- */
 
   /**
    * @param {string} name
-   * @param {string} message Vacío limpia el error.
+   * @param {string} message Empty clears error.
    */
   #setFieldError(name, message) {
     const input = this.#refs.inputs[name];
@@ -415,7 +415,7 @@ export class UserFormModal extends HTMLElement {
     this.#showSummary(issues.length > 0 ? `${TEXT.validation.summaryPrefix} ${issues.join(" ")}` : "");
   }
 
-  /** @param {string} message Vacío oculta el resumen. */
+  /** @param {string} message Empty hides summary. */
   #showSummary(message) {
     this.#refs.summary.textContent = message;
     this.#refs.summary.hidden = !message;

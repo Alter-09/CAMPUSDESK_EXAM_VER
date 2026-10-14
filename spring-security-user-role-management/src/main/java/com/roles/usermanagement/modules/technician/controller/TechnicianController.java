@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
- * Endpoints de consulta de técnicos. Solo el administrador puede usarlos.
+ * Technician inquiry endpoints. Only administrators can access them.
  */
 @RestController
 @RequestMapping({"/api/technicians", "/api/users/technicians"})
@@ -25,19 +25,19 @@ public class TechnicianController {
 
     private final TechnicianService technicianService;
 
-    // Spring inyecta el service por constructor
+    // Spring injects service via constructor
     public TechnicianController(TechnicianService technicianService) {
         this.technicianService = technicianService;
     }
 
-    /** Lista todos los técnicos, sin importar su disponibilidad. */
+    /** Lists all technicians, regardless of availability. */
     @GetMapping
     @Operation(summary = "List all technicians")
     public List<TechnicianResponse> listAll() {
         return technicianService.listAll();
     }
 
-    /** Lista los técnicos disponibles, del menos al más cargado. */
+    /** Lists available technicians, ordered from lowest to highest workload. */
     @GetMapping("/available")
     @Operation(summary = "List available technicians, least loaded first")
     public List<TechnicianAvailabilityResponse> listAvailable() {

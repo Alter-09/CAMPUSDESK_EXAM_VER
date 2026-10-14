@@ -228,7 +228,7 @@ export class AssignedTickets extends HTMLElement {
   #bindEvents() {
     this.#refs.retryBtn.addEventListener("click", () => this.#load());
 
-    // Filtrado por pestañas
+    // Filter by tabs
     this.#refs.filterTabs.forEach((tab) => {
       tab.addEventListener("click", () => {
         this.#refs.filterTabs.forEach((t) => {

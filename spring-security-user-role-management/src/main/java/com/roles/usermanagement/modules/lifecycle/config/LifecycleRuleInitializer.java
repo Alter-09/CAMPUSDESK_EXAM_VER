@@ -11,34 +11,34 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-// Clase de configuración: Spring la lee al arrancar y registra los beans que define
+// Configuration class: Spring reads it on startup and registers the beans it defines
 @Configuration
 public class LifecycleRuleInitializer {
 
-    // ApplicationRunner se ejecuta UNA vez, justo después de que la aplicación termina de arrancar
+    // ApplicationRunner runs ONCE, right after the application finishes starting up
     @Bean
     public ApplicationRunner initializeLifecycleRules(LifecycleRuleRepository repository) {
         return args -> {
-            // Las 5 reglas del flujo ABIERTA → ASIGNADA → EN_PROCESO → RESUELTA → CERRADA
+            // The 5 rules of the workflow OPEN → ASSIGNED → IN_PROGRESS → RESOLVED → CLOSED
             List<LifecycleRule> rules = List.of(
-                    // Solo el administrador asigna un técnico
+                    // Only the administrator assigns a technician
                     rule(TicketStatus.OPEN, TicketStatus.ASSIGNED, TransitionAction.ASSIGN,
                             "ROLE_ADMIN", false, false),
-                    // Solo el administrador reasigna (el ticket sigue en ASSIGNED)
+                    // Only the administrator reassigns (ticket remains ASSIGNED)
                     rule(TicketStatus.ASSIGNED, TicketStatus.ASSIGNED, TransitionAction.REASSIGN,
                             "ROLE_ADMIN", false, false),
-                    // El técnico responsable inicia la atención
+                    // Responsible technician starts progress
                     rule(TicketStatus.ASSIGNED, TicketStatus.IN_PROGRESS, TransitionAction.START_PROGRESS,
                             "ROLE_TECHNICIAN", false, true),
-                    // El técnico responsable marca como resuelto (solo desde IN_PROGRESS)
+                    // Responsible technician marks as resolved (only from IN_PROGRESS)
                     rule(TicketStatus.IN_PROGRESS, TicketStatus.RESOLVED, TransitionAction.RESOLVE,
                             "ROLE_TECHNICIAN", false, true),
-                    // Solo el solicitante confirma el cierre
+                    // Only the requester confirms closure
                     rule(TicketStatus.RESOLVED, TicketStatus.CLOSED, TransitionAction.CONFIRM_CLOSE,
                             "ROLE_USER", true, false)
             );
 
-            // Solo se guardan las reglas que aún no existen, así el arranque es idempotente
+            // Only rules that do not exist yet are saved, ensuring idempotent startup
             for (LifecycleRule rule : rules) {
                 boolean exists = repository
                         .findByCurrentStatusAndAction(rule.getCurrentStatus(), rule.getAction())
@@ -50,7 +50,7 @@ public class LifecycleRuleInitializer {
         };
     }
 
-    // Método auxiliar para no repetir el builder cinco veces
+    // Helper method to avoid repeating the builder five times
     private LifecycleRule rule(TicketStatus current, TicketStatus target, TransitionAction action,
                                String requiredRole, boolean mustBeApplicant, boolean mustBeAssignedTechnician) {
         return LifecycleRule.builder()

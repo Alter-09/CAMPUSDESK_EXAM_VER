@@ -4,10 +4,10 @@ import com.roles.usermanagement.persistance.entity.UserEntity;
 import org.springframework.data.repository.CrudRepository;
 
 /**
- * Interfaz que define operaciones CRUD (Crear, Leer, Actualizar, Borrar) para la entidad UserEntity.
- * Extiende CrudRepository proporcionado por Spring Data JPA.
+ * Interface that defines CRUD operations (Create, Read, Update, Delete) for the UserEntity entity.
+ * Extends CrudRepository provided by Spring Data JPA.
  *
- * Permite realizar operaciones básicas de persistencia para objetos UserEntity en la base de datos.
+ * Allows performing basic persistence operations for UserEntity objects in the database.
  */
 public interface UserCrudRepository extends CrudRepository<UserEntity, String> {
     @org.springframework.data.jpa.repository.Lock(jakarta.persistence.LockModeType.PESSIMISTIC_WRITE)

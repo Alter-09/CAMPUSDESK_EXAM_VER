@@ -79,7 +79,7 @@ export class RevenueChart {
     this.tooltip = this.root.querySelector("[data-chart-tooltip]");
     this.statusEl = this.root.querySelector("[data-chart-status]");
 
-    // Elementos de métricas del DOM
+    // DOM metric elements
     this.ui = {
       total: this.root.querySelector("[data-stat-total]"),
       growth: this.root.querySelector("[data-stat-growth]"),

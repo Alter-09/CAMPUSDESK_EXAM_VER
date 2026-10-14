@@ -12,7 +12,7 @@ public class UserDto {
   private Boolean locked;
   private Boolean disabled;
   @Schema(description = "Indica si el usuario debe cambiar su contraseña obligatoriamente", example = "true")
-  private Boolean mustChangePassword; // transporta datos entre el cliente y el backend
+  private Boolean mustChangePassword; // transports data between client and backend
   @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
   private String password;
   @Schema(description = "Rol único del usuario. CUSTOMER por defecto al crear.", example = "CUSTOMER")

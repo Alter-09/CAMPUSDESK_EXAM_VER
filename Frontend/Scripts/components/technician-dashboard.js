@@ -482,7 +482,7 @@ class TechnicianDashboard extends HTMLElement {
     this.pointsCyan = this.monthlyData.map((d, i) => ({ x: toX(i), y: toY(d.cyan), data: d }));
     this.pointsPurple = this.monthlyData.map((d, i) => ({ x: toX(i), y: toY(d.purple), data: d }));
 
-    // Área luminosa Cyan
+    // Cyan luminous area
     svg.append(
       createSvg("path", {
         class: "revenue-chart__wave-area",
@@ -491,7 +491,7 @@ class TechnicianDashboard extends HTMLElement {
       })
     );
 
-    // Curva Púrpura
+    // Purple curve
     svg.append(
       createSvg("path", {
         class: "revenue-chart__wave-line revenue-chart__wave-line--purple",
@@ -530,7 +530,7 @@ class TechnicianDashboard extends HTMLElement {
     });
     svg.append(xGroup);
 
-    // Eventos de puntero para el tooltip
+    // Pointer events for tooltip
     const showTooltip = (idx) => {
       const item = this.monthlyData[idx];
       const ptC = this.pointsCyan[idx];

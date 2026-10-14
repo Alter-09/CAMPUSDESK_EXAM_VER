@@ -71,7 +71,7 @@
   margin-inline: auto;
 }
 
-/* ---------- Tabla: tarjetas en móvil ---------- */
+/* ---------- Table: cards on mobile ---------- */
 
 .user-table,
 .user-table thead,
@@ -82,7 +82,7 @@
   display: block;
 }
 
-/* Encabezado oculto a la vista pero disponible para lectores de pantalla. */
+/* Header hidden from view but accessible to screen readers. */
 .user-table thead {
   position: absolute;
   inline-size: 1px;
@@ -133,7 +133,7 @@
   color: var(--cd-text-secondary);
 }
 
-/* ---------- Combo de permisos ---------- */
+/* ---------- Permissions dropdown ---------- */
 
 .permissions__summary {
   display: inline-flex;
@@ -177,8 +177,8 @@
   margin: 0.625rem 0 0;
   padding: 0;
   list-style: none;
-  max-height: 9rem; /* Limita la altura máxima para que no expanda demasiado la fila */
-  overflow-y: auto;  /* Agrega barra de desplazamiento si hay muchos permisos */
+  max-height: 9rem; /* Limits max height to prevent overextending row */
+  overflow-y: auto;  /* Adds scrollbar if many permissions exist */
   padding-right: 0.25rem;
 }
 
@@ -224,7 +224,7 @@
     display: table;
     inline-size: 100%;
     border-collapse: collapse;
-    table-layout: fixed; /* Añade esta propiedad */
+    table-layout: fixed; /* Adds this property */
   }
 
   .user-table thead {
@@ -267,25 +267,25 @@
     background: rgb(255 255 255 / 0.03);
   }
 
-  /* La cabecera ya rotula las columnas. */
+  /* Header already labels the columns. */
   .user-table [data-label]::before {
     content: none;
   }
 
-  /* CAMBIA ESTO: En lugar de dejar solo el last-child a 52%, distribuimos las columnas así: */
+  /* CHANGE THIS: Instead of setting only last-child to 52%, distribute columns as follows: */
   .user-table th:nth-child(1),
   .user-table td:nth-child(1) {
-    width: 25%; /* Columna de Usuario */
+    width: 25%; /* User column */
   }
 
   .user-table th:nth-child(2),
   .user-table td:nth-child(2) {
-    width: 25%; /* Columna de Rol */
+    width: 25%; /* Role column */
   }
 
   .user-table th:nth-child(3),
 .user-table td:nth-child(3) {
-  width: 55%; /* Amplía ligeramente el espacio asignado a los permisos */
+  width: 55%; /* Slightly increases space allocated to permissions */
 }
 }
 

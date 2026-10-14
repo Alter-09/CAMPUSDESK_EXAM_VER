@@ -24,24 +24,24 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
-// @Service: marca la clase como lógica de negocio y la registra en Spring
+// @Service: marks class as business logic and registers it with Spring
 @Service
 public class TicketService {
 
-    // Dependencias: final = no se pueden reemplazar después de crear el objeto
-    private final TicketRepository ticketRepository;   // habla con la tabla tickets
-    private final UserCrudRepository userRepository;   // habla con la tabla de usuarios
+    // Dependencies: final = immutable after instantiation
+    private final TicketRepository ticketRepository;   // talks to tickets table
+    private final UserCrudRepository userRepository;   // talks to users table
     private final TicketMapper mapper;                 // convierte Ticket -> TicketResponse
-    private final TicketAccessPolicy policy;           // reglas de quién puede ver qué
+    private final TicketAccessPolicy policy;           // rules for who can view what
     private final StatusHistoryService historyService;
 
-    // Constructor: Spring detecta los 4 tipos y los entrega solo (inyección de dependencias)
+    // Constructor: Spring injects required dependencies
     public TicketService(TicketRepository ticketRepository,
                          UserCrudRepository userRepository,
                          TicketMapper mapper,
                          TicketAccessPolicy policy,
                          StatusHistoryService historyService) {
-        // Guarda cada dependencia recibida en su campo
+        // Stores each received dependency in its field
         this.ticketRepository = ticketRepository;
         this.userRepository = userRepository;
         this.mapper = mapper;
@@ -51,54 +51,54 @@ public class TicketService {
 
     // ---------- CREATE ----------
 
-    // @Transactional: todo el método es una unidad; si falla algo, se revierte todo
+    // @Transactional: method executes as a single unit; rolls back on failure
     @Transactional
     public TicketResponse create(TicketCreateRequest request, Authentication auth) {
-        // auth.getName() = username del token; se busca ese usuario en la BD
+        // auth.getName() = username from token; query user in DB
         UserEntity applicant = userRepository.findById(auth.getName())
-                // Si el usuario no existe, lanza error 404
+                // If user does not exist, throw 404 error
                 .orElseThrow(() -> new ResponseStatusException(
                         HttpStatus.NOT_FOUND, "User not found"));
 
-        // Construye el ticket campo por campo (patrón Builder de Lombok)
+        // Build ticket field by field (Lombok Builder pattern)
         Ticket ticket = Ticket.builder()
                 .title(request.title().trim())               // trim() quita espacios sobrantes
                 .description(request.description().trim())
                 .category(request.category())
                 .priority(request.priority())
-                .status(TicketStatus.OPEN)                   // el estado inicial lo fija el servidor
-                .applicant(applicant)                        // el solicitante sale del token
-                .build();                                    // termina de crear el objeto
+                .status(TicketStatus.OPEN)                   // initial status set by server
+                .applicant(applicant)                        // applicant retrieved from token
+                .build();                                    // build complete object
 
-        // Guarda el ticket; el resultado ya trae el id generado por la BD
+        // Save ticket; returned entity contains DB-generated ID
         Ticket savedTicket = ticketRepository.save(ticket);
 
-// Registra en el historial la creación (sin estado anterior), en la misma transacción
+// Record creation in history (no previous status), in same transaction
         historyService.record(
                 savedTicket,
-                null,                           // no hay estado anterior: el ticket acaba de nacer
+                null,                           // no previous status: newly created ticket
                 TicketStatus.OPEN,              // estado nuevo
-                applicant,                      // quien lo creó
-                StatusHistoryAction.CREATION);  // tipo de cambio
+                applicant,                      // who created it
+                StatusHistoryAction.CREATION);  // change type
 
         return mapper.toResponse(savedTicket);
     }
 
     // ---------- GET BY ID ----------
 
-    // readOnly = true: solo lee, no modifica; mantiene la sesión abierta para leer relaciones LAZY
+    // readOnly = true: read-only; keeps session open to fetch LAZY relations
     @Transactional(readOnly = true)
     public TicketResponse getById(Long id, Authentication auth) {
-        // findById devuelve un Optional (una "caja" que puede estar vacía)
+        // findById returns an Optional (may be empty)
         Ticket ticket = ticketRepository.findById(id)
-                // Si está vacía, error 404; si no, saca el ticket de la caja
+                // If empty, 404 error; otherwise, unwrap ticket
                 .orElseThrow(() -> new ResponseStatusException(
                         HttpStatus.NOT_FOUND, "Ticket not found"));
 
-        // El "guardia": si no tiene permiso, lanza 403 y el método se corta aquí
+        // Security guard: if no permission, throw 403 and abort
         policy.assertCanView(ticket, auth);
 
-        // Solo llega a esta línea si pasó el guardia
+        // Reached only if permission check passed
         return mapper.toResponse(ticket);
     }
 
@@ -110,63 +110,63 @@ public class TicketService {
                                      TicketCategory category,
                                      Authentication auth) {
 
-        // Variable que guardará la condición de PERMISO (qué tickets puede ver este usuario)
+        // Variable holding PERMISSION predicate (which tickets user can view)
         Specification<Ticket> visibility;
         if (policy.isAdmin(auth)) {
-            // Admin: sin restricción, ve todos los tickets
+            // Admin: unrestricted, views all tickets
             visibility = Specification.unrestricted();
         } else if (policy.isTechnician(auth)) {
-            // Técnico: solo los tickets asignados a él
+            // Technician: only assigned tickets
             visibility = TicketSpecifications.assignedTo(auth.getName());
         } else {
-            // Cualquier otro: solo los tickets que él creó (lo más restrictivo por defecto)
+            // Requester/Other: only tickets created by user (most restrictive default)
             visibility = TicketSpecifications.appliedBy(auth.getName());
         }
 
-        // Une con AND el permiso + los filtros; los filtros null se ignoran
+        // Combine permission + filters with AND; null filters are ignored
         Specification<Ticket> spec = Specification.allOf(
                 visibility,
                 TicketSpecifications.hasStatus(status),
                 TicketSpecifications.hasPriority(priority),
                 TicketSpecifications.hasCategory(category));
 
-        // findAll ejecuta UNA consulta SQL con todas las condiciones, ordenada del más reciente al más antiguo
+        // findAll executes single SQL query with all predicates, sorted from newest to oldest
         return ticketRepository.findAll(spec, Sort.by(Sort.Direction.DESC, "createdAt"))
-                .stream()                       // recorre la lista de tickets
-                .map(mapper::toResponse)        // convierte cada Ticket en TicketResponse
-                .toList();                      // junta los resultados en una lista
+                .stream()                       // stream ticket list
+                .map(mapper::toResponse)        // converts each Ticket to TicketResponse
+                .toList();                      // collect results into list
     }
 
     /**
-     * Actualiza un ticket. Solo puede hacerlo su solicitante y únicamente
-     * mientras el ticket esté abierto (OPEN) y sin técnico asignado.
+     * Updates a ticket. Can only be done by its applicant and only
+     * while ticket is open (OPEN) and without an assigned technician.
      */
     @Transactional
     public TicketResponse update(Long id, TicketUpdateRequest request, Authentication auth) {
-        // Busca el ticket; si no existe, responde 404
+        // Find ticket; if not found, respond 404
         Ticket ticket = ticketRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(
                         HttpStatus.NOT_FOUND, "Ticket not found"));
 
-        // Solo el solicitante puede modificarlo; cualquier otro recibe 403
+        // Only applicant can modify ticket; any other user receives 403
         if (!policy.isApplicant(ticket, auth)) {
             throw new ResponseStatusException(
                     HttpStatus.FORBIDDEN, "Only the applicant can modify the ticket");
         }
 
-        // Si ya no está abierto o ya tiene técnico, el estado actual no lo permite: 409
+        // If no longer open or already assigned, current state forbids update: 409
         if (ticket.getStatus() != TicketStatus.OPEN || ticket.getTechnician() != null) {
             throw new ResponseStatusException(
                     HttpStatus.CONFLICT, "Only an open, unassigned ticket can be modified");
         }
 
-        // Copia los datos nuevos del request a la entidad (sin espacios sobrantes)
+        // Copy new request data to entity (trimming excess whitespace)
         ticket.setTitle(request.title().trim());
         ticket.setDescription(request.description().trim());
         ticket.setCategory(request.category());
         ticket.setPriority(request.priority());
 
-        // Guarda y devuelve el DTO de respuesta
+        // Save and return response DTO
         return mapper.toResponse(ticketRepository.save(ticket));
     }
 }

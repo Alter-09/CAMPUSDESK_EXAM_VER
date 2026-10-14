@@ -1,17 +1,17 @@
 /**
- * Layout para las páginas del portal de usuario:
+ * Layout for user portal pages:
  *   - user.html (overview / landing)
  *   - create-ticket.html
  *   - my-tickets.html
  *
- * Complementa layouts/superadmin.css que define el shell (sidebar + workspace).
+ * Supplements layouts/superadmin.css defining shell (sidebar + workspace).
  */
 
-/* ---------- Workspace del portal de usuario ---------- */
+/* ---------- User portal workspace ---------- */
 /*
- * superadmin.css solo define min-width:0 en .superadmin-workspace.
- * Las páginas del portal necesitan que sea flex-column para que el
- * header ocupe su fila y el <main> ocupe el espacio restante.
+ * superadmin.css only defines min-width:0 on .superadmin-workspace.
+ * Portal pages require flex-column so that
+ * header takes its row and <main> occupies remaining space.
  */
 .superadmin-workspace {
   display: flex;
@@ -19,11 +19,11 @@
   flex: 1;
 }
 
-/* ---------- Contenido del portal de usuario ---------- */
+/* ---------- User portal content ---------- */
 /*
- * .user-portal-content anula place-items:center de .superadmin-content
- * para que el componente web se estire al ancho completo disponible en lugar
- * de centrarse como un bloque de estado vacío.
+ * .user-portal-content overrides place-items:center from .superadmin-content
+ * so web component stretches to full available width instead
+ * of centering like an empty state block.
  */
 .user-portal-content.superadmin-content {
   place-items: start stretch;
@@ -31,10 +31,10 @@
   justify-items: stretch;
 }
 
-/* ---------- Vista del portal de usuario ---------- */
+/* ---------- User portal view ---------- */
 /*
- * .user-view es el wrapper de cada sección del portal.
- * Se estira al 100% del grid y limita el ancho máximo al token de contenido.
+ * .user-view wraps each portal section.
+ * Stretches to 100% grid and restricts max width to content token.
  */
 .user-view {
   width: 100%;

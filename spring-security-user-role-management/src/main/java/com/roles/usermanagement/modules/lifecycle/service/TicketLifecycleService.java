@@ -32,7 +32,7 @@ public class TicketLifecycleService {
     private final StatusHistoryService historyService;
     private final TicketAccessPolicy policy;
 
-    // Inyección por constructor: Spring entrega cada dependencia al crear el service
+    // Constructor injection: Spring provides each dependency when creating the service
     public TicketLifecycleService(TicketRepository ticketRepository,
                                   LifecycleRuleRepository ruleRepository,
                                   TechnicianRepository technicianRepository,
@@ -47,15 +47,15 @@ public class TicketLifecycleService {
         this.policy = policy;
     }
 
-    // Una sola transacción: el cambio de estado y su historial se confirman juntos o ninguno (RF-06)
+    // Single transaction: status change and history record are committed together or not at all (RF-06)
     @Transactional
     public StateTransitionResponse transition(Long ticketId, StateTransitionRequest request, Authentication auth) {
 
-        // 1. Buscar el ticket BLOQUEÁNDOLO; si no existe, 404
+        // 1. Find ticket with LOCKING; if it does not exist, 404
         Ticket ticket = ticketRepository.findForUpdate(ticketId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Ticket not found"));
 
-        // Quien no puede ver el ticket no debe enterarse de su estado (ni por un 409)
+        // Users without permission to view ticket must not know its state (not even via 409)
         policy.assertCanView(ticket, auth);
 
         TicketStatus previousStatus = ticket.getStatus();
@@ -64,20 +64,20 @@ public class TicketLifecycleService {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Acción o estado requerido no válido");
         }
 
-        // 2. Buscar la regla; si no existe, la transición no está permitida -> 409
+        // 2. Find rule; if not found, transition is not permitted -> 409
         LifecycleRule rule = ruleRepository
                 .findByCurrentStatusAndAction(previousStatus, request.action())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.CONFLICT,
                         "Action " + request.action() + " is not allowed when the ticket is " + previousStatus));
 
-        // 3. Verificar que quien lo pide cumple lo que exige la regla
+        // 3. Verify requester satisfies the rule requirements
         assertCanPerform(rule, ticket, auth);
 
-        // 4. Si es una asignación, validar al técnico ANTES de modificar el ticket
+        // 4. If assignment, validate technician BEFORE modifying ticket
         if (request.action() == TransitionAction.ASSIGN || request.action() == TransitionAction.REASSIGN) {
             UserEntity technician = resolveTechnician(request.technicianUsername());
 
-            // Reasignar al mismo técnico no tiene sentido
+            // Reassigning to the same technician is not allowed
             if (ticket.getTechnician() != null
                     && ticket.getTechnician().getUsername().equals(technician.getUsername())) {
                 throw new ResponseStatusException(HttpStatus.CONFLICT,
@@ -86,7 +86,7 @@ public class TicketLifecycleService {
             ticket.setTechnician(technician);
         }
 
-        // 5. Cambiar el estado y registrar el historial (misma transacción)
+        // 5. Change status and record history (same transaction)
         UserEntity actor = userRepository.findById(auth.getName())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
 
@@ -96,7 +96,7 @@ public class TicketLifecycleService {
         StatusHistory entry = historyService.record(
                 ticket, previousStatus, rule.getTargetStatus(), actor, toHistoryAction(request.action()));
 
-        // 6. Armar la respuesta (sin exponer entidades)
+        // 6. Build response (without exposing entities)
         return new StateTransitionResponse(
                 ticket.getId(),
                 request.action(),
@@ -107,23 +107,23 @@ public class TicketLifecycleService {
                 entry.getChangedAt());
     }
 
-    // Verifica que quien pide la acción cumple lo que exige la regla; si no, lanza 403
+    // Verifies requester satisfies rule requirements; otherwise throws 403
     private void assertCanPerform(LifecycleRule rule, Ticket ticket, Authentication auth) {
-        // El usuario debe tener el rol que exige la regla
+        // User must have the role required by rule
         if (!policy.hasRole(auth, rule.getRequiredRole())) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Your role cannot perform this action");
         }
-        // Si la regla exige ser el solicitante, debe ser quien creó el ticket
+        // If rule requires applicant, user must be the ticket creator
         if (rule.isMustBeApplicant() && !policy.isApplicant(ticket, auth)) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Only the applicant can perform this action");
         }
-        // Si la regla exige ser el técnico asignado, debe ser el responsable de este ticket
+        // If rule requires assigned technician, user must be responsible for this ticket
         if (rule.isMustBeAssignedTechnician() && !policy.isAssignedTechnician(ticket, auth)) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Only the assigned technician can perform this action");
         }
     }
 
-    // Valida que el username corresponda a un técnico (tiene perfil) y devuelve su usuario
+    // Validates that username corresponds to a technician (has profile) and returns user
     private UserEntity resolveTechnician(String username) {
         if (username == null || username.isBlank()) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
@@ -135,7 +135,7 @@ public class TicketLifecycleService {
         return profile.getUser();
     }
 
-    // Traduce la acción del ciclo de vida al tipo de evento que se guarda en el historial
+    // Translates lifecycle action into event type saved in status history
     private StatusHistoryAction toHistoryAction(TransitionAction action) {
         return switch (action) {
             case ASSIGN, REASSIGN -> StatusHistoryAction.ASSIGNMENT;

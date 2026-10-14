@@ -6,14 +6,14 @@ import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 /**
- * Acceso a datos de los perfiles de técnicos.
- * La clave primaria es el username (String), no un número.
+ * Data access for technician profiles.
+ * Primary key is username (String), not a numeric id.
  */
 public interface TechnicianRepository extends JpaRepository<TechnicianProfile, String> {
 
     /**
-     * Devuelve los técnicos con la disponibilidad indicada,
-     * ordenados del que menos tickets activos tiene al que más.
+     * Returns technicians with specified availability,
+     * ordered from lowest to highest active ticket count.
      */
     List<TechnicianProfile> findByAvailabilityStatusOrderByActiveTicketsCountAsc(
             TechnicianAvailabilityStatus status);

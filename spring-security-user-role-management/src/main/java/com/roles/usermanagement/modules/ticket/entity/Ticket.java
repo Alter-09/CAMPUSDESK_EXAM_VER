@@ -42,15 +42,15 @@ public class Ticket {
     private TicketStatus status;
 
     /**
-     * Usuario que creó la incidencia (Solicitante).
+     * User who created the issue (Applicant/Requester).
      */
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "applicant_username", referencedColumnName = "username", nullable = false)
     private UserEntity applicant;
 
     /**
-     * Técnico asignado para atender la incidencia.
-     * Puede ser nulo mientras el ticket permanezca en estado ABIERTA.
+     * Technician assigned to handle the issue.
+     * Can be null while ticket remains in OPEN status.
      */
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "technician_username", referencedColumnName = "username")

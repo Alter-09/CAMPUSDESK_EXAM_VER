@@ -4,8 +4,8 @@ import com.roles.usermanagement.modules.lifecycle.enums.TransitionAction;
 import jakarta.validation.constraints.NotNull;
 
 /**
- * Solicitud de cambio de estado de un ticket.
- * El cliente indica QUÉ acción quiere ejecutar; el estado destino lo decide la regla del ciclo de vida.
+ * Ticket state transition request.
+ * The client specifies WHAT action to execute; target status is determined by the lifecycle rule.
  */
 public record StateTransitionRequest(
         TransitionAction action,

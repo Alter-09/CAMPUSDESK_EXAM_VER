@@ -228,7 +228,7 @@
    Corrección Definitiva del Responsive para Tablas
    ========================================================================== */
 
-/* Asegura que el componente web y su tarjeta interna ocupen el 100% y no se desborden */
+/* Ensures web component and internal card occupy 100% without overflowing */
 :host {
   display: block;
   width: 100%;
@@ -242,7 +242,7 @@
   overflow-x: hidden;
 }
 
-/* Envuelve la tabla de manera nativa para permitir scroll horizontal fluido en móviles */
+/* Wraps table natively to allow smooth horizontal scrolling on mobile */
 @media screen and (max-width: 768px) {
   .user-directory {
     padding: var(--cd-space-md);
@@ -252,7 +252,7 @@
     font-size: 1.25rem;
   }
 
-  /* Convierte el contenedor de la tabla en una zona con scroll suave horizontal */
+  /* Converts table container into a smooth horizontal scroll area */
   .user-table {
     display: block;
     width: 100%;
@@ -261,7 +261,7 @@
     white-space: nowrap;
   }
 
-  /* Ajusta los espacios para que se vea compacto en celulares */
+  /* Adjusts spacing for a compact layout on mobile devices */
   .user-table th,
   .user-table td {
     padding: 0.6rem 0.75rem;

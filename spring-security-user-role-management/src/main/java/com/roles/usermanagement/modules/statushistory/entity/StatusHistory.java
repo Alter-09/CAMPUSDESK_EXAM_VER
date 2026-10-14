@@ -31,7 +31,7 @@ public class StatusHistory {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "previous_status", length = 30)
-    private TicketStatus previousStatus; // Nulo al momento de la creación inicial
+    private TicketStatus previousStatus; // Null at initial creation
 
     @Enumerated(EnumType.STRING)
     @Column(name = "new_status", nullable = false, length = 30)

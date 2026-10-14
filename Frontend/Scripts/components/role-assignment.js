@@ -153,7 +153,7 @@ export class RoleAssignment extends HTMLElement {
 
     keepButton.addEventListener("click", () => confirmDialog.close());
     discardButton.addEventListener("click", () => this.#discardChanges());
-    // Escape o "Seguir editando": no hay usuario pendiente de cambiar.
+    // Escape or "Keep editing": no user pending switch.
     confirmDialog.addEventListener("close", () => {
       this.#pendingUsername = "";
     });
@@ -228,9 +228,9 @@ export class RoleAssignment extends HTMLElement {
     this.#refs.roleSelect.replaceChildren(placeholder, ...options);
   }
 
-  /* ---------- Selección y borrador ---------- */
+  /* ---------- Selection and draft ---------- */
 
-  /** @param {string} username Vacío limpia la selección. */
+  /** @param {string} username Empty string clears selection. */
   #selectUser(username) {
     const { roleSelect } = this.#refs;
     const user = this.#users.find((item) => item.username === username) ?? null;
@@ -257,7 +257,7 @@ export class RoleAssignment extends HTMLElement {
     this.#updateSummary();
   }
 
-  /** Si hay cambios sin guardar, vuelve al usuario actual y pide confirmación. */
+  /** If there are unsaved changes, reverts to current user and requests confirmation. */
   #handleUserChange() {
     const { userSelect, confirmDialog, confirmText } = this.#refs;
     const nextUsername = userSelect.value;
@@ -307,7 +307,7 @@ export class RoleAssignment extends HTMLElement {
       this.#draft.additionalPermissions.delete(checkbox.value);
     }
 
-    // El estado visual del permiso se actualiza en sitio para no perder el foco.
+    // Visual permission state is updated in place to prevent losing focus.
     const row = checkbox.closest(".perm");
     if (row instanceof HTMLElement) {
       row.dataset.effective = String(row.dataset.fromRole === "true" || checkbox.checked);
@@ -317,13 +317,13 @@ export class RoleAssignment extends HTMLElement {
     this.#updateSummary();
   }
 
-  /** @returns {Set<string>} Permisos que trae el rol del borrador. */
+  /** @returns {Set<string>} Permissions provided by draft role. */
   #inheritedPermissions() {
     const role = this.#roles.find((item) => item.name === this.#draft?.role);
     return new Set(role?.permissions ?? []);
   }
 
-  /* ---------- Lista de permisos ---------- */
+  /* ---------- Permission list ---------- */
 
   #renderPermissions() {
     const { list, hint } = this.#refs;
@@ -347,10 +347,10 @@ export class RoleAssignment extends HTMLElement {
   }
 
   /**
-   * Casos de una fila:
-   *  - solo del rol: fija, sin control.
-   *  - del rol y también individual: casilla marcada para poder retirar la asignación sobrante.
-   *  - no del rol: casilla para asignarla o retirarla de forma individual.
+   * Row cases:
+   *  - role only: fixed, no control.
+   *  - role and also individual: checked checkbox to allow removing redundant assignment.
+   *  - not from role: checkbox to assign or remove individually.
    * @param {string} permission
    * @param {boolean} fromRole
    * @param {boolean} individual
@@ -420,7 +420,7 @@ export class RoleAssignment extends HTMLElement {
     count.textContent = TEXT.permissions.count(active, this.#catalog.length);
   }
 
-  /* ---------- Resumen de cambios y guardado ---------- */
+  /* ---------- Change summary and save ---------- */
 
   #updateSummary() {
     const { changes, saveButton } = this.#refs;
@@ -474,7 +474,7 @@ export class RoleAssignment extends HTMLElement {
         this.#notify(TEXT.saved(username));
       }
     } catch (error) {
-      // Falló el cambio de rol: no se aplicó nada.
+      // Role change failed: nothing applied.
       this.#showSummary(error?.message || MESSAGES.errors.unknown);
     } finally {
       this.#setSaving(false);
@@ -482,8 +482,8 @@ export class RoleAssignment extends HTMLElement {
   }
 
   /**
-   * Relee los usuarios para que el estado guardado refleje lo que tiene el backend.
-   * @param {string} username Usuario que se mantiene seleccionado.
+   * Re-reads users so saved state reflects what backend holds.
+   * @param {string} username User that remains selected.
    * @returns {Promise<boolean>}
    */
   async #refreshUsers(username) {
@@ -516,7 +516,7 @@ export class RoleAssignment extends HTMLElement {
 
   /* ---------- Avisos ---------- */
 
-  /** @param {string} message Vacío oculta el resumen de error. */
+  /** @param {string} message Empty hides error summary. */
   #showSummary(message) {
     this.#refs.summary.textContent = message;
     this.#refs.summary.hidden = !message;

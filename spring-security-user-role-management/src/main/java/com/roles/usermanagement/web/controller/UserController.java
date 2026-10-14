@@ -79,7 +79,7 @@ public class UserController {
         
         String tempPass = (body != null) ? body.get("temporaryPassword") : null;
         if (tempPass == null || tempPass.isBlank()) {
-            tempPass = "Temporal123!"; // Valor por defecto si el admin no especifica uno
+            tempPass = "Temporal123!"; // Default value if admin does not specify one
         }
 
         users.adminResetPassword(username, tempPass);

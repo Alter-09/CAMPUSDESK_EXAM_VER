@@ -20,8 +20,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 /**
- * Endpoints REST para gestionar tickets.
- * Solo recibe y responde HTTP; las reglas de negocio viven en TicketService.
+ * REST endpoints for managing tickets.
+ * Only handles HTTP requests and responses; business rules reside in TicketService.
  */
 @RestController
 @RequestMapping("/api/tickets")
@@ -31,22 +31,22 @@ public class TicketController {
 
     private final TicketService ticketService;
 
-    // Spring inyecta el service por constructor
+    // Spring injects service via constructor
     public TicketController(TicketService ticketService) {
         this.ticketService = ticketService;
     }
 
-    /** Crea un ticket. Solo el rol USER; nace en estado OPEN. */
+    /** Creates a ticket. USER role only; initial status is OPEN. */
     @PostMapping
     @PreAuthorize("hasRole('USER')")
     @Operation(summary = "Create ticket")
     public ResponseEntity<TicketResponse> create(@Valid @RequestBody TicketCreateRequest request,
                                                  Authentication auth) {
-        // 201 Created: se creó un recurso nuevo
+        // 201 Created: new resource created
         return ResponseEntity.status(HttpStatus.CREATED).body(ticketService.create(request, auth));
     }
 
-    /** Lista los tickets visibles para el usuario, con filtros opcionales. */
+    /** Lists tickets visible to the user, with optional filters. */
     @GetMapping
     @Operation(summary = "List visible tickets with optional filters")
     public List<TicketResponse> list(@RequestParam(required = false) TicketStatus status,
@@ -56,14 +56,14 @@ public class TicketController {
         return ticketService.list(status, priority, category, auth);
     }
 
-    /** Devuelve el detalle de un ticket si el usuario tiene permiso para verlo. */
+    /** Returns ticket details if user has permission to view it. */
     @GetMapping("/{id}")
     @Operation(summary = "Get ticket by id")
     public TicketResponse getById(@PathVariable Long id, Authentication auth) {
         return ticketService.getById(id, auth);
     }
 
-    /** Modifica un ticket. Solo su solicitante y mientras esté OPEN y sin técnico. */
+    /** Updates a ticket. Requester only while OPEN and unassigned. */
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('USER')")
     @Operation(summary = "Update ticket")

@@ -6,23 +6,23 @@ import com.roles.usermanagement.modules.technician.entity.TechnicianProfile;
 import org.springframework.stereotype.Component;
 
 /**
- * Convierte entidades TechnicianProfile en DTOs de respuesta.
- * Debe usarse dentro de una transacción, porque lee la relación LAZY con el usuario.
+ * Converts TechnicianProfile entities into response DTOs.
+ * Must be used within a transaction, as it reads the LAZY relation with user.
  */
 @Component
 public class TechnicianMapper {
 
-    /** Convierte un perfil en la ficha completa del técnico. */
+    /** Converts profile into full technician response DTO. */
     public TechnicianResponse toResponse(TechnicianProfile profile) {
         return new TechnicianResponse(
-                profile.getUsername(),              // la clave primaria del perfil es el username
+                profile.getUsername(),              // profile primary key is username
                 profile.getSpecialty(),
                 profile.getAvailabilityStatus(),
                 profile.getActiveTicketsCount(),
                 profile.getLastAssignedAt());
     }
 
-    /** Convierte un perfil en la versión corta usada para elegir a quién asignar. */
+    /** Converts profile into short version used for assignment selection. */
     public TechnicianAvailabilityResponse toAvailabilityResponse(TechnicianProfile profile) {
         return new TechnicianAvailabilityResponse(
                 profile.getUsername(),

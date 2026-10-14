@@ -5,20 +5,20 @@ import com.roles.usermanagement.modules.statushistory.entity.StatusHistory;
 import org.springframework.stereotype.Component;
 
 /**
- * Convierte entidades StatusHistory en DTOs de respuesta.
- * Debe usarse dentro de una transacción, porque lee relaciones LAZY (ticket y changedBy).
+ * Converts StatusHistory entities into response DTOs.
+ * Must be used within a transaction, as it reads LAZY relations (ticket and changedBy).
  */
 @Component
 public class StatusHistoryMapper {
 
-    /** Convierte una fila del historial en su representación pública. */
+    /** Converts a history record into its public representation. */
     public StatusHistoryResponse toResponse(StatusHistory history) {
         return new StatusHistoryResponse(
                 history.getId(),
-                history.getTicket().getId(),             // solo el id del ticket, no el ticket entero
+                history.getTicket().getId(),             // only ticket id, not entire ticket entity
                 history.getPreviousStatus(),
                 history.getNewStatus(),
-                history.getChangedBy().getUsername(),    // solo el username, nunca el UserEntity
+                history.getChangedBy().getUsername(),    // only username, never UserEntity
                 history.getAction(),
                 history.getChangedAt());
     }

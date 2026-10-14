@@ -18,7 +18,7 @@ class TicketList extends HTMLElement {
     try {
       const data = await apiRequest("/api/tickets", { method: "GET" });
       
-      // Mapeo con los campos exactos del TicketDto del backend Spring Boot:
+      // Mapping with exact TicketDto fields from Spring Boot backend:
       // applicantUsername, technicianUsername, title, status (enum: OPEN, ASSIGNED, IN_PROGRESS, RESOLVED, CLOSED)
       this.tickets = Array.isArray(data) ? data.map(ticket => ({
         id: ticket.id ?? ticket.ticketId ?? '---',
@@ -43,7 +43,7 @@ class TicketList extends HTMLElement {
 
   mapStatusCode(statusText) {
     if (!statusText) return 'open';
-    // Mapeo directo con los valores del enum del backend (OPEN, ASSIGNED, IN_PROGRESS, RESOLVED, CLOSED)
+    // Direct mapping to backend enum values (OPEN, ASSIGNED, IN_PROGRESS, RESOLVED, CLOSED)
     const STATUS_MAP = {
       'OPEN':        'open',
       'ASSIGNED':    'assigned',

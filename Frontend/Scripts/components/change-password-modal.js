@@ -207,7 +207,7 @@ export class ChangePasswordModal extends HTMLElement {
         return;
       }
 
-      // Éxito: cerrar diálogo y resolver la promesa para continuar la navegación
+      // Success: close dialog and resolve promise to continue navigation
       this.#dialog.close();
       if (this.#resolvePromise) {
         this.#resolvePromise();

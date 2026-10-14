@@ -8,7 +8,7 @@ import org.springframework.data.jpa.domain.Specification;
 
 public final class TicketSpecifications {
 
-    // esta clase es para evitar hacer multiples metodos en donde se busque o por status priority o category esto miniminiza codigo y hace que mas simplificado los filtros en general
+    // Specifications class to avoid multiple query methods by status, priority, or category, simplifying dynamic filtering
 
     private TicketSpecifications(){}
 

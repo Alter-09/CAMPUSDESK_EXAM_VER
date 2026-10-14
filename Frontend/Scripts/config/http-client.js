@@ -45,7 +45,7 @@ async function readPayload(response) {
 }
 
 /**
- * @param {string} path Ruta relativa a la API, ej. "/api/user/all".
+ * @param {string} path Relative API route, e.g. "/api/user/all".
  * @param {{ method?: string, body?: unknown }} [options]
  * @returns {Promise<any>}
  * @throws {ApiError}

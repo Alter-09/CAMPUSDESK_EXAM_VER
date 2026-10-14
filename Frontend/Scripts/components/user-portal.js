@@ -357,7 +357,7 @@ export class UserPortal extends HTMLElement {
     this.#initialized ??= this.#initialize();
   }
 
-  /** Permite que el módulo de navegación fuerce una recarga (e.g. al volver a la sección) */
+  /** Allows navigation module to force reload (e.g. when returning to section) */
   async reload() {
     await this.#initialized;
     if (this.#mode === "my-tickets") {
@@ -365,7 +365,7 @@ export class UserPortal extends HTMLElement {
     }
   }
 
-  // ─── Inicialización ────────────────────────────────────────────────────────
+  // ─── Initialization ────────────────────────────────────────────────────────
 
   async #initialize() {
     await attachStyles(this.#root, "user-portal.css");
@@ -397,7 +397,7 @@ export class UserPortal extends HTMLElement {
     const successState = root.getElementById("success-state");
     const newBtn = root.getElementById("ct-new-btn");
 
-    // Contadores de caracteres en tiempo real
+    // Real-time character counters
     titleInput.addEventListener("input", () => {
       const len = titleInput.value.length;
       titleCount.textContent = `${len} / 150`;
@@ -419,7 +419,7 @@ export class UserPortal extends HTMLElement {
       this.#clearFieldError("ct-priority-error")
     );
 
-    // Envío del formulario
+    // Form submission
     form.addEventListener("submit", async (e) => {
       e.preventDefault();
       this.#clearAllCreateErrors();
@@ -449,7 +449,7 @@ export class UserPortal extends HTMLElement {
       }
       if (hasError) return;
 
-      // Envío a la API
+      // Submit to API
       submitBtn.disabled = true;
       submitBtn.querySelector("span").textContent = TEXT.createTicket.submitting;
 
@@ -465,7 +465,7 @@ export class UserPortal extends HTMLElement {
       }
     });
 
-    // Botón «Crear otra solicitud»
+    // "Create another request" button
     newBtn.addEventListener("click", () => {
       form.reset();
       titleCount.textContent = "0 / 150";
@@ -497,7 +497,7 @@ export class UserPortal extends HTMLElement {
   #setupMyTickets() {
     const root = this.#root;
 
-    // Filtros por pestaña
+    // Tab filters
     const tabs = root.querySelectorAll(".filter-tab");
     tabs.forEach((tab) => {
       tab.addEventListener("click", () => {
@@ -509,7 +509,7 @@ export class UserPortal extends HTMLElement {
       });
     });
 
-    // Búsqueda
+    // Search
     root.getElementById("mt-search").addEventListener("input", (e) => {
       this.#searchQuery = e.target.value.toLowerCase().trim();
       this.#renderMyTicketsGrid();
@@ -518,7 +518,7 @@ export class UserPortal extends HTMLElement {
     // Reintentar
     root.getElementById("mt-retry-btn").addEventListener("click", () => this.#loadMyTickets());
 
-    // Cierre del modal
+    // Close modal
     root.getElementById("mt-modal-close").addEventListener("click", () => this.#closeModal());
     root.getElementById("mt-modal").addEventListener("click", (e) => {
       if (e.target === root.getElementById("mt-modal")) this.#closeModal();
@@ -530,7 +530,7 @@ export class UserPortal extends HTMLElement {
       this.#submitComment();
     });
 
-    // Edición
+    // Editing
     root.getElementById("mt-edit-form").addEventListener("submit", (e) => {
       e.preventDefault();
       this.#saveEdit();
@@ -567,13 +567,13 @@ export class UserPortal extends HTMLElement {
     const msgEl = root.getElementById("mt-status-msg");
     const retryBtn = root.getElementById("mt-retry-btn");
 
-    // Filtrar por estado activo
+    // Filter by active status
     let filtered = this.#tickets;
     if (this.#activeFilter !== "ALL") {
       filtered = filtered.filter((t) => String(t.status || "").toUpperCase() === this.#activeFilter);
     }
 
-    // Filtrar por búsqueda
+    // Filter by search query
     if (this.#searchQuery) {
       filtered = filtered.filter((t) => {
         return (
@@ -645,7 +645,7 @@ export class UserPortal extends HTMLElement {
   async #openDetail(ticketId) {
     const root = this.#root;
 
-    // Buscar en memoria primero; si no lo tiene, pedir al backend
+    // Search in memory first; if absent, fetch from backend
     try {
       this.#currentTicket = await getTicketById(ticketId);
     } catch {
@@ -680,10 +680,10 @@ export class UserPortal extends HTMLElement {
     root.getElementById("mt-modal-created").textContent = formatDate(ticket.createdAt);
     root.getElementById("mt-modal-updated").textContent = formatDate(ticket.updatedAt);
 
-    // Ciclo de vida (acciones del usuario)
+    // Lifecycle (user actions)
     this.#renderUserLifecycle(ticket);
 
-    // Panel de edición (solo si el ticket está OPEN y sin técnico)
+    // Edit panel (only if ticket is OPEN and unassigned)
     const editPanel = root.getElementById("mt-edit-panel");
     const isEditable = statusKey === "OPEN" && !ticket.technicianUsername;
     editPanel.hidden = !isEditable;
@@ -695,7 +695,7 @@ export class UserPortal extends HTMLElement {
       root.getElementById("mt-edit-error").textContent = "";
     }
 
-    // Gestión del formulario de comentarios según estado
+    // Comment form management according to status
     const isClosed = statusKey === "CLOSED";
     const commentForm = root.getElementById("mt-comment-form");
     commentForm.hidden = isClosed;
@@ -721,7 +721,7 @@ export class UserPortal extends HTMLElement {
     };
 
     if (status === "RESOLVED") {
-      // El usuario puede confirmar el cierre (RF-04, regla 6)
+      // User can confirm closure (RF-04, rule 6)
       const notice = document.createElement("div");
       notice.className = "status-notice";
       notice.textContent = TEXT.detail.resolvedNotice;
@@ -812,7 +812,7 @@ export class UserPortal extends HTMLElement {
         card.className = "comment-card";
         const isInternal = c.visibility === "INTERNAL";
 
-        // Los usuarios no ven comentarios internos (notas entre técnicos/admins)
+        // Users do not see internal comments (technician/admin internal notes)
         if (isInternal) return;
 
         card.innerHTML = `
@@ -847,7 +847,7 @@ export class UserPortal extends HTMLElement {
     submitBtn.textContent = TEXT.detail.submittingComment;
 
     try {
-      // Los usuarios solo envían comentarios públicos
+      // Users only post public comments
       await addTicketComment(ticketId, { content, visibility: "PUBLIC" });
       input.value = "";
       await this.#loadComments(ticketId);
