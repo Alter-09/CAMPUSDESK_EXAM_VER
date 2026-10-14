@@ -23,7 +23,6 @@
                 <section class="superadmin-nav-group" aria-labelledby="general-navigation">
                     <h2 id="general-navigation" class="superadmin-nav-group__label">General</h2>
                     <a class="superadmin-nav-link" href="./superadmin.html">
-                        <!-- SLOT: ícono del Dashboard -->
                         <img class="superadmin-nav-link__icon" src="./Assets/icons/dashboard.svg" width="24" height="24" alt="" />
                         <span class="superadmin-nav-link__text">Dashboard</span>
                     </a>
@@ -32,12 +31,10 @@
                 <section class="superadmin-nav-group" aria-labelledby="security-navigation">
                     <h2 id="security-navigation" class="superadmin-nav-group__label">Seguridad</h2>
                     <a class="superadmin-nav-link" href="./newuser.html">
-                        <!-- SLOT: ícono de Crear nuevo usuario -->
                         <img class="superadmin-nav-link__icon" src="./Assets/icons/user-logo.svg" width="24" height="24" alt="" />
                         <span class="superadmin-nav-link__text">Crear nuevo Usuario</span>
                     </a>
                     <a class="superadmin-nav-link" href="./roleselector.html">
-                        <!-- SLOT: ícono de Roles y permisos -->
                         <img class="superadmin-nav-link__icon" src="./Assets/icons/shieldlock.svg" width="24" height="24" alt="" />
                         <span class="superadmin-nav-link__text">Roles y Permisos</span>
                     </a>
@@ -46,7 +43,6 @@
                 <section class="superadmin-nav-group" aria-labelledby="people-navigation">
                     <h2 id="people-navigation" class="superadmin-nav-group__label">Personal</h2>
                     <a class="superadmin-nav-link" href="./techguys.html">
-                        <!-- SLOT: ícono de Técnicos -->
                         <img class="superadmin-nav-link__icon" src="./Assets/icons/technician.svg" width="24" height="24" alt="" />
                         <span class="superadmin-nav-link__text">Técnicos</span>
                     </a>
@@ -59,12 +55,10 @@
                 <section class="superadmin-nav-group" aria-labelledby="tickets-navigation">
                     <h2 id="tickets-navigation" class="superadmin-nav-group__label">Tiquetes</h2>
                     <a class="superadmin-nav-link" href="./assignation.html">
-                        <!-- SLOT: ícono de Asignar técnico -->
                         <img class="superadmin-nav-link__icon" src="./Assets/icons/assign.svg" width="24" height="24" alt="" />
                         <span class="superadmin-nav-link__text">Asignar Técnico</span>
                     </a>
                     <a class="superadmin-nav-link" href="./ticketlist.html">
-                        <!-- SLOT: ícono de Estado de tiquetes -->
                         <img class="superadmin-nav-link__icon" src="./Assets/icons/search.svg" width="24" height="24" alt="" />
                         <span class="superadmin-nav-link__text">Estado de Tiquetes</span>
                     </a>
@@ -73,14 +67,11 @@
 
             <div class="superadmin-sidebar__footer">
                 <a class="superadmin-nav-link superadmin-nav-link--danger" href="./index.html">
-                    <!-- SLOT: ícono de Cerrar sesión -->
                     <img class="superadmin-nav-link__icon" src="./Assets/icons/logout.svg" width="24" height="24" alt="" />
                     <span class="superadmin-nav-link__text">Cerrar sesión</span>
                 </a>
             </div>
         </aside>
-
-        <!-- Fondo oscuro del menú lateral en pantallas pequeñas -->
         <div class="superadmin-backdrop" data-sidebar-backdrop></div>
 
         <div class="superadmin-workspace">
@@ -98,12 +89,11 @@
                 </div>
                 <div class="app-header__user">
                     <span class="app-header__role">Superadmin</span>
-                    <img class="app-header__menu-icon" src="./Assets/Icons/user.svg" width="24" height="24" alt="" />
+                    <img class="app-header__menu-icon" src="./Assets/Icons/user.svg" width="24" height="24" alt="user logo" />
                 </div>
             </header>
 
             <main id="users-list" class="superadmin-content">
-                <!-- El Web Component gestiona la carga, la tabla y los datos reales del backend -->
                 <cd-user-directory></cd-user-directory>
             </main>
         </div>

@@ -1,11 +1,3 @@
-/**
- * Componente: Dashboard Especializado para Usuarios (<cd-user-dashboard>).
- * Diseñado según el estilo dark de referencia Fortify360 y enfocado en las necesidades del solicitante:
- * - Tarjetas KPI con barras de progreso (Total creadas, En Espera, En Atención, Resueltas/Cerradas)
- * - Gráfico de ondas curvas de actividad personal de solicitudes
- * - Lista de Solicitudes Recientes con estado en vivo y Acceso Rápido a crear tiquete
- * 100% Vanilla JS + HTML5 + CSS3 sin dependencias externas.
- */
 import { apiRequest } from "../config/http-client.js";
 
 const SVG_NS = "http://www.w3.org/2000/svg";
@@ -287,7 +279,6 @@ class UserDashboard extends HTMLElement {
           <!-- Card 1: Total Reportadas -->
           <article class="role-kpi-card">
             <div class="role-kpi-card__top">
-              <div class="role-kpi-card__icon-wrap">📋</div>
               <span class="role-kpi-card__badge role-kpi-card__badge--cyan">Historial</span>
             </div>
             <p class="role-kpi-card__label">Total Solicitudes Creadas</p>
@@ -303,7 +294,6 @@ class UserDashboard extends HTMLElement {
           <!-- Card 2: En Espera (Abiertas) -->
           <article class="role-kpi-card">
             <div class="role-kpi-card__top">
-              <div class="role-kpi-card__icon-wrap">⏳</div>
               <span class="role-kpi-card__badge role-kpi-card__badge--amber">En Espera</span>
             </div>
             <p class="role-kpi-card__label">Esperando Asignación</p>
@@ -319,7 +309,6 @@ class UserDashboard extends HTMLElement {
           <!-- Card 3: En Atención Activa -->
           <article class="role-kpi-card">
             <div class="role-kpi-card__top">
-              <div class="role-kpi-card__icon-wrap">👨‍🔧</div>
               <span class="role-kpi-card__badge role-kpi-card__badge--cyan">En Curso</span>
             </div>
             <p class="role-kpi-card__label">En Atención Técnica</p>
@@ -335,7 +324,6 @@ class UserDashboard extends HTMLElement {
           <!-- Card 4: Solucionadas & Cerradas -->
           <article class="role-kpi-card">
             <div class="role-kpi-card__top">
-              <div class="role-kpi-card__icon-wrap">✨</div>
               <span class="role-kpi-card__badge role-kpi-card__badge--green">Completadas</span>
             </div>
             <p class="role-kpi-card__label">Solucionadas & Cerradas</p>
@@ -427,7 +415,7 @@ class UserDashboard extends HTMLElement {
             <!-- Tarjeta de Acción Rápida -->
             <div class="quick-action-card">
               <h2 class="quick-action-card__title">
-                <span>⚡</span>
+                <span></span>
                 <span>¿Tienes una nueva incidencia?</span>
               </h2>
               <p class="quick-action-card__desc">
@@ -509,8 +497,6 @@ class UserDashboard extends HTMLElement {
 
     this.pointsCyan = this.monthlyData.map((d, i) => ({ x: toX(i), y: toY(d.cyan), data: d }));
     this.pointsPurple = this.monthlyData.map((d, i) => ({ x: toX(i), y: toY(d.purple), data: d }));
-
-    // Área luminosa Cyan
     svg.append(
       createSvg("path", {
         class: "revenue-chart__wave-area",
@@ -518,16 +504,12 @@ class UserDashboard extends HTMLElement {
         fill: "url(#userCyanArea)",
       })
     );
-
-    // Curva Púrpura
     svg.append(
       createSvg("path", {
         class: "revenue-chart__wave-line revenue-chart__wave-line--purple",
         d: getCurvedPath(this.pointsPurple),
       })
     );
-
-    // Curva Cyan
     svg.append(
       createSvg("path", {
         class: "revenue-chart__wave-line revenue-chart__wave-line--cyan",

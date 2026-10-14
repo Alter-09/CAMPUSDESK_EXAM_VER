@@ -1,7 +1,3 @@
-/**
- * Arranque de la página "Crear nuevo usuario".
- * Conecta los dos componentes sin que se conozcan entre sí.
- */
 import { MESSAGES } from "../constants/messages.es.js";
 import { USER_ADD_REQUESTED_EVENT } from "../components/user-list.js";
 import { USER_CREATED_EVENT } from "../components/user-form-modal.js";
