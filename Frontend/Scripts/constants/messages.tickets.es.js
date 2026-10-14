@@ -1,0 +1,91 @@
+export const TICKETS_MESSAGES = Object.freeze({
+  categories: Object.freeze({
+    HARDWARE: "Hardware",
+    SOFTWARE: "Software",
+    NETWORK: "Redes",
+    ACCESS: "Accesos",
+    OTHER: "Otros",
+  }),
+
+  priorities: Object.freeze({
+    LOW: "Baja",
+    MEDIUM: "Media",
+    HIGH: "Alta",
+    CRITICAL: "Crítica",
+  }),
+
+  statuses: Object.freeze({
+    OPEN: "Abierta",
+    ASSIGNED: "Asignada",
+    IN_PROGRESS: "En proceso",
+    RESOLVED: "Resuelta",
+    CLOSED: "Cerrada",
+  }),
+
+  transitions: Object.freeze({
+    START_PROGRESS: "Iniciar atención",
+    RESOLVE: "Marcar como resuelta",
+    CONFIRM_CLOSE: "Confirmar cierre",
+  }),
+
+  visibility: Object.freeze({
+    PUBLIC: "Pública (visible para el solicitante)",
+    INTERNAL: "Nota interna (solo técnicos y administradores)",
+  }),
+
+  historyActions: Object.freeze({
+    CREATION: "Creación del tiquete",
+    ASSIGNMENT: "Asignación de técnico",
+    STATUS_TRANSITION: "Cambio de estado",
+    CLOSURE: "Cierre definitivo",
+  }),
+
+  assigned: Object.freeze({
+    eyebrow: "Soporte Operativo",
+    title: "Tiquetes Asignados",
+    subtitle: "Atención, diagnóstico y resolución de incidencias a tu cargo",
+    loading: "Cargando tus tiquetes asignados…",
+    empty: "No tienes tiquetes asignados en este momento.",
+    loadError: "No se pudieron cargar los tiquetes.",
+    retry: "Reintentar",
+    filterAll: "Todos",
+    filterAssigned: "Asignados",
+    filterInProgress: "En proceso",
+    filterResolved: "Resueltos",
+    searchPlaceholder: "Buscar por título, ID o solicitante…",
+    cardRequester: "Solicitante",
+    cardViewDetails: "Ver detalle completo →",
+  }),
+
+  detail: Object.freeze({
+    modalTitle: "Detalle de la Incidencia",
+    sectionGeneral: "Información General",
+    sectionLifecycle: "Estado y Transición del Tiquete",
+    sectionComments: "Comentarios de Seguimiento",
+    sectionHistory: "Historial de Cambios",
+    requesterLabel: "Reportado por",
+    technicianLabel: "Técnico asignado",
+    createdAtLabel: "Fecha de creación",
+    updatedAtLabel: "Última actualización",
+    descriptionLabel: "Descripción del problema",
+    categoryLabel: "Categoría",
+    priorityLabel: "Prioridad",
+    statusLabel: "Estado actual",
+    actionStartProgress: "Iniciar atención",
+    actionResolve: "Marcar como resuelta",
+    transitionSuccess: "Estado del tiquete actualizado correctamente.",
+    transitionError: "No se pudo cambiar el estado del tiquete.",
+    resolvedNotice: "Tiquete marcado como resuelto. En espera de confirmación de cierre por el solicitante.",
+    closedNotice: "Esta incidencia se encuentra cerrada. No admite modificaciones.",
+    noComments: "No hay comentarios registrados para esta incidencia.",
+    addCommentHeading: "Agregar comentario",
+    commentPlaceholder: "Describe los hallazgos técnicos, acciones realizadas o notas de solución…",
+    visibilityLabel: "Visibilidad de la nota:",
+    submitComment: "Publicar comentario",
+    submittingComment: "Publicando…",
+    commentSuccess: "Comentario agregado correctamente.",
+    commentError: "No se pudo publicar el comentario.",
+    noHistory: "No se registran cambios de estado.",
+    closeBtn: "Cerrar",
+  }),
+});

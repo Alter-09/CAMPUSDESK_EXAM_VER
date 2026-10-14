@@ -1,0 +1,272 @@
+/**
+ * Static superadmin shell. No data logic until API is available.
+ * Mobile-first: mobile base (sidebar is a slide-out drawer) and
+ * from 1024px sidebar becomes fixed. Header resides in components/app-header.css.
+ */
+
+/* ---------- Page ---------- */
+.superadmin-page {
+  min-height: 100vh;
+  min-height: 100dvh;
+  background: var(--cd-color-surface-canvas);
+}
+
+/* ---------- Sidebar ---------- */
+/* Base (mobile and tablet): off-canvas panel; data-sidebar-open displays it */
+.superadmin-sidebar {
+  display: flex;
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 3;
+  flex-direction: column;
+  width: min(var(--cd-sidebar-width), 85vw);
+  overflow-y: auto;
+  background: var(--cd-color-surface-navy-deep);
+  border-right: 1px solid var(--cd-color-border-level-1);
+  box-shadow: var(--cd-elevation-float);
+  transform: translateX(-100%);
+  /* visibility prevents keyboard focus on hidden links */
+  visibility: hidden;
+  transition: transform var(--cd-transition-base), visibility 0s linear var(--cd-transition-base);
+}
+
+.superadmin-page[data-sidebar-open] .superadmin-sidebar {
+  transform: none;
+  visibility: visible;
+  transition: transform var(--cd-transition-base), visibility 0s;
+}
+
+/* Dark backdrop behind open menu */
+.superadmin-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 2;
+  background: var(--cd-color-surface-canvas);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity var(--cd-transition-base), visibility 0s linear var(--cd-transition-base);
+}
+
+.superadmin-page[data-sidebar-open] .superadmin-backdrop {
+  opacity: 0.72;
+  visibility: visible;
+  transition: opacity var(--cd-transition-base), visibility 0s;
+}
+
+/* When menu is open, background page does not scroll */
+html:has(.superadmin-page[data-sidebar-open]) {
+  overflow: hidden;
+}
+
+/* ---------- Marca ---------- */
+.superadmin-brand {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  gap: var(--cd-space-sm);
+  /* Same height as header: the two bottom lines remain aligned */
+  min-height: var(--cd-header-height);
+  padding: 0 var(--cd-space-lg);
+  border-bottom: 1px solid var(--cd-color-border-level-1);
+  text-decoration: none;
+}
+
+.superadmin-brand__mark {
+  width: 2.5rem;
+  height: 2.5rem;
+}
+
+.superadmin-brand__name,
+.superadmin-brand__view {
+  display: block;
+}
+
+.superadmin-brand__name {
+  font-family: var(--cd-font-display);
+  font-size: 0.875rem;
+  font-weight: var(--cd-font-weight-bold);
+  letter-spacing: 0.06em;
+}
+
+.superadmin-brand__view {
+  margin-top: var(--cd-space-xs);
+  color: var(--cd-color-slate-titanium-500);
+  font-size: 0.75rem;
+}
+
+/* ---------- Navigation ---------- */
+.superadmin-navigation {
+  display: flex;
+  flex-direction: column;
+  gap: var(--cd-space-lg);
+  padding: var(--cd-space-lg) var(--cd-space-md);
+}
+
+.superadmin-nav-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--cd-space-xs);
+}
+
+.superadmin-nav-group__label {
+  margin: 0 0 var(--cd-space-xs);
+  padding-inline: var(--cd-space-sm);
+  color: var(--cd-color-slate-titanium-500);
+  font-family: var(--cd-font-mono);
+  font-size: 0.625rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+/* Touch target base: 44px height; reverts to 40px on desktop */
+.superadmin-nav-link,
+.superadmin-signout {
+  display: flex;
+  align-items: center;
+  gap: var(--cd-space-sm);
+  min-height: var(--cd-touch-target);
+  padding: var(--cd-space-sm) 0.75rem;
+  border: 1px solid transparent;
+  border-radius: var(--cd-radius-md);
+  background: transparent;
+  color: var(--cd-color-slate-titanium-300);
+  font-size: 0.875rem;
+  text-align: left;
+  text-decoration: none;
+}
+
+.superadmin-nav-link:hover {
+  background: var(--cd-color-surface-card);
+  color: var(--cd-color-slate-titanium-100);
+}
+
+.superadmin-nav-link[aria-current="page"] {
+  border-color: var(--cd-color-border-active);
+  background: var(--cd-color-signal-coral-muted);
+  color: var(--cd-color-slate-titanium-100);
+}
+
+/* Navigation icon: fixed 24px box; SVGs are normalized */
+.superadmin-nav-link__icon {
+  flex-shrink: 0;
+  width: 1.5rem;
+  height: 1.5rem;
+  object-fit: contain;
+  /* SVGs have fixed color: filter makes them white over dark sidebar */
+  filter: brightness(0) invert(1);
+  opacity: 0.8;
+  transition: opacity var(--cd-transition-fast);
+}
+
+.superadmin-nav-link:hover .superadmin-nav-link__icon,
+.superadmin-nav-link[aria-current="page"] .superadmin-nav-link__icon {
+  opacity: 1;
+}
+
+.superadmin-sidebar__footer {
+  flex-shrink: 0;
+  padding: var(--cd-space-md);
+  border-top: 1px solid var(--cd-color-border-level-1);
+}
+
+.superadmin-signout {
+  width: 100%;
+  cursor: default;
+}
+
+/* ---------- Workspace ---------- */
+.superadmin-workspace {
+  min-width: 0;
+}
+
+/* Horizontal padding matches header (components/app-header.css) */
+.superadmin-content {
+  display: grid;
+  /* minmax(0, 1fr): without this, wide table or select stretches column causing overflow */
+  grid-template-columns: minmax(0, 1fr);
+  min-height: calc(100vh - var(--cd-header-height));
+  min-height: calc(100dvh - var(--cd-header-height));
+  place-items: center;
+  padding: var(--cd-margin);
+}
+
+.superadmin-empty-state {
+  width: min(100%, var(--cd-app-content-max));
+  padding: clamp(var(--cd-space-xl), 7vw, var(--cd-space-2xl));
+  border: 1px solid var(--cd-color-border-subtle);
+  border-top-color: var(--cd-color-card-highlight);
+  border-radius: var(--cd-radius-lg);
+  background: var(--cd-color-surface-navy-deep);
+  text-align: center;
+}
+
+.superadmin-empty-state__eyebrow {
+  margin: 0 0 var(--cd-space-sm);
+  color: var(--cd-color-signal-coral);
+  font-family: var(--cd-font-mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.superadmin-empty-state__title {
+  margin: 0;
+  font-family: var(--cd-font-display);
+  font-size: clamp(1.5rem, 3vw, 2rem);
+  font-weight: var(--cd-font-weight-semibold);
+  letter-spacing: -0.02em;
+  overflow-wrap: break-word;
+}
+
+.superadmin-empty-state__description {
+  max-width: 34rem;
+  margin: var(--cd-space-md) auto 0;
+  color: var(--cd-color-slate-titanium-300);
+  font-size: 0.875rem;
+  line-height: 1.5;
+}
+
+/* ---------- Tablet (≥768px) ---------- */
+@media (min-width: 768px) {
+  .superadmin-content {
+    padding: var(--cd-margin-lg);
+  }
+}
+
+/* ---------- Escritorio (≥1024px): sidebar fijo ---------- */
+/* This breakpoint is also in js/sidebar-toggle.js: keep them synchronized */
+@media (min-width: 1024px) {
+  .superadmin-page {
+    display: grid;
+    grid-template-columns: var(--cd-sidebar-width) minmax(0, 1fr);
+  }
+
+  .superadmin-sidebar {
+    position: sticky;
+    bottom: auto;
+    left: auto;
+    width: auto;
+    height: 100vh;
+    height: 100dvh;
+    box-shadow: none;
+    transform: none;
+    visibility: visible;
+    transition: none;
+  }
+
+  .superadmin-backdrop {
+    display: none;
+  }
+
+  .superadmin-nav-link,
+  .superadmin-signout {
+    min-height: 2.5rem;
+  }
+
+  /* Menu button exists only while sidebar is slide-out drawer */
+  .app-header__menu-button {
+    display: none;
+  }
+}

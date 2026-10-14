@@ -1,0 +1,307 @@
+/**
+ * Composition of the login page.
+ * Desktop: panel (form) + brand. Mobile: column with fluid gaps (no negative margins).
+ */
+
+.login-page {
+  position: relative;
+  isolation: isolate;
+  min-height: 100vh;
+  min-height: 100dvh;
+  overflow-x: clip;
+  background-color: var(--cd-color-surface-canvas);
+}
+
+/* Atmosphere: tonal depth without competing with CTA */
+.login-page__atmosphere {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    radial-gradient(
+      55% 45% at 85% 40%,
+      var(--cd-color-atmosphere) 0%,
+      transparent 70%
+    ),
+    radial-gradient(
+      40% 35% at 15% 80%,
+      rgba(12, 50, 109, 0.45) 0%,
+      transparent 65%
+    ),
+    linear-gradient(
+      160deg,
+      var(--cd-color-surface-canvas) 0%,
+      var(--cd-color-surface-navy-deep) 55%,
+      var(--cd-color-surface-canvas) 100%
+    );
+}
+
+.login-page__inner {
+  display: grid;
+  grid-template-columns: minmax(18rem, var(--cd-login-card-width)) minmax(0, 1fr);
+  align-items: center;
+  column-gap: clamp(1rem, 3vw, var(--cd-space-2xl));
+  width: min(100%, var(--cd-login-page-max));
+  min-height: 100vh;
+  min-height: 100dvh;
+  margin-inline: auto;
+  padding: clamp(var(--cd-margin-md), 5vh, var(--cd-margin-lg))
+    clamp(var(--cd-margin), 4vw, var(--cd-margin-lg));
+}
+
+.login-page__brand {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 0;
+  height: 100%;
+}
+
+.login-page__brand-image {
+  width: min(100%, var(--cd-login-brand-max));
+  max-height: min(48rem, 82vh);
+  height: auto;
+  aspect-ratio: 1;
+  object-fit: contain;
+  pointer-events: none;
+  user-select: none;
+  filter: drop-shadow(0 18px 40px rgba(1, 14, 36, 0.55));
+}
+
+.login-page__brand-mobile {
+  display: none;
+}
+
+/* On desktop the panel IS the card (welcome + form together) */
+.login-panel {
+  width: 100%;
+  max-width: var(--cd-login-card-width);
+  padding: clamp(1.75rem, 3vw, 2.5rem) clamp(1.25rem, 2.5vw, 1.75rem)
+    clamp(2rem, 3.5vw, 2.75rem);
+  background-color: var(--cd-color-surface-card);
+  border: 1px solid var(--cd-color-border-subtle);
+  border-top: 1px solid var(--cd-color-card-highlight);
+  border-radius: var(--cd-radius-lg);
+  box-shadow: var(--cd-elevation-float);
+}
+
+.login-welcome {
+  margin: 0 0 var(--cd-space-sm);
+  font-family: var(--cd-font-display);
+  font-size: clamp(1.5rem, 2.2vw, 2rem);
+  font-weight: var(--cd-font-weight-bold);
+  line-height: 1.25;
+  letter-spacing: -0.02em;
+  text-align: center;
+  color: var(--cd-color-slate-titanium-100);
+}
+
+.login-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--cd-space-xl);
+}
+
+.login-card__subtitle {
+  margin: 0;
+  font-family: var(--cd-font-display);
+  font-size: clamp(1.125rem, 1.8vw, 1.5rem);
+  font-weight: var(--cd-font-weight-semibold);
+  line-height: 1.33;
+  letter-spacing: -0.01em;
+  text-align: center;
+  color: var(--cd-color-slate-titanium-100);
+}
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--cd-space-xl);
+}
+
+.login-form__summary {
+  display: none;
+  margin: 0;
+  padding: var(--cd-space-sm) var(--cd-space-md);
+  border: 1px solid var(--cd-color-border-active);
+  border-radius: var(--cd-radius-lg);
+  background-color: var(--cd-color-signal-coral-muted);
+  color: var(--cd-color-slate-titanium-100);
+  font-size: 0.875rem;
+  line-height: 1.45;
+}
+
+.login-form__summary.is-visible {
+  display: block;
+}
+
+.login-form__fields {
+  display: flex;
+  flex-direction: column;
+  gap: var(--cd-space-lg);
+}
+
+.login-form__actions {
+  display: flex;
+  flex-direction: column;
+  gap: var(--cd-space-sm);
+}
+
+.login-form__hint {
+  margin: 0;
+  text-align: center;
+  font-size: 0.75rem;
+  line-height: 1.5;
+  color: var(--cd-color-slate-titanium-500);
+}
+
+/* Tablet */
+@media (max-width: 1279px) and (min-width: 768px) {
+  .login-page__inner {
+    grid-template-columns: minmax(17rem, 28rem) minmax(0, 1fr);
+    column-gap: var(--cd-gutter);
+  }
+
+  .login-page__brand-image {
+    width: min(100%, 26rem);
+  }
+}
+
+/* 🖥️ Pantallas Grandes, Monitores y Televisores (Autoescalado fluido) */
+@media (min-width: 1280px) {
+  .login-page__inner {
+    grid-template-columns: minmax(28rem, 38vw) minmax(0, 1fr);
+    column-gap: clamp(3rem, 6vw, 10rem);
+    width: min(95%, 90vw);
+    max-width: 140rem;
+  }
+
+  .login-panel {
+    max-width: 100%;
+    padding: clamp(2.5rem, 3.5vw, 4.5rem) clamp(2rem, 3vw, 3.5rem);
+  }
+
+  .login-welcome {
+    font-size: clamp(2rem, 2.5vw, 3rem);
+  }
+
+  .login-card__subtitle {
+    font-size: clamp(1.4rem, 1.8vw, 2.1rem);
+  }
+
+  .field__input {
+    min-height: clamp(3.2rem, 4vw, 4.5rem);
+    font-size: clamp(1rem, 1.2vw, 1.25rem);
+  }
+
+  .button {
+    min-height: clamp(3.2rem, 4vw, 4.5rem);
+    font-size: clamp(1rem, 1.3vw, 1.25rem);
+  }
+
+  .login-page__brand-image {
+    width: min(100%, 48vw);
+    max-height: min(75rem, 85vh);
+  }
+}
+
+/* Mobile — column with real gaps; panel ceases to be the card */
+@media (max-width: 767px) {
+  .login-page__inner {
+    grid-template-columns: 1fr;
+    align-content: start;
+    justify-items: center;
+    row-gap: 0;
+    padding: var(--cd-margin) var(--cd-margin) var(--cd-space-2xl);
+  }
+
+  .login-page__brand {
+    order: -1;
+    width: min(100%, 16rem);
+    height: auto;
+    margin-inline: auto;
+    padding-block: var(--cd-space-sm) 0;
+  }
+
+  .login-page__brand-desktop {
+    display: none;
+  }
+
+  .login-page__brand-mobile {
+    display: block;
+    width: 100%;
+    height: auto;
+    filter: drop-shadow(0 10px 24px rgba(1, 14, 36, 0.5));
+  }
+
+  .login-panel {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: var(--cd-space-lg);
+    width: min(100%, 22.5rem);
+    max-width: none;
+    padding: var(--cd-space-xl) var(--cd-space-md);
+  }
+
+  .login-welcome {
+    margin: 0;
+    font-size: clamp(1.35rem, 5.5vw, 1.5rem);
+  }
+
+  .login-card {
+    gap: var(--cd-space-lg);
+    padding: 0;
+  }
+
+  .login-card__subtitle {
+    font-size: 1.125rem;
+  }
+
+  .login-form {
+    gap: var(--cd-space-lg);
+  }
+
+  .login-form__fields {
+    gap: var(--cd-space-md);
+  }
+
+  .field__input {
+    min-height: 3rem;
+  }
+}
+
+/* Very low viewport heights (mobile landscape): compact brand */
+@media (max-width: 767px) and (max-height: 700px) {
+  .login-page__brand {
+    width: min(100%, 9.5rem);
+    padding-block: 0;
+  }
+
+  .login-panel {
+    gap: var(--cd-space-sm);
+  }
+
+  .login-card {
+    padding-block: var(--cd-space-lg);
+  }
+}
+/* Force dark background and light text when browser autofills input */
+.field__input:-webkit-autofill,
+.field__input:-webkit-autofill:hover,
+.field__input:-webkit-autofill:focus {
+  -webkit-box-shadow: 0 0 0 1000px var(--cd-color-surface-canvas, #071328) inset !important;
+  -webkit-text-fill-color: var(--cd-color-slate-titanium-100, #ffffff) !important;
+  transition: background-color 5000s ease-in-out 0s;
+}
+/* Force light text color and dark background on Chrome autofill and suggestions */
+.field__input:-webkit-autofill,
+.field__input:-webkit-autofill:hover,
+.field__input:-webkit-autofill:focus,
+.field__input:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0 1000px var(--cd-color-surface-canvas, #071328) inset !important;
+  -webkit-text-fill-color: var(--cd-color-slate-titanium-100, #ffffff) !important;
+  caret-color: var(--cd-color-slate-titanium-100, #ffffff);
+  transition: background-color 5000s ease-in-out 0s;
+}

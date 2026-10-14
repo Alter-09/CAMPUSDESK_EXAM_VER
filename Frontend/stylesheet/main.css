@@ -1,0 +1,33 @@
+/**
+ * Stylesheet entrypoint.
+ * Import order: tokens → base → shared components → page layouts.
+ */
+@import url("./tokens.css");
+@import url("./base.css");
+@import url("./components/card.css");
+@import url("./components/field.css");
+@import url("./components/button.css");
+@import url("./components/app-header.css");
+@import url("./components/revenue-chart.css");
+@import url("./components/role-dashboard.css");
+@import url("./layouts/login.css");
+@import url("./layouts/superadmin.css");
+@import url("./layouts/user.css");
+
+/* ==========================================================================
+   Base Reset
+   ========================================================================== */
+
+html {
+  box-sizing: border-box;
+}
+
+*, *:before, *:after {
+  box-sizing: inherit;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: var(--cd-font-sans, sans-serif);
+}

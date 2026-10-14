@@ -1,0 +1,152 @@
+:host {
+  display: block;
+  width: 100%;
+}
+
+.ticket-directory {
+  background-color: var(--cd-color-surface-card, #062654);
+  border: 1px solid var(--cd-color-border-subtle, rgba(203, 213, 225, 0.12));
+  border-radius: var(--cd-radius-xl, 0.75rem);
+  padding: var(--cd-space-xl, 2rem);
+  box-shadow: var(--cd-elevation-float);
+  max-width: 950px;
+  margin: 0 auto;
+}
+
+.ticket-directory__header {
+  margin-bottom: var(--cd-space-lg, 1.5rem);
+  text-align: center;
+}
+
+.ticket-directory__eyebrow {
+  font-family: var(--cd-font-display, sans-serif);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--cd-color-signal-coral, #e75c69);
+  font-weight: var(--cd-font-weight-semibold, 600);
+  margin-bottom: var(--cd-space-xs, 0.25rem);
+}
+
+.ticket-directory__title {
+  font-family: var(--cd-font-display, sans-serif);
+  font-size: 1.5rem;
+  font-weight: var(--cd-font-weight-bold, 700);
+  color: var(--cd-color-slate-titanium-100, #f1f5f9);
+  margin: 0;
+}
+
+.ticket-directory__message,
+.ticket-directory__error {
+  text-align: center;
+  color: var(--cd-color-slate-titanium-300, #cbd5e1);
+  font-size: 0.95rem;
+  padding: var(--cd-space-md, 1rem) 0;
+  margin: 0;
+}
+
+.ticket-directory__error {
+  color: var(--cd-color-signal-coral-glow, #ff6b79);
+}
+
+/* Responsive table container with horizontal scroll */
+.ticket-table-wrapper {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  overflow-x: auto;
+  width: 100%;
+}
+
+.ticket-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+  font-size: 0.9rem;
+}
+
+.ticket-table th,
+.ticket-table td {
+  padding: 0.85rem 1rem;
+  vertical-align: middle;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.ticket-table th {
+  background: rgba(255, 255, 255, 0.05);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  color: #94a3b8;
+  font-weight: 600;
+  font-size: 0.8125rem;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.ticket-table td {
+  color: #cbd5e1;
+}
+
+.ticket-table td:first-child {
+  color: #f8fafc;
+  font-weight: 500;
+}
+
+/* Status Badges */
+.status-badge {
+  display: inline-block;
+  padding: 0.25rem 0.5rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  border-radius: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+}
+
+.status-badge--in-process {
+  background: rgba(59, 130, 246, 0.2);
+  color: #60a5fa;
+  border: 1px solid rgba(59, 130, 246, 0.3);
+}
+
+.status-badge--pending {
+  background: rgba(234, 179, 8, 0.2);
+  color: #facc15;
+  border: 1px solid rgba(234, 179, 8, 0.3);
+}
+
+.status-badge--resolved {
+  background: rgba(34, 197, 94, 0.2);
+  color: #4ade80;
+  border: 1px solid rgba(34, 197, 94, 0.3);
+}
+
+/* Responsive for mobile devices */
+@media screen and (max-width: 768px) {
+  .ticket-directory {
+    padding: var(--cd-space-md);
+  }
+
+  .ticket-table {
+    display: block;
+    min-width: 550px;
+    white-space: nowrap;
+    scrollbar-width: none;
+  }
+
+  .ticket-table::-webkit-scrollbar {
+    display: none;
+  }
+}
+/* ==========================================================================
+   Ocultar barra de desplazamiento horizontal manteniendo el scroll funcional
+   ========================================================================== */
+@media screen and (max-width: 768px) {
+  .ticket-table-wrapper {
+    scrollbar-width: none;  /* Firefox */
+    -ms-overflow-style: none;  /* Internet Explorer 10+ */
+  }
+  
+  .ticket-table-wrapper::-webkit-scrollbar {
+    display: none; /* Chrome, Safari y Opera */
+  }
+}

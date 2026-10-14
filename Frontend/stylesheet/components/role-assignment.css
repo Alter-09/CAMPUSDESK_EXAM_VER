@@ -1,0 +1,319 @@
+:host {
+  display: block;
+  color: var(--cd-color-slate-titanium-100);
+  --ra-success: #4ade80;
+  --ra-danger: #f87171;
+}
+
+.assignment {
+  display: flex;
+  flex-direction: column;
+  gap: var(--cd-space-lg);
+  max-width: 50rem;
+  margin-inline: auto;
+  padding: var(--cd-gutter);
+  border: 1px solid var(--cd-color-border-subtle);
+  border-radius: var(--cd-radius-xl);
+  background: var(--cd-color-surface-navy-deep);
+}
+
+.assignment__header {
+  text-align: center;
+}
+
+.assignment__eyebrow {
+  margin: 0 0 var(--cd-space-sm);
+  font-family: var(--cd-font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--cd-color-signal-coral);
+}
+
+.assignment__title {
+  margin: 0;
+  font-family: var(--cd-font-display);
+  font-size: 1.5rem;
+  font-weight: var(--cd-font-weight-semibold);
+  line-height: 1.2;
+}
+
+.assignment__notice,
+.assignment__summary {
+  margin: 0;
+  padding: 0.75rem var(--cd-space-md);
+  border: 1px solid var(--ra-success);
+  border-radius: var(--cd-radius-lg);
+  background: rgb(74 222 128 / 0.08);
+  font-size: 0.875rem;
+}
+
+.assignment__summary {
+  border-color: var(--ra-danger);
+  background: rgb(248 113 113 / 0.08);
+  color: #fecaca;
+}
+
+.assignment__message {
+  margin: 0;
+  padding: var(--cd-space-xl) var(--cd-space-sm);
+  text-align: center;
+  color: var(--cd-color-slate-titanium-300);
+}
+
+.assignment__message[role="alert"] {
+  padding-bottom: var(--cd-space-md);
+  color: var(--ra-danger);
+}
+
+.assignment__retry {
+  margin-inline: auto;
+}
+
+.assignment__form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--cd-space-md);
+}
+
+.assignment__select {
+  inline-size: 100%;
+  background-color: var(--cd-color-surface-canvas);
+  color: var(--cd-color-slate-titanium-100);
+  color-scheme: dark;
+  cursor: pointer;
+}
+
+.assignment__select:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.assignment__select option {
+  background: var(--cd-color-surface-canvas);
+  color: var(--cd-color-slate-titanium-100);
+}
+
+/* ---------- Permisos ---------- */
+
+.permissions-card {
+  padding: var(--cd-space-md);
+  border: 1px solid var(--cd-color-border-subtle);
+  border-radius: var(--cd-radius-lg);
+  background: var(--cd-color-surface-canvas);
+}
+
+.permissions-card__header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--cd-space-sm);
+}
+
+.permissions-card__title {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: var(--cd-font-weight-semibold);
+}
+
+.permissions-card__count {
+  font-family: var(--cd-font-mono);
+  font-size: 0.75rem;
+  color: var(--cd-color-signal-coral);
+}
+
+.permissions-card__hint {
+  margin: var(--cd-space-sm) 0 var(--cd-space-md);
+  font-size: 0.8125rem;
+  color: var(--cd-color-slate-titanium-300);
+}
+
+.permissions-card__list {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--cd-space-sm);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.perm {
+  display: grid;
+  grid-template-columns: 1.25rem 1fr;
+  column-gap: var(--cd-space-sm);
+  align-items: start;
+  padding: 0.625rem 0.75rem;
+  border: 1px solid var(--cd-color-border-level-1);
+  border-radius: var(--cd-radius-lg);
+}
+
+.perm__mark::before {
+  content: "✕";
+  color: var(--cd-color-slate-titanium-500);
+}
+
+.perm[data-effective="true"] .perm__mark::before {
+  content: "✓";
+  color: var(--ra-success);
+}
+
+/* Effective only via individual assignment: distinguished from role-granted permission. */
+.perm[data-effective="true"][data-from-role="false"] {
+  border-color: var(--cd-color-border-active);
+  background: var(--cd-color-signal-coral-muted);
+}
+
+.perm[data-effective="true"][data-from-role="false"] .perm__mark::before {
+  color: var(--cd-color-signal-coral);
+}
+
+.perm__body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  min-inline-size: 0;
+}
+
+.perm__code {
+  font-family: var(--cd-font-mono);
+  font-size: 0.75rem;
+  overflow-wrap: anywhere;
+}
+
+.perm[data-effective="false"] .perm__code {
+  color: var(--cd-color-slate-titanium-300);
+}
+
+.perm__note {
+  font-size: 0.75rem;
+  color: var(--cd-color-slate-titanium-300);
+}
+
+.perm__toggle {
+  display: flex;
+  align-items: center;
+  gap: var(--cd-space-sm);
+  font-size: 0.75rem;
+  color: var(--cd-color-slate-titanium-300);
+  cursor: pointer;
+}
+
+.perm__toggle input {
+  accent-color: var(--cd-color-signal-coral);
+}
+
+/* ---------- Acciones ---------- */
+
+.assignment__actions {
+  position: sticky;
+  inset-block-end: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--cd-space-sm);
+  padding-block: var(--cd-space-md);
+  border-top: 1px solid var(--cd-color-border-subtle);
+  background: var(--cd-color-surface-navy-deep);
+}
+
+.assignment__changes {
+  margin: 0;
+  font-size: 0.875rem;
+  color: var(--cd-color-slate-titanium-300);
+}
+
+.assignment__save {
+  inline-size: 100%;
+}
+
+.assignment :is(button, select, input):disabled {
+  cursor: not-allowed;
+}
+
+/* ---------- Unsaved changes confirmation ---------- */
+
+.confirm {
+  box-sizing: border-box;
+  inline-size: min(26rem, calc(100% - 1.5rem));
+  margin: auto;
+  padding: 0;
+  border: 1px solid var(--cd-color-border-subtle);
+  border-radius: var(--cd-radius-xl);
+  background: var(--cd-color-surface-navy-deep);
+  color: var(--cd-color-slate-titanium-100);
+  color-scheme: dark;
+}
+
+.confirm::backdrop {
+  background: rgb(1 8 20 / 0.72);
+}
+
+.confirm__form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--cd-space-md);
+  padding: var(--cd-gutter);
+}
+
+.confirm__title {
+  margin: 0;
+  font-family: var(--cd-font-display);
+  font-size: 1.25rem;
+  font-weight: var(--cd-font-weight-semibold);
+}
+
+.confirm__text {
+  margin: 0;
+  font-size: 0.9375rem;
+  color: var(--cd-color-slate-titanium-300);
+}
+
+/* The safe action ("Keep editing") carries emphasis and initial focus. */
+.confirm__actions {
+  display: flex;
+  flex-direction: column-reverse;
+  gap: var(--cd-space-sm);
+}
+
+.confirm .confirm__discard {
+  border: 1px solid var(--cd-color-border-button);
+  background: transparent;
+  color: var(--cd-color-slate-titanium-100);
+}
+
+@media (min-width: 40rem) {
+  .confirm__actions {
+    flex-direction: row;
+    justify-content: flex-end;
+  }
+}
+
+/* base.css has the focus ring nested on itself; declared explicitly here. */
+:is(button, select, input):focus-visible {
+  outline: 2px solid var(--cd-color-signal-coral);
+  outline-offset: 2px;
+}
+
+@media (min-width: 40rem) {
+  .assignment {
+    padding: var(--cd-space-xl);
+  }
+
+  .permissions-card__list {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .assignment__actions {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .assignment__changes {
+    flex: 1;
+  }
+
+  .assignment__save {
+    inline-size: auto;
+  }
+}

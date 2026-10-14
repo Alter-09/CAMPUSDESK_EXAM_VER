@@ -1,0 +1,43 @@
+/**
+ * Layout for user portal pages:
+ *   - user.html (overview / landing)
+ *   - create-ticket.html
+ *   - my-tickets.html
+ *
+ * Supplements layouts/superadmin.css defining shell (sidebar + workspace).
+ */
+
+/* ---------- User portal workspace ---------- */
+/*
+ * superadmin.css only defines min-width:0 on .superadmin-workspace.
+ * Portal pages require flex-column so that
+ * header takes its row and <main> occupies remaining space.
+ */
+.superadmin-workspace {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+/* ---------- User portal content ---------- */
+/*
+ * .user-portal-content overrides place-items:center from .superadmin-content
+ * so web component stretches to full available width instead
+ * of centering like an empty state block.
+ */
+.user-portal-content.superadmin-content {
+  place-items: start stretch;
+  align-items: stretch;
+  justify-items: stretch;
+}
+
+/* ---------- User portal view ---------- */
+/*
+ * .user-view wraps each portal section.
+ * Stretches to 100% grid and restricts max width to content token.
+ */
+.user-view {
+  width: 100%;
+  max-width: var(--cd-app-content-max);
+  margin-inline: auto;
+}

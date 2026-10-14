@@ -1,0 +1,456 @@
+.role-dashboard {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  width: 100%;
+}
+.role-dashboard__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.role-dashboard__title {
+  margin: 0;
+  color: #f1f5f9;
+  font-family: var(--cd-font-display, "Hanken Grotesk", sans-serif);
+  font-size: clamp(1.5rem, 2.5vw, 2rem);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.role-dashboard__subtitle {
+  margin: 0.35rem 0 0 0;
+  color: #94a3b8;
+  font-size: 0.875rem;
+}
+
+.role-dashboard__badge-role {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.35rem 0.85rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.05);
+  color: #cbd5e1;
+}
+
+/* ==========================================================================
+   Top KPI Cards Grid (Matches the 5 status cards from Fortify360 reference)
+   ========================================================================== */
+.role-kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+}
+
+.role-kpi-card {
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 1.15rem 1.25rem;
+  border-radius: var(--cd-radius-lg, 12px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background:
+    radial-gradient(100% 60% at 50% 0%, rgba(255, 255, 255, 0.03) 0%, transparent 80%),
+    linear-gradient(180deg, #09122a 0%, #050b1a 100%);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.45);
+  transition: transform var(--cd-transition-fast, 150ms), border-color var(--cd-transition-fast, 150ms);
+}
+
+.role-kpi-card:hover {
+  transform: translateY(-2px);
+  border-color: rgba(255, 255, 255, 0.16);
+}
+
+.role-kpi-card__top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.role-kpi-card__icon-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.05);
+  color: #cbd5e1;
+  font-size: 1rem;
+}
+
+.role-kpi-card__badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.2rem 0.55rem;
+  border-radius: 9999px;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  border: 1px solid transparent;
+}
+
+.role-kpi-card__badge--green {
+  background: rgba(16, 185, 129, 0.15);
+  color: #34d399;
+  border-color: rgba(16, 185, 129, 0.28);
+}
+
+.role-kpi-card__badge--amber {
+  background: rgba(245, 158, 11, 0.15);
+  color: #fbbf24;
+  border-color: rgba(245, 158, 11, 0.28);
+}
+
+.role-kpi-card__badge--cyan {
+  background: rgba(34, 211, 238, 0.15);
+  color: #22d3ee;
+  border-color: rgba(34, 211, 238, 0.28);
+}
+
+.role-kpi-card__badge--purple {
+  background: rgba(192, 132, 252, 0.15);
+  color: #c084fc;
+  border-color: rgba(192, 132, 252, 0.28);
+}
+
+.role-kpi-card__badge--coral {
+  background: rgba(231, 92, 105, 0.15);
+  color: #ff6b79;
+  border-color: rgba(231, 92, 105, 0.28);
+}
+
+.role-kpi-card__label {
+  margin: 0;
+  color: #94a3b8;
+  font-size: 0.8125rem;
+  font-weight: 500;
+}
+
+.role-kpi-card__value {
+  margin: 0.25rem 0 0.75rem 0;
+  color: #ffffff;
+  font-family: var(--cd-font-display, "Hanken Grotesk", sans-serif);
+  font-size: 1.75rem;
+  font-weight: 700;
+  line-height: 1.1;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Progress bar at the bottom of the card */
+.role-kpi-card__progress-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  margin-top: auto;
+}
+
+.role-kpi-card__progress-bar {
+  flex: 1;
+  height: 4px;
+  border-radius: 9999px;
+  background: rgba(255, 255, 255, 0.08);
+  overflow: hidden;
+}
+
+.role-kpi-card__progress-fill {
+  height: 100%;
+  border-radius: 9999px;
+  transition: width 0.4s ease-out;
+}
+
+.role-kpi-card__progress-fill--green {
+  background: #34d399;
+  box-shadow: 0 0 6px rgba(52, 211, 153, 0.5);
+}
+
+.role-kpi-card__progress-fill--amber {
+  background: #fbbf24;
+  box-shadow: 0 0 6px rgba(251, 191, 36, 0.5);
+}
+
+.role-kpi-card__progress-fill--cyan {
+  background: #22d3ee;
+  box-shadow: 0 0 6px rgba(34, 211, 238, 0.5);
+}
+
+.role-kpi-card__progress-fill--purple {
+  background: #c084fc;
+  box-shadow: 0 0 6px rgba(192, 132, 252, 0.5);
+}
+
+.role-kpi-card__progress-fill--coral {
+  background: #ff6b79;
+  box-shadow: 0 0 6px rgba(255, 107, 121, 0.5);
+}
+
+.role-kpi-card__percent {
+  color: #cbd5e1;
+  font-size: 0.75rem;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ==========================================================================
+   2-Column Layout (Chart + Priority Queue / Action Card)
+   ========================================================================== */
+.role-dashboard-grid {
+  display: grid;
+  grid-template-columns: 1.45fr 1fr;
+  gap: 1.5rem;
+  align-items: start;
+}
+
+@media (max-width: 1024px) {
+  .role-dashboard-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Priority Queue / Remediation Queue card */
+.priority-queue-card {
+  padding: 1.5rem;
+  border-radius: var(--cd-radius-xl, 16px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background:
+    radial-gradient(100% 60% at 50% 0%, rgba(255, 255, 255, 0.02) 0%, transparent 80%),
+    linear-gradient(180deg, #070f24 0%, #030816 100%);
+  box-shadow: 0 20px 48px rgba(0, 0, 0, 0.5);
+  display: flex;
+  flex-direction: column;
+  gap: 1.15rem;
+}
+
+.priority-queue-card__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.priority-queue-card__title {
+  margin: 0;
+  color: #f1f5f9;
+  font-family: var(--cd-font-display, "Hanken Grotesk", sans-serif);
+  font-size: 1.125rem;
+  font-weight: 600;
+}
+
+.priority-queue-card__subtitle {
+  margin: 0.25rem 0 0 0;
+  color: #64748b;
+  font-size: 0.75rem;
+}
+
+.priority-queue-card__badge-count {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.2rem 0.55rem;
+  border-radius: 9999px;
+  background: rgba(255, 255, 255, 0.08);
+  color: #cbd5e1;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.priority-queue-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  max-height: 480px;
+  overflow-y: auto;
+  padding-right: 0.25rem;
+}
+
+/* Custom scrollbar */
+.priority-queue-list::-webkit-scrollbar {
+  width: 4px;
+}
+.priority-queue-list::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 4px;
+}
+
+.priority-queue-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.85rem;
+  padding: 0.95rem 1.1rem;
+  border-radius: var(--cd-radius-md, 10px);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  background: rgba(255, 255, 255, 0.03);
+  text-decoration: none;
+  transition: all var(--cd-transition-fast, 150ms);
+}
+
+.priority-queue-item:hover {
+  border-color: rgba(255, 255, 255, 0.18);
+  background: rgba(255, 255, 255, 0.06);
+  transform: translateX(2px);
+}
+
+.priority-queue-item__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.85rem;
+  height: 1.85rem;
+  border-radius: 8px;
+  flex-shrink: 0;
+  font-size: 0.875rem;
+}
+
+.priority-queue-item__icon--critical {
+  background: rgba(239, 68, 68, 0.15);
+  color: #f87171;
+  border: 1px solid rgba(239, 68, 68, 0.25);
+}
+
+.priority-queue-item__icon--high {
+  background: rgba(245, 158, 11, 0.15);
+  color: #fbbf24;
+  border: 1px solid rgba(245, 158, 11, 0.25);
+}
+
+.priority-queue-item__icon--medium {
+  background: rgba(59, 130, 246, 0.15);
+  color: #60a5fa;
+  border: 1px solid rgba(59, 130, 246, 0.25);
+}
+
+.priority-queue-item__icon--low {
+  background: rgba(16, 185, 129, 0.15);
+  color: #34d399;
+  border: 1px solid rgba(16, 185, 129, 0.25);
+}
+
+.priority-queue-item__content {
+  flex: 1;
+  min-width: 0;
+}
+
+.priority-queue-item__title {
+  margin: 0;
+  color: #f1f5f9;
+  font-size: 0.875rem;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.priority-queue-item__meta {
+  margin: 0.25rem 0 0 0;
+  color: #64748b;
+  font-size: 0.75rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.priority-queue-item__tag {
+  display: inline-block;
+  padding: 0.1rem 0.45rem;
+  border-radius: 4px;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  background: rgba(255, 255, 255, 0.06);
+  color: #cbd5e1;
+}
+
+.priority-queue-item__tag--status {
+  background: rgba(34, 211, 238, 0.15);
+  color: #22d3ee;
+}
+
+.priority-queue-item__tag--resolved {
+  background: rgba(16, 185, 129, 0.15);
+  color: #34d399;
+}
+
+/* Quick Action / Report Card (Right column on User Portal) */
+.quick-action-card {
+  padding: 1.5rem;
+  border-radius: var(--cd-radius-xl, 16px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background:
+    radial-gradient(100% 60% at 50% 0%, rgba(255, 255, 255, 0.02) 0%, transparent 80%),
+    linear-gradient(180deg, #070f24 0%, #030816 100%);
+  box-shadow: 0 20px 48px rgba(0, 0, 0, 0.5);
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.quick-action-card__title {
+  margin: 0;
+  color: #f1f5f9;
+  font-size: 1.125rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.quick-action-card__desc {
+  margin: 0;
+  color: #94a3b8;
+  font-size: 0.8125rem;
+  line-height: 1.5;
+}
+
+.quick-action-card__btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.25rem;
+  border-radius: var(--cd-radius-md, 8px);
+  background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+  color: #ffffff;
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-decoration: none;
+  box-shadow: 0 4px 14px rgba(37, 99, 235, 0.4);
+  transition: all var(--cd-transition-fast, 150ms);
+}
+
+.quick-action-card__btn:hover {
+  background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(37, 99, 235, 0.6);
+}
+
+.quick-action-card__btn--outline {
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  box-shadow: none;
+  color: #cbd5e1;
+}
+
+.quick-action-card__btn--outline:hover {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.25);
+  color: #ffffff;
+}
+
+.empty-queue-msg {
+  text-align: center;
+  color: #64748b;
+  font-size: 0.8125rem;
+  padding: 2rem 1rem;
+}

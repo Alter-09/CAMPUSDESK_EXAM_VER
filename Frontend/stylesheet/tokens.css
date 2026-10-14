@@ -1,0 +1,98 @@
+:root {
+  --cd-color-surface-canvas: #010e24;
+  --cd-color-surface-navy-deep: #011e44;
+  --cd-color-surface-card: #062654;
+  --cd-color-surface-elevated: #0c326d;
+
+  --cd-color-signal-coral: #e75c69;
+  --cd-color-signal-coral-glow: #ff6b79;
+  --cd-color-signal-coral-muted: rgba(231, 92, 105, 0.15);
+
+  --cd-color-slate-titanium-100: #f1f5f9;
+  --cd-color-slate-titanium-300: #cbd5e1;
+  --cd-color-slate-titanium-500: #64748b;
+
+  --cd-color-border-subtle: rgba(203, 213, 225, 0.12);
+  --cd-color-border-level-1: rgba(203, 213, 225, 0.08);
+  --cd-color-border-input: rgba(203, 213, 225, 0.16);
+  --cd-color-border-active: rgba(231, 92, 105, 0.4);
+  --cd-color-border-button: rgba(203, 213, 225, 0.24);
+
+  --cd-color-focus-ring: rgba(231, 92, 105, 0.2);
+  --cd-color-card-highlight: rgba(231, 92, 105, 0.25);
+  --cd-color-glow: rgba(231, 92, 105, 0.35);
+  --cd-color-on-signal: #ffffff;
+  --cd-color-atmosphere: rgba(231, 92, 105, 0.08);
+
+  /* Data visualization */
+  --cd-color-data-revenue: #9d7cff;
+  --cd-color-data-revenue-bright: #c4b5fd;
+  --cd-color-data-revenue-fill: rgba(157, 124, 255, 0.24);
+  --cd-color-data-expenses: #22d3ee;
+  --cd-color-data-expenses-bright: #67e8f9;
+  --cd-color-data-expenses-fill: rgba(34, 211, 238, 0.2);
+  --cd-color-data-resolved: #34d399;
+  --cd-color-data-resolved-bright: #6ee7b7;
+  --cd-color-data-closed: #fbbf24;
+  --cd-color-data-closed-bright: #fcd34d;
+  --cd-color-data-done: #f472b6;
+  --cd-color-data-done-bright: #f9a8d4;
+  --cd-color-chart-grid: rgba(203, 213, 225, 0.1);
+  --cd-color-chart-crosshair: rgba(203, 213, 225, 0.45);
+
+  /* Typography — requested families; no CDN until Q-39 (self-hosted fonts) */
+  --cd-font-display: "Hanken Grotesk", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --cd-font-body: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --cd-font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+
+  --cd-font-weight-regular: 400;
+  --cd-font-weight-medium: 500;
+  --cd-font-weight-semibold: 600;
+  --cd-font-weight-bold: 700;
+
+  /* Espaciado — ritmo 8 px */
+  --cd-space-xs: 0.25rem;
+  --cd-space-sm: 0.5rem;
+  --cd-space-md: 1rem;
+  --cd-space-lg: 1.5rem;
+  --cd-space-xl: 2rem;
+  --cd-space-2xl: 3rem;
+
+  --cd-gutter: 1.25rem;
+  --cd-gutter-lg: 1.5rem;
+  --cd-margin: 1rem;
+  --cd-margin-md: 1.5rem;
+  --cd-margin-lg: 2rem;
+
+  /* Radios */
+  --cd-radius-sm: 0.125rem;
+  --cd-radius-md: 0.375rem;
+  --cd-radius-lg: 0.5rem;
+  --cd-radius-xl: 0.75rem;
+
+  /* Elevation */
+  --cd-elevation-float: 0 12px 32px -4px rgba(1, 14, 36, 0.7),
+    0 0 0 1px rgba(203, 213, 225, 0.15);
+
+  /* Layout login */
+  --cd-login-card-width: 33.1875rem;
+  --cd-login-page-max: 90rem;
+  --cd-login-brand-max: 48rem;
+  --cd-touch-target: 2.75rem;
+
+  /* Application layout */
+  --cd-sidebar-width: 16rem;
+  --cd-header-height: 4rem;
+  --cd-app-content-max: 78rem;
+
+  /* Motion */
+  --cd-transition-fast: 150ms ease;
+  --cd-transition-base: 220ms ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --cd-transition-fast: 0ms;
+    --cd-transition-base: 0ms;
+  }
+}
