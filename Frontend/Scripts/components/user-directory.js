@@ -1,6 +1,3 @@
-/**
- * <cd-user-directory>: Directorio general de usuarios basado en la API del backend.
- */
 import { MESSAGES } from "../constants/messages.es.js";
 import { listUsers, deleteUser } from "../services/user.service.js";
 import { listRoles } from "../services/role.service.js";

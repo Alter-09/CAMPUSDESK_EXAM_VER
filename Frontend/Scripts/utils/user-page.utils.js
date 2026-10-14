@@ -1,11 +1,3 @@
-/**
- * Utilidades compartidas por todas las páginas del portal de usuario.
- * Principio DRY: sincronizar la cabecera con datos de sesión y gestionar logout.
- */
-
-/**
- * Lee sessionStorage y actualiza el rol y avatar del header con el nombre real del usuario.
- */
 export function syncSessionHeader() {
   const headerRole = document.getElementById("header-role");
   const headerAvatar = document.getElementById("header-avatar");

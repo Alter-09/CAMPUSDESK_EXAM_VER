@@ -1,9 +1,4 @@
-/**
- * Tokens Titan Meridian (06-design-system.md).
- * Única fuente de valores crudos — el resto del CSS solo referencia variables.
- */
 :root {
-  /* Color — literales de DESIGN.md */
   --cd-color-surface-canvas: #010e24;
   --cd-color-surface-navy-deep: #011e44;
   --cd-color-surface-card: #062654;

@@ -1,7 +1,3 @@
-/**
- * Textos de la gestión de técnicos (interfaz en español).
- * Se integra en MESSAGES con: technicians: TECHNICIANS_MESSAGES
- */
 export const TECHNICIANS_MESSAGES = Object.freeze({
   list: Object.freeze({
     eyebrow: "Personal de Soporte",

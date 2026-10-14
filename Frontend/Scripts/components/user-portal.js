@@ -1,11 +1,3 @@
-/**
- * <cd-user-portal>: Componente Web con Shadow DOM para el portal de usuario.
- * Modo 'create-ticket': formulario para crear nuevas solicitudes (RF-03).
- * Modo 'my-tickets': cuadrícula de tiquetes propios con detalle completo (RF-01 Usuario).
- *
- * Principios: SOLID · DRY · Mobile-First · Web Components + Shadow DOM.
- */
-
 import { MESSAGES } from "../constants/messages.es.js";
 import {
   listTickets,

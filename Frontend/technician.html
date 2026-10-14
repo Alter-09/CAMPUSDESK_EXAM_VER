@@ -12,7 +12,7 @@
     <div class="superadmin-page" data-shell>
         <aside id="sidebar" class="superadmin-sidebar" data-sidebar aria-label="Navegación principal">
             <a class="superadmin-brand" href="./technician.html" aria-label="CampusDesk, Vista Técnico">
-                <img class="superadmin-brand__mark" src="./Assets/favicon.svg" width="40" height="40" alt="" />
+                <img class="superadmin-brand__mark" src="./Assets/favicon.svg" width="40" height="40" alt="campusdesk logo" />
                 <span class="superadmin-brand__copy">
                     <span class="superadmin-brand__name">CAMPUSDESK</span>
                     <span class="superadmin-brand__view">Vista Técnico</span>
@@ -23,7 +23,7 @@
                 <section class="superadmin-nav-group" aria-labelledby="general-navigation">
                     <h2 id="general-navigation" class="superadmin-nav-group__label">General</h2>
                     <a class="superadmin-nav-link" href="#overview">
-                        <img class="superadmin-nav-link__icon" src="./Assets/Icons/dashboard.svg" width="24" height="24" alt="" />
+                        <img class="superadmin-nav-link__icon" src="./Assets/Icons/dashboard.svg" width="24" height="24" alt="dashboard icon" />
                         <span class="superadmin-nav-link__text">Dashboard</span>
                     </a>
                 </section>
@@ -31,11 +31,11 @@
                 <section class="superadmin-nav-group" aria-labelledby="tickets-navigation">
                     <h2 id="tickets-navigation" class="superadmin-nav-group__label">Tiquetes</h2>
                     <a class="superadmin-nav-link" href="#assigned-tickets" aria-current="page">
-                        <img class="superadmin-nav-link__icon" src="./Assets/Icons/assign.svg" width="24" height="24" alt="" />
+                        <img class="superadmin-nav-link__icon" src="./Assets/Icons/assign.svg" width="24" height="24" alt="assign icon" />
                         <span class="superadmin-nav-link__text">Tiquetes Asignados</span>
                     </a>
                     <a class="superadmin-nav-link" href="#resolved-tickets">
-                        <img class="superadmin-nav-link__icon" src="./Assets/Icons/search.svg" width="24" height="24" alt="" />
+                        <img class="superadmin-nav-link__icon" src="./Assets/Icons/search.svg" width="24" height="24" alt="search icon" />
                         <span class="superadmin-nav-link__text">Historial de Resueltos</span>
                     </a>
                 </section>
@@ -43,20 +43,18 @@
 
             <div class="superadmin-sidebar__footer">
                 <a class="superadmin-nav-link superadmin-nav-link--danger" href="./index.html">
-                    <img class="superadmin-nav-link__icon" src="./Assets/Icons/logout.svg" width="24" height="24" alt="" />
+                    <img class="superadmin-nav-link__icon" src="./Assets/Icons/logout.svg" width="24" height="24" alt="logout icon" />
                     <span class="superadmin-nav-link__text">Cerrar sesión</span>
                 </a>
             </div>
         </aside>
-
-        <!-- Fondo oscuro del menú lateral en pantallas pequeñas -->
         <div class="superadmin-backdrop" data-sidebar-backdrop></div>
 
         <div class="superadmin-workspace">
             <header class="app-header">
                 <div class="app-header__start">
                     <button class="app-header__menu-button" type="button" data-sidebar-toggle aria-controls="sidebar" aria-expanded="false" aria-label="Abrir menú de navegación">
-                        <img class="app-header__menu-icon" src="./Assets/Icons/menu.svg" width="24" height="24" alt="" />
+                        <img class="app-header__menu-icon" src="./Assets/Icons/menu.svg" width="24" height="24" alt="menu icon" />
                     </button>
                     <nav class="app-header__breadcrumb" aria-label="Ubicación actual">
                         <ol class="app-header__crumbs">
@@ -67,22 +65,17 @@
                 </div>
                 <div class="app-header__user">
                     <span class="app-header__role">Técnico</span>
-                    <img class="app-header__menu-icon" src="./Assets/Icons/user.svg" width="24" height="24" alt="" />
+                    <img class="app-header__menu-icon" src="./Assets/Icons/user.svg" width="24" height="24" alt="user icon" />
                 </div>
             </header>
 
             <main id="technician-main" class="superadmin-content">
-                <!-- Sección Tiquetes Asignados (Grid + Modal de Detalle Completo) -->
                 <section id="section-assigned-tickets" class="technician-view">
                     <cd-assigned-tickets></cd-assigned-tickets>
                 </section>
-
-                <!-- Sección Dashboard del Técnico -->
                 <section id="section-overview" class="technician-view">
                     <cd-technician-dashboard></cd-technician-dashboard>
                 </section>
-
-                <!-- Sección Cola General (informativa) -->
                 <section id="section-general-queue" class="technician-view" hidden>
                     <section class="superadmin-empty-state" aria-labelledby="queue-title">
                         <p class="superadmin-empty-state__eyebrow">Cola de Soporte</p>
@@ -93,7 +86,6 @@
             </main>
         </div>
     </div>
-
     <script type="module" src="./scripts/components/technician-dashboard.js"></script>
     <script type="module" src="./scripts/components/assigned-tickets.js"></script>
     <script type="module" src="./scripts/modules/technician-nav.js"></script>

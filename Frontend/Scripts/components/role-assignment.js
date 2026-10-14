@@ -1,15 +1,3 @@
-/**
- * <cd-role-assignment>: cambia el rol de un usuario y gestiona sus permisos individuales.
- *
- * Flujo: elegir usuario -> elegir rol -> ajustar permisos individuales -> guardar.
- *  - El superadmin (rol protegido) no aparece en la lista de usuarios ni en la de roles.
- *  - La lista de permisos muestra el catálogo completo: los que trae el rol van fijos y
- *    los demás se pueden asignar o retirar de forma individual.
- *  - Guardar aplica solo la diferencia contra el estado que tiene el backend.
- *  - Cambiar de usuario con cambios sin guardar pide confirmación antes de descartarlos.
- *
- * Los textos son constantes de MESSAGES; los datos de la API se insertan con textContent.
- */
 import { MESSAGES } from "../constants/messages.es.js";
 import { listUsers } from "../services/user.service.js";
 import { listAssignableRoles, isProtectedRole } from "../services/role.service.js";

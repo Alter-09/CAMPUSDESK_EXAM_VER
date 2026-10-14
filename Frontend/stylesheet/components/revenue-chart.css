@@ -1,8 +1,3 @@
-/* ==========================================================================
-   Productivity Line Chart — Dark Glowing Waves (Titan Meridian / CampusDesk)
-   Matches the sleek curve aesthetics from the reference design.
-   ========================================================================== */
-
 .superadmin-content--dashboard {
   display: block;
 }
@@ -24,8 +19,6 @@
     linear-gradient(180deg, #070f24 0%, #030816 100%);
   box-shadow: 0 24px 60px rgba(0, 0, 0, 0.55), inset 0 1px 0 rgba(255, 255, 255, 0.1);
 }
-
-/* Header */
 .revenue-chart__header {
   display: flex;
   align-items: flex-start;

@@ -10,8 +10,6 @@
 </head>
 <body>
     <div class="superadmin-page" data-shell>
-
-        <!-- ── Sidebar de navegación ───────────────────────────────────── -->
         <aside id="sidebar" class="superadmin-sidebar" data-sidebar aria-label="Navegación principal">
 
             <a class="superadmin-brand" href="./user.html" aria-label="CampusDesk, Portal de Usuario">
@@ -51,14 +49,8 @@
                 </a>
             </div>
         </aside>
-
-        <!-- Fondo oscuro del menú lateral en pantallas pequeñas -->
         <div class="superadmin-backdrop" data-sidebar-backdrop></div>
-
-        <!-- ── Área de trabajo ─────────────────────────────────────────── -->
         <div class="superadmin-workspace">
-
-            <!-- Cabecera con breadcrumb y avatar del usuario -->
             <header class="app-header">
                 <div class="app-header__start">
                     <button
@@ -83,22 +75,15 @@
                     <img class="app-header__menu-icon" src="./Assets/Icons/user.svg" width="24" height="24" alt="" />
                 </div>
             </header>
-
-            <!-- ── Contenido principal ─────────────────────────────────── -->
             <main id="user-main" class="superadmin-content">
-
-                <!-- Sección: Dashboard Especializado del Usuario -->
                 <cd-user-dashboard></cd-user-dashboard>
 
             </main>
         </div>
     </div>
 
-    <!-- Módulo del sidebar responsivo -->
     <script type="module" src="./scripts/modules/sidebar-toggle.js"></script>
-    <!-- Componente Dashboard del Usuario -->
     <script type="module" src="./scripts/components/user-dashboard.js"></script>
-    <!-- Bootstrap de la página: sincroniza cabecera con datos de sesión -->
     <script type="module" src="./scripts/pages/user-overview.js"></script>
 </body>
 </html>

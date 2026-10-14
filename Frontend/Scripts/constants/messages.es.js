@@ -3,11 +3,6 @@ import { ACCESS_MESSAGES } from "./messages.access.es.js";
 import { TECHNICIANS_MESSAGES } from "./messages.technicians.es.js";
 import { TICKETS_MESSAGES } from "./messages.tickets.es.js";
 import { USER_PORTAL_MESSAGES } from "./messages.user.es.js";
-
-/**
- * Textos visibles de la interfaz (español).
- * Fuente única para mensajes — evita literales dispersos (C-03, C-05).
- */
 export const MESSAGES = Object.freeze({
   login: Object.freeze({
     pageTitle: "CampusDesk | Iniciar sesión",

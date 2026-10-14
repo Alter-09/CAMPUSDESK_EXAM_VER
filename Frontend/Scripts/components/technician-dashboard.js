@@ -1,11 +1,3 @@
-/**
- * Componente: Dashboard Especializado para Técnicos (<cd-technician-dashboard>).
- * Basado en la interfaz dark de referencia Fortify360 y adaptado a las responsabilidades de soporte:
- * - Tarjetas KPI con barras de progreso y badges (Asignados, En Proceso, Resueltos, Cerrados, Efectividad)
- * - Gráfico de ondas curvas de productividad personal (Resueltos vs. Carga activa)
- * - Cola de Prioridades de Tiquetes (Remediation Priority Queue)
- * 100% Vanilla JS + HTML5 + CSS3 sin frameworks externos.
- */
 import { apiRequest } from "../config/http-client.js";
 
 const SVG_NS = "http://www.w3.org/2000/svg";
@@ -113,20 +105,16 @@ class TechnicianDashboard extends HTMLElement {
     const activeTotal = assigned + inProgress;
     const completedTotal = resolved + closed;
     const total = activeTotal + completedTotal;
-
-    // Inicializar los 12 meses exclusivamente en cero (sin datos simulados)
     const buckets = Array.from({ length: 12 }, (_, idx) => ({
       index: idx,
       shortLabel: MONTH_LABELS[idx],
       fullLabel: MONTH_NAMES[idx],
-      cyan: 0,   // Carga activa (Asignados / En Proceso)
-      purple: 0, // Resueltos / Cerrados
+      cyan: 0, 
+      purple: 0,
       total: 0,
       growth: "0.0%",
       efficiency: "0%",
     }));
-
-    // Agrupar los tickets reales obtenidos desde PostgreSQL por su mes de creación
     let hasRealTicketDates = false;
     if (Array.isArray(this.tickets) && this.tickets.length > 0) {
       this.tickets.forEach((ticket) => {
@@ -148,23 +136,17 @@ class TechnicianDashboard extends HTMLElement {
         }
       });
     }
-
-    // Si no hay fechas individuales pero la API de métricas reporta tiquetes técnicos,
-    // reflejarlos fielmente en el mes actual del sistema
     const currentMonth = new Date().getMonth();
     if (!hasRealTicketDates && total > 0) {
       buckets[currentMonth].cyan = activeTotal;
       buckets[currentMonth].purple = completedTotal;
     }
-
-    // Calcular métricas de productividad reales mes a mes basadas 100% en la BD
     let prevTotal = 0;
     this.monthlyData = buckets.map((b, idx) => {
       const mTotal = b.cyan + b.purple;
       b.total = mTotal;
       const eff = mTotal > 0 ? ((b.purple / mTotal) * 100).toFixed(0) : "0";
       b.efficiency = `${eff}%`;
-
       let growth = "0.0%";
       if (idx > 0) {
         if (prevTotal === 0 && mTotal > 0) {
@@ -178,10 +160,8 @@ class TechnicianDashboard extends HTMLElement {
       prevTotal = mTotal;
       return b;
     });
-
     this.activeIndex = currentMonth;
   }
-
   renderLoading() {
     this.shadowRoot.innerHTML = `
       <style>
@@ -211,14 +191,10 @@ class TechnicianDashboard extends HTMLElement {
     const total = assigned + inProgress + resolved + closed;
     const completed = resolved + closed;
     const efficiency = total > 0 ? Math.round((completed / total) * 100) : 0;
-
-    // Calcular porcentajes de barra
     const pctAssigned = total > 0 ? Math.min(100, Math.round((assigned / total) * 100)) : 0;
     const pctInProgress = total > 0 ? Math.min(100, Math.round((inProgress / total) * 100)) : 0;
     const pctResolved = total > 0 ? Math.min(100, Math.round((resolved / total) * 100)) : 0;
     const pctClosed = total > 0 ? Math.min(100, Math.round((closed / total) * 100)) : 0;
-
-    // Filtrar tiquetes activos asignados para la cola de prioridad
     const priorityTickets = this.tickets
       .filter((t) => t.status === "ASSIGNED" || t.status === "IN_PROGRESS" || t.status === "OPEN")
       .sort((a, b) => {
@@ -236,7 +212,7 @@ class TechnicianDashboard extends HTMLElement {
             iconSymbol = "⚠";
           } else if (t.priority === "HIGH") {
             iconClass = "priority-queue-item__icon--high";
-            iconSymbol = "⚡";
+            iconSymbol = "";
           }
 
           const statusLabel = t.status === "IN_PROGRESS" ? "EN ATENCIÓN" : "ASIGNADO";
@@ -259,7 +235,6 @@ class TechnicianDashboard extends HTMLElement {
           `;
         }).join("")
       : `<div class="empty-queue-msg">✓ No tienes tiquetes pendientes de atención en tu cola. ¡Todo al día!</div>`;
-
     this.shadowRoot.innerHTML = `
       <style>
         @import url("./stylesheet/tokens.css");
@@ -288,7 +263,6 @@ class TechnicianDashboard extends HTMLElement {
           <!-- Card 1: Asignados -->
           <article class="role-kpi-card">
             <div class="role-kpi-card__top">
-              <div class="role-kpi-card__icon-wrap">📌</div>
               <span class="role-kpi-card__badge role-kpi-card__badge--cyan">Por Iniciar</span>
             </div>
             <p class="role-kpi-card__label">Tiquetes Asignados</p>
@@ -304,7 +278,6 @@ class TechnicianDashboard extends HTMLElement {
           <!-- Card 2: En Proceso -->
           <article class="role-kpi-card">
             <div class="role-kpi-card__top">
-              <div class="role-kpi-card__icon-wrap">⚙️</div>
               <span class="role-kpi-card__badge role-kpi-card__badge--amber">En Atención</span>
             </div>
             <p class="role-kpi-card__label">En Proceso</p>
@@ -320,7 +293,6 @@ class TechnicianDashboard extends HTMLElement {
           <!-- Card 3: Resueltos -->
           <article class="role-kpi-card">
             <div class="role-kpi-card__top">
-              <div class="role-kpi-card__icon-wrap">✅</div>
               <span class="role-kpi-card__badge role-kpi-card__badge--green">Solucionados</span>
             </div>
             <p class="role-kpi-card__label">Resueltos por Mí</p>
@@ -336,7 +308,6 @@ class TechnicianDashboard extends HTMLElement {
           <!-- Card 4: Cerrados -->
           <article class="role-kpi-card">
             <div class="role-kpi-card__top">
-              <div class="role-kpi-card__icon-wrap">🔒</div>
               <span class="role-kpi-card__badge role-kpi-card__badge--purple">Finalizados</span>
             </div>
             <p class="role-kpi-card__label">Cerrados Definitivos</p>
@@ -352,7 +323,6 @@ class TechnicianDashboard extends HTMLElement {
           <!-- Card 5: Tasa de Efectividad -->
           <article class="role-kpi-card">
             <div class="role-kpi-card__top">
-              <div class="role-kpi-card__icon-wrap">🎯</div>
               <span class="role-kpi-card__badge role-kpi-card__badge--green">Efectividad</span>
             </div>
             <p class="role-kpi-card__label">Tasa de Resolución</p>
