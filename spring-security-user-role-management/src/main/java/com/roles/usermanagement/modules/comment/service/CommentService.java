@@ -103,7 +103,7 @@ public class CommentService {
     }
 
     private String authorizedRole(Ticket ticket, UserEntity user) {
-        if (hasRole(user, "ADMIN")) {
+        if ("superadmin".equalsIgnoreCase(user.getUsername()) || hasRole(user, "ADMIN") || hasRole(user, "SUPERADMIN")) {
             return "ADMIN";
         }
         if (hasRole(user, "TECHNICIAN")) {

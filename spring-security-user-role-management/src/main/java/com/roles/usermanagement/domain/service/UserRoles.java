@@ -1,7 +1,10 @@
 package com.roles.usermanagement.domain.service;
 
+import java.util.Set;
+
 public class UserRoles {
     public enum Role {
+        SUPERADMIN,
         ADMIN,
         TECHNICIAN,
         USER
@@ -41,6 +44,9 @@ public class UserRoles {
         AUDIT_READ,
         SERVICE_CATALOG_ADMIN,
 
+        // Permiso exclusivo para SuperAdmin: borrado definitivo de incidencias
+        TICKET_DELETE,
+
         // Common Permissions (Comments and History)
         COMMENT_CREATE,
         COMMENT_READ,
@@ -49,5 +55,25 @@ public class UserRoles {
         public String value() {
             return name();
         }
+    }
+
+    /**
+     * Permisos exclusivos de SUPERADMIN.
+     * El rol ADMIN operativo NO tiene acceso a estas operaciones críticas del sistema.
+     */
+    public static final Set<Authority> SUPERADMIN_EXCLUSIVE_AUTHORITIES = Set.of(
+            Authority.USER_DELETE,
+            Authority.TICKET_DELETE,
+            Authority.ROLE_MANAGE,
+            Authority.PERMISSION_MANAGE,
+            Authority.PERMISSION_ASSIGN,
+            Authority.AUDIT_READ
+    );
+
+    /**
+     * Determina si una autoridad corresponde a las facultades operativas del rol ADMIN.
+     */
+    public static boolean isAdminAuthority(Authority authority) {
+        return authority != null && !SUPERADMIN_EXCLUSIVE_AUTHORITIES.contains(authority);
     }
 }

@@ -27,6 +27,14 @@
                         <img class="superadmin-nav-link__icon" src="./Assets/Icons/dashboard.svg" width="24" height="24" alt="user logo" />
                         <span class="superadmin-nav-link__text">Inicio</span>
                     </a>
+                    <a class="superadmin-nav-link" href="./knowledge-base.html" id="nav-kb">
+                        <img class="superadmin-nav-link__icon" src="./Assets/Icons/search.svg" width="24" height="24" alt="" />
+                        <span class="superadmin-nav-link__text">Base de Conocimiento</span>
+                    </a>
+                    <a class="superadmin-nav-link" href="./user-profile.html" id="nav-profile">
+                        <img class="superadmin-nav-link__icon" src="./Assets/Icons/user.svg" width="24" height="24" alt="" />
+                        <span class="superadmin-nav-link__text">Mi Perfil</span>
+                    </a>
                 </section>
 
                 <section class="superadmin-nav-group" aria-labelledby="tickets-nav-label">
@@ -76,15 +84,24 @@
                 </div>
             </header>
             <main id="create-ticket-main" class="superadmin-content user-portal-content">
+                <cd-announcement-banner></cd-announcement-banner>
                 <section class="user-view">
                     <cd-user-portal mode="create-ticket"></cd-user-portal>
                 </section>
             </main>
         </div>
     </div>
+    <cd-toast-manager></cd-toast-manager>
+
     <script type="module" src="./scripts/components/cd-notification-center.js"></script>
+    <script type="module" src="./scripts/components/cd-announcement-banner.js"></script>
+    <script type="module" src="./scripts/components/toast-manager.js"></script>
     <script type="module" src="./scripts/modules/sidebar-toggle.js"></script>
     <script type="module" src="./scripts/components/user-portal.js"></script>
     <script type="module" src="./scripts/pages/create-ticket.js"></script>
+    <script type="module">
+        import { enforceRoleAccess } from "./scripts/modules/auth-guard.js";
+        enforceRoleAccess();
+    </script>
 </body>
 </html>

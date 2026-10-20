@@ -88,6 +88,7 @@ export function escalateTicket(ticketId, reason = "") {
     method: "POST"
   });
 }
+export const requestTicketEscalation = escalateTicket;
 
 // [Nueva Funcionalidad: T-27 - Crear ticket a nombre de otro usuario] - Registra ticket a nombre de un solicitante - Conecta con: /api/tickets/on-behalf
 export function createTicketOnBehalf({ title, description, category, priority, serviceCatalogId, urgentReason, applicantUsername }) {
@@ -125,5 +126,12 @@ export function bulkReassignTickets(fromTechnician, toTechnician) {
   const query = new URLSearchParams({ fromTechnician, toTechnician });
   return apiRequest(`/api/tickets/bulk-reassign?${query.toString()}`, {
     method: "POST"
+  });
+}
+
+// [Permiso exclusivo SuperAdmin]: Borrado definitivo de incidencias
+export function deleteTicket(ticketId) {
+  return apiRequest(`/api/tickets/${encodeURIComponent(ticketId)}`, {
+    method: "DELETE"
   });
 }

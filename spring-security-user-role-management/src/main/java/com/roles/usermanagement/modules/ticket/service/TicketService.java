@@ -162,10 +162,10 @@ public class TicketService {
                 .orElseThrow(() -> new ResponseStatusException(
                         HttpStatus.NOT_FOUND, "Ticket not found"));
 
-        // Only applicant can modify ticket; any other user receives 403
-        if (!policy.isApplicant(ticket, auth)) {
+        // Only applicant or administrator can modify ticket; any other user receives 403
+        if (!policy.isAdmin(auth) && !policy.isApplicant(ticket, auth)) {
             throw new ResponseStatusException(
-                    HttpStatus.FORBIDDEN, "Only the applicant can modify the ticket");
+                    HttpStatus.FORBIDDEN, "Only the applicant or administrator can modify the ticket");
         }
 
         // If no longer open or already assigned, current state forbids update: 409
@@ -312,5 +312,12 @@ public class TicketService {
         java.util.List<TicketResponse> content = p.getContent().stream().map(mapper::toResponse).toList();
         return new com.roles.usermanagement.domain.dto.PageResponse<>(
                 content, p.getNumber(), p.getSize(), p.getTotalElements(), p.getTotalPages(), p.isLast());
+    }
+
+    @Transactional
+    public void deleteTicket(Long id) {
+        Ticket ticket = ticketRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Incidencia no encontrada"));
+        ticketRepository.delete(ticket);
     }
 }

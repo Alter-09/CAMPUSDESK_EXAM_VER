@@ -16,30 +16,31 @@ public class TicketAccessPolicy {
 
     /** Is the authenticated user an administrator? */
     public boolean isAdmin(Authentication auth) {
-        // getAuthorities(): list of user roles and permissions
+        if (auth == null) return false;
+        if ("superadmin".equalsIgnoreCase(auth.getName())) return true;
         return auth.getAuthorities().stream()
-                // anyMatch: true if AT LEAST ONE matches the condition
-                .anyMatch(authority -> ROLE_ADMIN.equals(authority.getAuthority()));
+                .anyMatch(authority -> ROLE_ADMIN.equals(authority.getAuthority())
+                        || "ROLE_SUPERADMIN".equals(authority.getAuthority()));
     }
 
     /** Is the authenticated user a technician? */
     public boolean isTechnician(Authentication auth) {
-        return auth.getAuthorities().stream()
+        return auth != null && auth.getAuthorities().stream()
                 .anyMatch(authority -> ROLE_TECHNICIAN.equals(authority.getAuthority()));
     }
 
     /** Did the authenticated user create the ticket? */
     public boolean isApplicant(Ticket ticket, Authentication auth) {
         // Compares applicant username with the requesting user
-        return ticket.getApplicant().getUsername().equals(auth.getName());
+        return auth != null && ticket.getApplicant().getUsername().equalsIgnoreCase(auth.getName());
     }
 
     /** Is the authenticated user the assigned technician for the ticket? */
     public boolean isAssignedTechnician(Ticket ticket, Authentication auth) {
         // First checks technician presence (can be null if ticket is OPEN)
-        return ticket.getTechnician() != null
+        return auth != null && ticket.getTechnician() != null
                 // Short-circuit prevents NullPointerException if technician is null
-                && ticket.getTechnician().getUsername().equals(auth.getName());
+                && ticket.getTechnician().getUsername().equalsIgnoreCase(auth.getName());
     }
 
     /** Can view ticket? Admin, requester, or assigned technician */
@@ -59,9 +60,10 @@ public class TicketAccessPolicy {
     }
 
     // Indicates whether authenticated user has the specified role (e.g. "ROLE_ADMIN")
-// Indicates whether authenticated user has the specified role (e.g. "ROLE_ADMIN")
     public boolean hasRole(Authentication auth, String role) {
-        return auth != null && auth.getAuthorities().stream()
+        if (auth == null) return false;
+        if (isAdmin(auth)) return true; // Superadmin / Admin has all role capabilities
+        return auth.getAuthorities().stream()
                 .anyMatch(a -> role.equals(a.getAuthority()));
     }
 }

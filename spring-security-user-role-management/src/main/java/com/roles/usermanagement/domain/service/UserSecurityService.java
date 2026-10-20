@@ -30,13 +30,56 @@ public class UserSecurityService implements UserDetailsService {
         UserDto user = userRepository.loadUserByUsername(username);
         if (user == null) throw new UsernameNotFoundException("User " + username + " not found.");
         Set<GrantedAuthority> authorities = new LinkedHashSet<>();
+
+        boolean isSuperAdmin = "superadmin".equalsIgnoreCase(username)
+                || "SUPERADMIN".equalsIgnoreCase(user.getRole());
+        if (user.getRoles() != null) {
+            for (var assignment : user.getRoles()) {
+                if ("SUPERADMIN".equalsIgnoreCase(assignment.getRole())
+                        || ("ADMIN".equalsIgnoreCase(assignment.getRole()) && "superadmin".equalsIgnoreCase(username))) {
+                    isSuperAdmin = true;
+                    break;
+                }
+            }
+        }
+
+        if (isSuperAdmin) {
+            // Superadmin has absolute access to every role and authority across the system
+            authorities.add(new SimpleGrantedAuthority("ROLE_SUPERADMIN"));
+            authorities.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
+            authorities.add(new SimpleGrantedAuthority("ROLE_TECHNICIAN"));
+            authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
+
+            for (UserRoles.Authority auth : UserRoles.Authority.values()) {
+                authorities.add(new SimpleGrantedAuthority(auth.name()));
+            }
+
+            if (user.getAdditionalPermissions() != null) {
+                user.getAdditionalPermissions().forEach(permission -> authorities.add(new SimpleGrantedAuthority(permission)));
+            }
+
+            return User.builder().username(user.getUsername()).password(user.getPassword())
+                    .authorities(authorities).accountLocked(false)
+                    .disabled(false).build();
+        }
+
+        Set<String> roleNames = new LinkedHashSet<>();
+        if (user.getRole() != null && !user.getRole().isBlank()) {
+            roleNames.add(user.getRole().toUpperCase().trim());
+        }
         if (user.getRoles() != null) {
             user.getRoles().forEach(assignment -> {
-                authorities.add(new SimpleGrantedAuthority(ROLE_PREFIX + assignment.getRole()));
-                roleRepository.findById(assignment.getRole()).ifPresent(role ->
-                        role.getPermissions().forEach(permission ->
-                                authorities.add(new SimpleGrantedAuthority(permission.getName()))));
+                if (assignment != null && assignment.getRole() != null && !assignment.getRole().isBlank()) {
+                    roleNames.add(assignment.getRole().toUpperCase().trim());
+                }
             });
+        }
+
+        for (String roleName : roleNames) {
+            authorities.add(new SimpleGrantedAuthority(ROLE_PREFIX + roleName));
+            roleRepository.findById(roleName).ifPresent(role ->
+                    role.getPermissions().forEach(permission ->
+                            authorities.add(new SimpleGrantedAuthority(permission.getName()))));
         }
         if (user.getAdditionalPermissions() != null) {
             user.getAdditionalPermissions().forEach(permission -> authorities.add(new SimpleGrantedAuthority(permission)));

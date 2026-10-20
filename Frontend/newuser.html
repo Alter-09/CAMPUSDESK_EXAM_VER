@@ -25,6 +25,29 @@
                         <img class="superadmin-nav-link__icon" src="./Assets/icons/dashboard.svg" width="24" height="24" alt="" />
                         <span class="superadmin-nav-link__text">Dashboard</span>
                     </a>
+                    <a class="superadmin-nav-link" href="./knowledge-base.html">
+                        <img class="superadmin-nav-link__icon" src="./Assets/Icons/search.svg" width="24" height="24" alt="" />
+                        <span class="superadmin-nav-link__text">Base de Conocimiento</span>
+                    </a>
+                    <a class="superadmin-nav-link" href="./user-profile.html">
+                        <img class="superadmin-nav-link__icon" src="./Assets/Icons/user.svg" width="24" height="24" alt="" />
+                        <span class="superadmin-nav-link__text">Mi Perfil</span>
+                    </a>
+                </section>
+                <section class="superadmin-nav-group" aria-labelledby="config-navigation">
+                    <h2 id="config-navigation" class="superadmin-nav-group__label">Configuración del Sistema</h2>
+                    <a class="superadmin-nav-link" href="./superadmin.html#sla-policies">
+                        <img class="superadmin-nav-link__icon" src="./Assets/Icons/calendar.svg" width="24" height="24" alt="" />
+                        <span class="superadmin-nav-link__text">Políticas SLA</span>
+                    </a>
+                    <a class="superadmin-nav-link" href="./superadmin.html#service-catalog">
+                        <img class="superadmin-nav-link__icon" src="./Assets/Icons/assign.svg" width="24" height="24" alt="" />
+                        <span class="superadmin-nav-link__text">Catálogo de Servicios</span>
+                    </a>
+                    <a class="superadmin-nav-link" href="./superadmin.html#audit-logs">
+                        <img class="superadmin-nav-link__icon" src="./Assets/Icons/shieldlock.svg" width="24" height="24" alt="" />
+                        <span class="superadmin-nav-link__text">Auditoría del Sistema</span>
+                    </a>
                 </section>
                 <section class="superadmin-nav-group" aria-labelledby="security-navigation">
                     <h2 id="security-navigation" class="superadmin-nav-group__label">Seguridad</h2>
@@ -81,7 +104,8 @@
                         </ol>
                     </nav>
                 </div>
-                <div class="app-header__user">
+                <div class="app-header__user" style="display: flex; align-items: center; gap: 12px;">
+                    <cd-notification-center></cd-notification-center>
                     <span class="app-header__role">Superadmin</span>
                     <img class="app-header__menu-icon" src="./Assets/Icons/user.svg" width="24" height="24" alt="user icon" />
                 </div>
@@ -92,7 +116,15 @@
             </main>
         </div>
     </div>
+    <cd-toast-manager></cd-toast-manager>
+
+    <script type="module" src="./scripts/components/cd-notification-center.js"></script>
+    <script type="module" src="./scripts/components/toast-manager.js"></script>
     <script type="module" src="./scripts/modules/sidebar-toggle.js"></script>
     <script type="module" src="./scripts/pages/new-user.js"></script>
+    <script type="module">
+        import { enforceRoleAccess } from "./scripts/modules/auth-guard.js";
+        enforceRoleAccess(["ADMIN", "SUPERADMIN"]);
+    </script>
 </body>
 </html>

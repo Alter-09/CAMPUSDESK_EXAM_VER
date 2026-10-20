@@ -13,3 +13,10 @@ export function getAttachmentsForTicket(ticketId) {
     method: "GET",
   });
 }
+export const getTicketAttachments = getAttachmentsForTicket;
+
+export function deleteAttachment(attachmentId) {
+  return apiRequest(`/api/v1/attachments/${encodeURIComponent(attachmentId)}`, {
+    method: "DELETE",
+  }).catch(() => null);
+}

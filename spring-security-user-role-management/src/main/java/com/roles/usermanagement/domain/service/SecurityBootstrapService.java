@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 
 @Service
 public class SecurityBootstrapService {
@@ -17,30 +19,58 @@ public class SecurityBootstrapService {
     private final UserCrudRepository users;
     private final UserRoleCrudRepository userRoles;
     private final PasswordEncoder encoder;
-    private final boolean enabled;
-    private final String username;
-    private final String email;
-    private final String password;
 
-    public SecurityBootstrapService(PermissionCrudRepository permissions, RoleCrudRepository roles,
-            UserCrudRepository users, UserRoleCrudRepository userRoles, PasswordEncoder encoder,
-            @Value("${app.bootstrap.enabled:false}") boolean enabled,
-            @Value("${app.bootstrap.username:superadmin}") String username,
-            @Value("${app.bootstrap.email:superadmin@localhost}") String email,
-            @Value("${app.bootstrap.password:}") String password) {
+    @PersistenceContext
+    private EntityManager entityManager;
+
+    // Configuración de Superadministrador (Acceso total a la plataforma)
+    private final boolean superAdminEnabled;
+    private final String superAdminUsername;
+    private final String superAdminEmail;
+    private final String superAdminPassword;
+
+    // Configuración de Administrador Operativo (Gestión de tickets, técnicos y usuarios)
+    private final boolean adminEnabled;
+    private final String adminUsername;
+    private final String adminEmail;
+    private final String adminPassword;
+
+    public SecurityBootstrapService(
+            PermissionCrudRepository permissions,
+            RoleCrudRepository roles,
+            UserCrudRepository users,
+            UserRoleCrudRepository userRoles,
+            PasswordEncoder encoder,
+            // Superadmin properties (compatibilidad con app.bootstrap.*)
+            @Value("${app.bootstrap.enabled:false}") boolean superAdminEnabled,
+            @Value("${app.bootstrap.username:superadmin}") String superAdminUsername,
+            @Value("${app.bootstrap.email:superadmin@localhost}") String superAdminEmail,
+            @Value("${app.bootstrap.password:}") String superAdminPassword,
+            // Admin properties (app.bootstrap.admin.*)
+            @Value("${app.bootstrap.admin.enabled:false}") boolean adminEnabled,
+            @Value("${app.bootstrap.admin.username:admin}") String adminUsername,
+            @Value("${app.bootstrap.admin.email:admin@localhost}") String adminEmail,
+            @Value("${app.bootstrap.admin.password:}") String adminPassword) {
         this.permissions = permissions;
         this.roles = roles;
         this.users = users;
         this.userRoles = userRoles;
         this.encoder = encoder;
-        this.enabled = enabled;
-        this.username = username;
-        this.email = email;
-        this.password = password;
+
+        this.superAdminEnabled = superAdminEnabled;
+        this.superAdminUsername = superAdminUsername;
+        this.superAdminEmail = superAdminEmail;
+        this.superAdminPassword = superAdminPassword;
+
+        this.adminEnabled = adminEnabled;
+        this.adminUsername = adminUsername;
+        this.adminEmail = adminEmail;
+        this.adminPassword = adminPassword;
     }
 
     @Transactional
     public void initialize() {
+        // 1. Inicializar catálogo completo de permisos en base de datos
         Map<String, PermissionEntity> catalog = new LinkedHashMap<>();
         for (UserRoles.Authority authority : UserRoles.Authority.values()) {
             String name = authority.value();
@@ -51,18 +81,30 @@ public class SecurityBootstrapService {
             });
             catalog.put(name, permission);
         }
+
+        // 2. Asignar permisos diferenciados a cada uno de los 4 roles
         for (UserRoles.Role roleName : UserRoles.Role.values()) {
             RoleEntity role = roles.findById(roleName.name()).orElseGet(() -> {
                 RoleEntity created = new RoleEntity();
                 created.setName(roleName.name());
                 return created;
             });
+
             for (PermissionEntity permission : catalog.values()) {
                 String permName = permission.getName();
                 boolean shouldAssign = false;
 
-                if (roleName == UserRoles.Role.ADMIN) {
+                if (roleName == UserRoles.Role.SUPERADMIN) {
+                    // Superadmin tiene acceso a la TOTALIDAD de las funcionalidades (100% de los permisos)
                     shouldAssign = true;
+                } else if (roleName == UserRoles.Role.ADMIN) {
+                    // Admin tiene permisos administrativos operativos, EXCLUYENDO las facultades críticas de Superadmin
+                    try {
+                        UserRoles.Authority auth = UserRoles.Authority.valueOf(permName);
+                        shouldAssign = UserRoles.isAdminAuthority(auth);
+                    } catch (IllegalArgumentException e) {
+                        shouldAssign = false;
+                    }
                 } else if (roleName == UserRoles.Role.TECHNICIAN) {
                     shouldAssign = permName.equals(UserRoles.Authority.TICKET_READ_ASSIGNED.name())
                             || permName.equals(UserRoles.Authority.TICKET_STATUS_UPDATE.name())
@@ -86,37 +128,77 @@ public class SecurityBootstrapService {
                     if (!present) {
                         role.getPermissions().add(permission);
                     }
+                } else {
+                    // Asegurar que permisos no correspondientes queden removidos del rol
+                    role.getPermissions().removeIf(existing -> existing.getName().equals(permName));
                 }
             }
             roles.save(role);
         }
-        if (!enabled) return;
-        if (username.isBlank() || username.length() > 50 || email.isBlank() || email.length() > 200) {
-            throw new IllegalStateException("Configura ADMIN_USERNAME y ADMIN_EMAIL válidos.");
+
+        // 3. Crear o actualizar la cuenta de Superadministrador
+        bootstrapUser(superAdminEnabled, superAdminUsername, superAdminEmail, superAdminPassword, UserRoles.Role.SUPERADMIN);
+
+        // 4. Crear o actualizar la cuenta de Administrador Operativo
+        bootstrapUser(adminEnabled, adminUsername, adminEmail, adminPassword, UserRoles.Role.ADMIN);
+    }
+
+    private void bootstrapUser(boolean isEnabled, String targetUsername, String targetEmail, String rawPassword, UserRoles.Role targetRole) {
+        if (!isEnabled) return;
+        if (targetUsername == null || targetUsername.isBlank() || targetUsername.length() > 50
+                || targetEmail == null || targetEmail.isBlank() || targetEmail.length() > 200) {
+            throw new IllegalStateException("Configura username y email válidos para " + targetRole.name());
         }
-        UserRoleId adminRole = new UserRoleId(username, UserRoles.Role.ADMIN.name());
-        if (users.existsById(username)) {
-            if (!userRoles.existsById(adminRole)) {
-                throw new IllegalStateException("El usuario inicial ya existe sin ADMIN; elige otro ADMIN_USERNAME.");
+
+        if (users.existsById(targetUsername)) {
+            UserEntity user = users.findById(targetUsername).orElse(null);
+            if (user != null) {
+                boolean hasTargetRole = user.getRoles() != null && user.getRoles().stream()
+                        .anyMatch(r -> targetRole.name().equalsIgnoreCase(r.getRole()));
+
+                if (!hasTargetRole) {
+                    entityManager.createNativeQuery("DELETE FROM user_role WHERE username = ?1")
+                            .setParameter(1, targetUsername)
+                            .executeUpdate();
+                    entityManager.flush();
+
+                    UserRoleEntity assignment = new UserRoleEntity();
+                    assignment.setUsername(targetUsername);
+                    assignment.setRole(targetRole.name());
+                    userRoles.save(assignment);
+                    entityManager.flush();
+                }
+
+                boolean changed = false;
+                if (Boolean.TRUE.equals(user.getLocked())) { user.setLocked(false); changed = true; }
+                if (Boolean.TRUE.equals(user.getDisabled())) { user.setDisabled(false); changed = true; }
+                if (Boolean.TRUE.equals(user.getMustChangePassword())) { user.setMustChangePassword(false); changed = true; }
+                if (rawPassword != null && !rawPassword.isBlank()) {
+                    user.setPassword(encoder.encode(rawPassword));
+                    changed = true;
+                }
+                if (changed) users.save(user);
             }
-            // Never replace an existing account's password, email or status.
             return;
         }
-        if (password.isBlank()) {
-            throw new IllegalStateException("Configura ADMIN_PASSWORD para crear el administrador inicial.");
+
+        if (rawPassword == null || rawPassword.isBlank()) {
+            throw new IllegalStateException("Configura una contraseña para crear el usuario inicial: " + targetUsername);
         }
-        UserEntity admin = new UserEntity();
-        admin.setUsername(username);
-        admin.setEmail(email.trim().toLowerCase());
-        admin.setPassword(encoder.encode(password));
-        admin.setLocked(false);
-        admin.setDisabled(false);
-        admin.setMustChangePassword(false); // <-- Super Admin no requiere forzar cambio
-        admin.setRoles(new ArrayList<>());
-        users.save(admin);
+
+        UserEntity user = new UserEntity();
+        user.setUsername(targetUsername);
+        user.setEmail(targetEmail.trim().toLowerCase());
+        user.setPassword(encoder.encode(rawPassword));
+        user.setLocked(false);
+        user.setDisabled(false);
+        user.setMustChangePassword(false);
+        user.setRoles(new ArrayList<>());
+        users.save(user);
+
         UserRoleEntity assignment = new UserRoleEntity();
-        assignment.setUsername(username);
-        assignment.setRole(UserRoles.Role.ADMIN.name());
+        assignment.setUsername(targetUsername);
+        assignment.setRole(targetRole.name());
         userRoles.save(assignment);
     }
 }

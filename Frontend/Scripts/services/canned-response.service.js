@@ -4,6 +4,7 @@ import { apiRequest } from "../config/http-client.js";
 export function getAvailableCannedResponses() {
   return apiRequest("/api/v1/canned-responses", { method: "GET" });
 }
+export const getActiveCannedResponses = getAvailableCannedResponses;
 
 export function createCannedResponse({ title, content, category, isGlobal }) {
   return apiRequest("/api/v1/canned-responses", {

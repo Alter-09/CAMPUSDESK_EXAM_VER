@@ -19,20 +19,38 @@ class TicketAssign extends HTMLElement {
   }
 
   async loadData() {
+    this.error = null;
     try {
-      // Load tickets that can be assigned or reassigned (OPEN and ASSIGNED)
-      const ticketsData = await listTickets();
-      const allTickets = Array.isArray(ticketsData) ? ticketsData : [];
-      this.tickets = allTickets.filter(t => t.status === "OPEN" || t.status === "ASSIGNED");
+      const [ticketsResult, techResult] = await Promise.allSettled([
+        listTickets(),
+        listTechnicians(),
+      ]);
 
-      // If a ticket was selected, keep its reference updated
+      if (ticketsResult.status === "fulfilled" && Array.isArray(ticketsResult.value)) {
+        this.tickets = ticketsResult.value.filter(t => t.status === "OPEN" || t.status === "ASSIGNED");
+      } else {
+        this.tickets = [];
+        if (ticketsResult.status === "rejected") {
+          console.error("Error al cargar tiquetes:", ticketsResult.reason);
+          this.error = ticketsResult.reason?.message || "Error al cargar la lista de tiquetes.";
+        }
+      }
+
       if (this.selectedTicket) {
         this.selectedTicket = this.tickets.find(t => String(t.id) === String(this.selectedTicket.id)) || null;
       }
 
-      // Use listTechnicians() which combines /api/user/all + /api/technicians
-      // and properly filters by TECHNICIAN role
-      this.technicians = await listTechnicians();
+      if (techResult.status === "fulfilled" && Array.isArray(techResult.value)) {
+        this.technicians = techResult.value;
+      } else {
+        this.technicians = [];
+        if (techResult.status === "rejected") {
+          console.error("Error al cargar técnicos:", techResult.reason);
+          if (!this.error) {
+            this.error = techResult.reason?.message || "Error al cargar la lista de técnicos.";
+          }
+        }
+      }
 
       this.render();
       this.attachEvents();

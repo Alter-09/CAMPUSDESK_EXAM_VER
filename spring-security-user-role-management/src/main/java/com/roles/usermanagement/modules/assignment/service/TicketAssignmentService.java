@@ -136,9 +136,13 @@ public class TicketAssignmentService {
     }
 
     private void requireRole(UserEntity user, String role, String message) {
-        boolean hasRole = user.getRoles() != null && user.getRoles().stream()
+        if (user != null && ("superadmin".equalsIgnoreCase(user.getUsername())
+                || (user.getRoles() != null && user.getRoles().stream().anyMatch(r -> "SUPERADMIN".equalsIgnoreCase(r.getRole()))))) {
+            return; // Superadmin has all permissions and satisfies any administrative or operational role requirement
+        }
+        boolean hasRole = user != null && user.getRoles() != null && user.getRoles().stream()
                 .map(UserRoleEntity::getRole)
-                .anyMatch(role::equals);
+                .anyMatch(role::equalsIgnoreCase);
         if (!hasRole) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, message);
         }

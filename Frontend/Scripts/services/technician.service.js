@@ -20,17 +20,39 @@ export async function listTechnicians() {
       profilesByUsername.set(profile.username.toLowerCase(), profile);
     }
   }
-  const technicianUsers = allUsers.filter((u) => {
+
+  const usersByUsername = new Map();
+  for (const u of allUsers) {
+    if (u?.username) {
+      usersByUsername.set(u.username.toLowerCase(), u);
+    }
+  }
+
+  // Collect all unique technician usernames from both users and profile queries
+  const technicianUsernames = new Set();
+  for (const u of allUsers) {
     const role = String(u.role || "").toUpperCase();
-    return role === "TECHNICIAN" || role.includes("TECH") || role.includes("TECNICO");
-  });
-  return technicianUsers.map((u) => {
-    const profile = profilesByUsername.get(u.username.toLowerCase());
+    if (role === "TECHNICIAN" || role.includes("TECH") || role.includes("TECNICO")) {
+      technicianUsernames.add(u.username.toLowerCase());
+    }
+  }
+  for (const p of techProfiles) {
+    if (p?.username) {
+      technicianUsernames.add(p.username.toLowerCase());
+    }
+  }
+
+  return Array.from(technicianUsernames).map((lower) => {
+    const u = usersByUsername.get(lower);
+    const profile = profilesByUsername.get(lower);
+    const username = u?.username || profile?.username || lower;
+    const email = u?.email || "—";
+    const role = u?.role || "TECHNICIAN";
     const count = typeof profile?.activeTicketsCount === "number" ? profile.activeTicketsCount : 0;
-    
+
     let availability = profile?.availabilityStatus;
     if (!availability) {
-      if (u.disabled || u.locked) {
+      if (u?.disabled || u?.locked) {
         availability = "OFFLINE";
       } else if (count > 0) {
         availability = "BUSY";
@@ -40,14 +62,14 @@ export async function listTechnicians() {
     }
 
     return {
-      username: u.username,
-      email: u.email || "—",
-      role: u.role || "TECHNICIAN",
+      username,
+      email,
+      role,
       specialty: profile?.specialty || "Soporte General",
       activeTicketsCount: count,
       availabilityStatus: availability,
-      locked: Boolean(u.locked),
-      disabled: Boolean(u.disabled),
+      locked: Boolean(u?.locked),
+      disabled: Boolean(u?.disabled),
     };
   });
 }

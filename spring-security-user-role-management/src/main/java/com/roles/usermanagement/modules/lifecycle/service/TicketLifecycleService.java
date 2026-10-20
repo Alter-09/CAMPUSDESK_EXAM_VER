@@ -109,6 +109,9 @@ public class TicketLifecycleService {
 
     // Verifies requester satisfies rule requirements; otherwise throws 403
     private void assertCanPerform(LifecycleRule rule, Ticket ticket, Authentication auth) {
+        if (policy.isAdmin(auth)) {
+            return; // Superadmin / Admin has omnipotent access across lifecycle transitions
+        }
         // User must have the role required by rule
         if (!policy.hasRole(auth, rule.getRequiredRole())) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Your role cannot perform this action");

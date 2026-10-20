@@ -40,6 +40,14 @@ public class AuditService {
         return new PageResponse<>(content, p.getNumber(), p.getSize(), p.getTotalElements(), p.getTotalPages(), p.isLast());
     }
 
+    // [Nueva Funcionalidad: A-18 - Consulta global de auditoría] - Retorna todas las trazas de auditoría paginadas - Conecta con: AuditLogRepository y AuditController
+    @Transactional(readOnly = true)
+    public PageResponse<AuditLogResponse> getAllLogs(int page, int size) {
+        Page<AuditLog> p = auditLogRepository.findAll(PageRequest.of(page, size, org.springframework.data.domain.Sort.by(org.springframework.data.domain.Sort.Direction.DESC, "timestamp")));
+        List<AuditLogResponse> content = p.getContent().stream().map(this::toResponse).toList();
+        return new PageResponse<>(content, p.getNumber(), p.getSize(), p.getTotalElements(), p.getTotalPages(), p.isLast());
+    }
+
     private AuditLogResponse toResponse(AuditLog a) {
         return new AuditLogResponse(
                 a.getId(),

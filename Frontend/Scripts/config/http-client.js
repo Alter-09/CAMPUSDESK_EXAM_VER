@@ -53,7 +53,13 @@ async function readPayload(response) {
 export async function apiRequest(path, { method = "GET", body } = {}) {
   /** @type {Record<string, string>} */
   const headers = {};
-  const token = sessionStorage.getItem(TOKEN_STORAGE_KEY);
+  const token = sessionStorage.getItem(TOKEN_STORAGE_KEY)
+    || localStorage.getItem(TOKEN_STORAGE_KEY)
+    || sessionStorage.getItem("token")
+    || localStorage.getItem("token")
+    || sessionStorage.getItem("jwt")
+    || localStorage.getItem("jwt")
+    || "";
 
   if (token) {
     headers.Authorization = `Bearer ${token}`;

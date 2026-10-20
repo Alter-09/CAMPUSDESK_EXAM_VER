@@ -127,4 +127,13 @@ public class TicketController {
             Authentication auth) {
         return ResponseEntity.ok(ticketService.listPaginated(page, size, status, priority, category, auth));
     }
+
+    // Permiso exclusivo para SuperAdmin: eliminar incidencias de forma definitiva
+    @DeleteMapping("/{id}")
+    @PreAuthorize("hasAuthority('TICKET_DELETE') or hasRole('SUPERADMIN')")
+    @Operation(summary = "Eliminar incidencia definitivamente (Exclusivo Superadmin)")
+    public ResponseEntity<Void> deleteTicket(@PathVariable Long id) {
+        ticketService.deleteTicket(id);
+        return ResponseEntity.noContent().build();
+    }
 }

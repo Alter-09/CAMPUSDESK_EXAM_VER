@@ -4,6 +4,7 @@ import { apiRequest } from "../config/http-client.js";
 export function getUnreadNotifications() {
   return apiRequest("/api/v1/notifications/unread", { method: "GET" });
 }
+export const getMyNotifications = getUnreadNotifications;
 
 export function getNotificationsList({ page = 0, size = 10 } = {}) {
   return apiRequest(`/api/v1/notifications?page=${page}&size=${size}`, { method: "GET" });

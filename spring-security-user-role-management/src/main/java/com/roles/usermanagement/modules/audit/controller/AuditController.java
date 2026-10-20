@@ -12,10 +12,17 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/v1/audit")
 @RequiredArgsConstructor
-@PreAuthorize("hasRole('ADMIN')")
+@PreAuthorize("hasAuthority('AUDIT_READ') or hasRole('SUPERADMIN')")
 public class AuditController {
 
     private final AuditService auditService;
+
+    @GetMapping
+    public ResponseEntity<PageResponse<AuditLogResponse>> getAllLogs(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "20") int size) {
+        return ResponseEntity.ok(auditService.getAllLogs(page, size));
+    }
 
     @GetMapping("/entity/{entityName}/{entityId}")
     public ResponseEntity<PageResponse<AuditLogResponse>> getLogsByEntity(

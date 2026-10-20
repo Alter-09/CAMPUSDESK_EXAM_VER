@@ -125,6 +125,9 @@ public class UserRepository implements IUserRepository {
   @Transactional
   public UserRoleDto assignRole(UserRoleDto dto) {
     UserEntity user=account(dto.getUsername());
+    if ("superadmin".equalsIgnoreCase(user.getUsername())) {
+      throw new ResponseStatusException(HttpStatus.FORBIDDEN, "No se puede modificar el rol del Superadministrador principal");
+    }
     if(dto.getRole()==null || !roles.existsById(dto.getRole())) throw invalid("El rol debe existir en el catálogo");
     setRole(user,dto.getRole()); em.flush();
     UserRoleDto result=new UserRoleDto(); result.setUsername(user.getUsername()); result.setRole(dto.getRole()); return result;
@@ -146,8 +149,13 @@ public class UserRepository implements IUserRepository {
   public UserPermissionsDto permissionDetails(String username) {
     UserEntity user=users.findById(username).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,"El usuario no existe"));
     String role=mapper.roleName(user);
-    List<String> inherited=role==null ? List.of() : roles.findById(role).map(item ->
-        item.getPermissions().stream().map(PermissionEntity::getName).sorted().toList()).orElse(List.of());
+    List<String> inherited;
+    if ("superadmin".equalsIgnoreCase(username) || "SUPERADMIN".equalsIgnoreCase(role)) {
+      inherited = permissionCatalog();
+    } else {
+      inherited=role==null ? List.of() : roles.findById(role).map(item ->
+          item.getPermissions().stream().map(PermissionEntity::getName).sorted().toList()).orElse(List.of());
+    }
     List<String> additional=mapper.permissionNames(user);
     Set<String> effective=new TreeSet<>(inherited); effective.addAll(additional);
     return new UserPermissionsDto(username,role,inherited,additional,List.copyOf(effective));
@@ -165,7 +173,17 @@ public class UserRepository implements IUserRepository {
   @Override public List<UserDto> getAllUsers() {
     List<UserEntity> result=new ArrayList<>(); users.findAll().forEach(result::add); return mapper.toUsersDto(result);
   }
-  @Override public void deleteUser(String username) {users.deleteById(username);}
+  @Override public void deleteUser(String username) {
+    if ("superadmin".equalsIgnoreCase(username)) {
+      throw new ResponseStatusException(HttpStatus.FORBIDDEN, "No se puede eliminar la cuenta principal de Superadministrador");
+    }
+    users.findById(username).ifPresent(u -> {
+      if (u.getRoles() != null && u.getRoles().stream().anyMatch(r -> "SUPERADMIN".equalsIgnoreCase(r.getRole()))) {
+        throw new ResponseStatusException(HttpStatus.FORBIDDEN, "No se puede eliminar un usuario con rol SUPERADMIN");
+      }
+    });
+    users.deleteById(username);
+  }
   @Override public boolean existsByUsername(String username) {return users.existsById(username);}
 
   @Transactional

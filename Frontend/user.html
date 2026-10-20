@@ -27,6 +27,14 @@
                         <img class="superadmin-nav-link__icon" src="./Assets/Icons/dashboard.svg" width="24" height="24" alt="" />
                         <span class="superadmin-nav-link__text">Inicio</span>
                     </a>
+                    <a class="superadmin-nav-link" href="./knowledge-base.html" id="nav-kb">
+                        <img class="superadmin-nav-link__icon" src="./Assets/Icons/search.svg" width="24" height="24" alt="" />
+                        <span class="superadmin-nav-link__text">Base de Conocimiento</span>
+                    </a>
+                    <a class="superadmin-nav-link" href="./user-profile.html" id="nav-profile">
+                        <img class="superadmin-nav-link__icon" src="./Assets/Icons/user.svg" width="24" height="24" alt="" />
+                        <span class="superadmin-nav-link__text">Mi Perfil</span>
+                    </a>
                 </section>
 
                 <section class="superadmin-nav-group" aria-labelledby="tickets-nav-label">
@@ -82,11 +90,21 @@
             </main>
         </div>
     </div>
+    <cd-toast-manager></cd-toast-manager>
 
     <script type="module" src="./scripts/modules/sidebar-toggle.js"></script>
     <script type="module" src="./scripts/components/cd-notification-center.js"></script>
     <script type="module" src="./scripts/components/cd-announcement-banner.js"></script>
+    <script type="module" src="./scripts/components/toast-manager.js"></script>
     <script type="module" src="./scripts/components/user-dashboard.js"></script>
     <script type="module" src="./scripts/pages/user-overview.js"></script>
+    <script type="module">
+        import { enforceRoleAccess, logout } from "./scripts/modules/auth-guard.js";
+        enforceRoleAccess();
+        document.getElementById("nav-logout")?.addEventListener("click", (e) => {
+            e.preventDefault();
+            logout();
+        });
+    </script>
 </body>
 </html>
