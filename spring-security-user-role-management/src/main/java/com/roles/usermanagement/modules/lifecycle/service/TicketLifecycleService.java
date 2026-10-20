@@ -135,12 +135,12 @@ public class TicketLifecycleService {
         return profile.getUser();
     }
 
-    // Translates lifecycle action into event type saved in status history
+    // [Nueva Funcionalidad: T-01/T-09/U-01 - Mapeo de acciones ampliadas a historial] - Mapea pausas, cancelaciones y escalaciones al historial de estado - Conecta con: StatusHistoryAction y TransitionAction
     private StatusHistoryAction toHistoryAction(TransitionAction action) {
         return switch (action) {
             case ASSIGN, REASSIGN -> StatusHistoryAction.ASSIGNMENT;
-            case CONFIRM_CLOSE -> StatusHistoryAction.CLOSURE;
-            case START_PROGRESS, RESOLVE -> StatusHistoryAction.STATUS_TRANSITION;
+            case CONFIRM_CLOSE, CANCEL -> StatusHistoryAction.CLOSURE;
+            case START_PROGRESS, PAUSE, RESUME, ESCALATE, RESOLVE -> StatusHistoryAction.STATUS_TRANSITION;
         };
     }
 }

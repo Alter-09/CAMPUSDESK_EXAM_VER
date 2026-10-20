@@ -1,0 +1,29 @@
+package com.roles.usermanagement.modules.report.controller;
+
+import com.roles.usermanagement.modules.report.service.ReportService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+// [Nueva Funcionalidad: U-19/A-11 - Controlador REST de reportes y exportación] - Endpoint para exportar listados de tickets a CSV - Conecta con: ReportService
+@RestController
+@RequestMapping("/api/v1/reports")
+@RequiredArgsConstructor
+public class ReportController {
+
+    private final ReportService reportService;
+
+    @GetMapping(value = "/my-tickets/export", produces = "text/csv")
+    public ResponseEntity<String> exportMyTickets(Authentication auth) {
+        String csv = reportService.exportUserTicketsCsv(auth.getName());
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"mis_tickets.csv\"")
+                .contentType(MediaType.parseMediaType("text/csv"))
+                .body(csv);
+    }
+}

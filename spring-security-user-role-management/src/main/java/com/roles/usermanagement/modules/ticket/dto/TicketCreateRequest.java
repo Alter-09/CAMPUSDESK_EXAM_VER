@@ -20,6 +20,10 @@ public record TicketCreateRequest(
         TicketCategory category,
 
         @NotNull(message = "The priority is mandatory.")
-        TicketPriority priority
+        TicketPriority priority,
+
+        // [Nueva Funcionalidad: U-26/U-28 - Asociación de catálogo y justificación de urgencia en creación] - Permite asociar ítems de catálogo y justificar prioridad crítica - Conecta con: Ticket
+        Long serviceCatalogId,
+        String urgentReason
 ) {
 }

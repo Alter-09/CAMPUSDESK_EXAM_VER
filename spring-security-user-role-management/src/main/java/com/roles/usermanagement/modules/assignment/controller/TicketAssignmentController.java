@@ -57,4 +57,31 @@ public class TicketAssignmentController {
         return ResponseEntity.ok(assignmentService.reassign(
                 ticketId, request.technicianUsername(), request.justification(), username));
     }
+
+    // [Nueva Funcionalidad: T-01 - Endpoint de auto-asignación por técnico] - Permite al técnico tomar un ticket abierto - Conecta con: TicketAssignmentService
+    @org.springframework.web.bind.annotation.PostMapping("/{ticketId}/self-assign")
+    @PreAuthorize("hasRole('TECHNICIAN')")
+    public ResponseEntity<TicketAssignmentResponse> selfAssign(
+            @PathVariable @Positive Long ticketId,
+            @AuthenticationPrincipal String username) {
+        return ResponseEntity.ok(assignmentService.selfAssign(ticketId, username));
+    }
+
+    // [Nueva Funcionalidad: T-04/A-16 - Endpoint de auto-asignación por carga activa] - Asigna ticket automáticamente al técnico con menor carga - Conecta con: TicketAssignmentService
+    @org.springframework.web.bind.annotation.PostMapping("/{ticketId}/auto-assign")
+    @PreAuthorize("hasAnyRole('ADMIN', 'TECHNICIAN')")
+    public ResponseEntity<TicketAssignmentResponse> autoAssign(@PathVariable @Positive Long ticketId) {
+        return ResponseEntity.ok(assignmentService.autoAssign(ticketId));
+    }
+
+    // [Nueva Funcionalidad: A-26 - Endpoint de reasignación masiva] - Reasigna todos los tickets activos de un técnico a otro - Conecta con: TicketAssignmentService
+    @org.springframework.web.bind.annotation.PostMapping("/bulk-reassign")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<java.util.Map<String, Object>> bulkReassign(
+            @org.springframework.web.bind.annotation.RequestParam String fromTechnician,
+            @org.springframework.web.bind.annotation.RequestParam String toTechnician,
+            @AuthenticationPrincipal String adminUsername) {
+        int reassignedCount = assignmentService.bulkReassign(fromTechnician, toTechnician, adminUsername);
+        return ResponseEntity.ok(java.util.Map.of("reassignedCount", reassignedCount, "success", true));
+    }
 }

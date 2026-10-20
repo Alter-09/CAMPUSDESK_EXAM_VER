@@ -58,3 +58,72 @@ export function updateTicket(ticketId, { title, description, category, priority 
     body: { title, description, category, priority },
   });
 }
+
+// [Nueva Funcionalidad: U-01 - Cancelar ticket propio] - Solicita cancelación de un ticket OPEN - Conecta con: /api/tickets/{id}/cancel
+export function cancelTicket(ticketId) {
+  return apiRequest(`/api/tickets/${encodeURIComponent(ticketId)}/cancel`, {
+    method: "POST"
+  });
+}
+
+// [Nueva Funcionalidad: U-05 - Reabrir ticket cerrado] - Solicita reapertura con motivo - Conecta con: /api/tickets/{id}/reopen
+export function reopenTicket(ticketId, reason = "") {
+  const query = reason ? `?reason=${encodeURIComponent(reason)}` : "";
+  return apiRequest(`/api/tickets/${encodeURIComponent(ticketId)}/reopen${query}`, {
+    method: "POST"
+  });
+}
+
+// [Nueva Funcionalidad: U-13 - Duplicar ticket como plantilla] - Clona un ticket existente - Conecta con: /api/tickets/{id}/clone
+export function cloneTicket(ticketId) {
+  return apiRequest(`/api/tickets/${encodeURIComponent(ticketId)}/clone`, {
+    method: "POST"
+  });
+}
+
+// [Nueva Funcionalidad: U-24 - Solicitar escalación de ticket] - Marca el ticket para escalación prioritaria - Conecta con: /api/tickets/{id}/escalate
+export function escalateTicket(ticketId, reason = "") {
+  const query = reason ? `?reason=${encodeURIComponent(reason)}` : "";
+  return apiRequest(`/api/tickets/${encodeURIComponent(ticketId)}/escalate${query}`, {
+    method: "POST"
+  });
+}
+
+// [Nueva Funcionalidad: T-27 - Crear ticket a nombre de otro usuario] - Registra ticket a nombre de un solicitante - Conecta con: /api/tickets/on-behalf
+export function createTicketOnBehalf({ title, description, category, priority, serviceCatalogId, urgentReason, applicantUsername }) {
+  return apiRequest(`/api/tickets/on-behalf?applicantUsername=${encodeURIComponent(applicantUsername)}`, {
+    method: "POST",
+    body: { title, description, category, priority, serviceCatalogId, urgentReason }
+  });
+}
+
+// [Nueva Funcionalidad: U-03/U-21/T-21 - Listado paginado de tickets] - Obtiene página de tickets con filtros - Conecta con: /api/tickets/paginated
+export function listTicketsPaginated({ page = 0, size = 10, status, priority, category } = {}) {
+  const query = new URLSearchParams({ page, size });
+  if (status) query.set("status", status);
+  if (priority) query.set("priority", priority);
+  if (category) query.set("category", category);
+  return apiRequest(`/api/tickets/paginated?${query.toString()}`, { method: "GET" });
+}
+
+// [Nueva Funcionalidad: T-01 - Auto-asignarse ticket de la cola] - Toma un ticket no asignado - Conecta con: /api/tickets/{id}/self-assign
+export function selfAssignTicket(ticketId) {
+  return apiRequest(`/api/tickets/${encodeURIComponent(ticketId)}/self-assign`, {
+    method: "POST"
+  });
+}
+
+// [Nueva Funcionalidad: T-04/A-16 - Auto-asignación por carga activa] - Asigna ticket al técnico óptimo - Conecta con: /api/tickets/{id}/auto-assign
+export function autoAssignTicket(ticketId) {
+  return apiRequest(`/api/tickets/${encodeURIComponent(ticketId)}/auto-assign`, {
+    method: "POST"
+  });
+}
+
+// [Nueva Funcionalidad: A-26 - Reasignación masiva de tickets] - Transfiere tickets activos entre técnicos - Conecta con: /api/tickets/bulk-reassign
+export function bulkReassignTickets(fromTechnician, toTechnician) {
+  const query = new URLSearchParams({ fromTechnician, toTechnician });
+  return apiRequest(`/api/tickets/bulk-reassign?${query.toString()}`, {
+    method: "POST"
+  });
+}

@@ -45,6 +45,13 @@ public class UserEntity {
   @Column(nullable = false, length = 200)
   private String password;
 
+  // [Nueva Funcionalidad: U-15 - Extensión de perfil de usuario] - Almacena teléfono y departamento institucional - Conecta con: UserController y UserProfileDto
+  @Column(name = "phone_number", length = 20)
+  private String phoneNumber;
+
+  @Column(name = "department", length = 100)
+  private String department;
+
   @OneToMany(mappedBy = "user", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
   private List<UserRoleEntity> roles;
 

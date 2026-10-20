@@ -33,6 +33,14 @@ public class UserRoles {
         TICKET_ASSIGN,
         REPORT_READ,
 
+        // [Nueva Funcionalidad: A-21/A-26/A-01 - Autoridades de permisos finos] - Control granular de asignación masiva, reportes, auditoría y catálogo - Conecta con: SecurityConfig y PreAuthorize
+        TICKET_BULK_UPDATE,
+        TICKET_ESCALATE,
+        SLA_CONFIG_WRITE,
+        REPORT_EXPORT,
+        AUDIT_READ,
+        SERVICE_CATALOG_ADMIN,
+
         // Common Permissions (Comments and History)
         COMMENT_CREATE,
         COMMENT_READ,

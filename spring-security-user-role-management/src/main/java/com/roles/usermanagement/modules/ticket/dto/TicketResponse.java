@@ -15,6 +15,17 @@ public record TicketResponse(
         String applicantUsername,
         String technicianUsername,
         LocalDateTime createdAt,
-        LocalDateTime updatedAt
+        LocalDateTime updatedAt,
+        // [Nueva Funcionalidad: U-04/T-18/U-26/U-28 - Atributos de respuesta extendidos de ticket] - Expone SLA, catálogo, urgencia y reaperturas a la API - Conecta con: TicketMapper
+        Long serviceCatalogId,
+        LocalDateTime slaDueDate,
+        LocalDateTime firstResponseDueDate,
+        LocalDateTime firstResponseAt,
+        LocalDateTime resolvedAt,
+        Integer reopenedCount,
+        Boolean isEscalated,
+        String urgentReason,
+        String rootCause,
+        String resolutionSummary
 ) {
 }

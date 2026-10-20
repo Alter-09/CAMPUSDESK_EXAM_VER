@@ -62,6 +62,42 @@ public class Ticket {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
+    // [Nueva Funcionalidad: U-04/T-18/U-26/U-28 - Trazabilidad de SLA, catálogo, urgencia y concurrencia] - Soporta seguimiento de tiempos límites, catálogo de servicios y control de versiones - Conecta con: SlaPolicy, ServiceCatalogItem y TicketLifecycleService
+    @Column(name = "service_catalog_id")
+    private Long serviceCatalogId;
+
+    @Column(name = "sla_due_date")
+    private LocalDateTime slaDueDate;
+
+    @Column(name = "first_response_due_date")
+    private LocalDateTime firstResponseDueDate;
+
+    @Column(name = "first_response_at")
+    private LocalDateTime firstResponseAt;
+
+    @Column(name = "resolved_at")
+    private LocalDateTime resolvedAt;
+
+    @Column(name = "reopened_count", nullable = false)
+    @Builder.Default
+    private Integer reopenedCount = 0;
+
+    @Column(name = "is_escalated", nullable = false)
+    @Builder.Default
+    private Boolean isEscalated = false;
+
+    @Column(name = "urgent_reason", length = 500)
+    private String urgentReason;
+
+    @Column(name = "root_cause", columnDefinition = "TEXT")
+    private String rootCause;
+
+    @Column(name = "resolution_summary", columnDefinition = "TEXT")
+    private String resolutionSummary;
+
+    @Version
+    private Long version;
+
     @PrePersist
     protected void onCreate() {
         this.createdAt = LocalDateTime.now();

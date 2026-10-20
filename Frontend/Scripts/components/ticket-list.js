@@ -1,5 +1,8 @@
 import { apiRequest } from "../config/http-client.js";
+import "./cd-pagination.js";
+import "./cd-sla-indicator.js";
 
+// [Nueva Funcionalidad: Monitoreo Global con SLA y Paginación] - Muestra cumplimiento de tiempos de respuesta y paginación en lista global - Conecta con: cd-sla-indicator, cd-pagination
 class TicketList extends HTMLElement {
   constructor() {
     super();
@@ -7,6 +10,8 @@ class TicketList extends HTMLElement {
     this.tickets = [];
     this.loading = true;
     this.error = null;
+    this.currentPage = 0;
+    this.pageSize = 10;
   }
 
   async connectedCallback() {
@@ -28,7 +33,9 @@ class TicketList extends HTMLElement {
           || (ticket.tecnico ? ticket.tecnico.nombre : null)
           || 'Sin asignar',
         status: ticket.status || ticket.estado || 'Pendiente',
-        statusCode: this.mapStatusCode(ticket.status || ticket.estado)
+        statusCode: this.mapStatusCode(ticket.status || ticket.estado),
+        slaDueDate: ticket.slaDueDate,
+        slaBreached: ticket.slaBreached
       })) : [];
 
       this.loading = false;
@@ -83,6 +90,9 @@ class TicketList extends HTMLElement {
       return;
     }
 
+    const startIndex = this.currentPage * this.pageSize;
+    const pageItems = this.tickets.slice(startIndex, startIndex + this.pageSize);
+
     this.shadowRoot.innerHTML = `
       <style>${this.getStyles()}</style>
       <section class="ticket-directory">
@@ -100,10 +110,11 @@ class TicketList extends HTMLElement {
                 <th>Asunto / Categoría</th>
                 <th>Técnico Asignado</th>
                 <th>Estado</th>
+                <th>SLA</th>
               </tr>
             </thead>
             <tbody>
-              ${this.tickets.length > 0 ? this.tickets.map(ticket => `
+              ${pageItems.length > 0 ? pageItems.map(ticket => `
                 <tr>
                   <td>${ticket.id}</td>
                   <td>${ticket.requester}</td>
@@ -114,10 +125,13 @@ class TicketList extends HTMLElement {
                       ${ticket.status}
                     </span>
                   </td>
+                  <td>
+                    <cd-sla-indicator due-date="${ticket.slaDueDate || ''}" breached="${ticket.slaBreached || false}" status="${ticket.status}"></cd-sla-indicator>
+                  </td>
                 </tr>
               `).join('') : `
                 <tr>
-                  <td colspan="5" style="text-align: center; padding: 2.5rem; color: #cbd5e1;">
+                  <td colspan="6" style="text-align: center; padding: 2.5rem; color: #cbd5e1;">
                     No hay tiquetes registrados en el sistema.
                   </td>
                 </tr>
@@ -125,8 +139,23 @@ class TicketList extends HTMLElement {
             </tbody>
           </table>
         </div>
+
+        <cd-pagination
+          id="ticket-list-pagination"
+          total-elements="${this.tickets.length}"
+          total-pages="${Math.ceil(this.tickets.length / this.pageSize) || 1}"
+          page="${this.currentPage}"
+          size="${this.pageSize}">
+        </cd-pagination>
       </section>
     `;
+
+    const paginationEl = this.shadowRoot.getElementById("ticket-list-pagination");
+    paginationEl?.addEventListener("page-change", (e) => {
+      this.currentPage = e.detail.page;
+      this.pageSize = e.detail.size;
+      this.render();
+    });
   }
 
   getStyles() {

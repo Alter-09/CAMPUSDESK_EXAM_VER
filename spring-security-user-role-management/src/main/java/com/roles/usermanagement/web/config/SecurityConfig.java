@@ -44,15 +44,10 @@ public class SecurityConfig {
             .authorizeHttpRequests(customRequest -> customRequest
                 .requestMatchers("/swagger-ui.html", "/swagger-ui/**", "/v3/api-docs", "/v3/api-docs/**", "/v3/api-docs.yaml").permitAll()
                 .requestMatchers("/api/auth/**").permitAll()
+                // [Nueva Funcionalidad: A-21/U-16 - Rutas públicas de avisos y base de conocimiento] - Permite acceso a anuncios y KB sin alterar autenticación existente - Conecta con: SecurityConfig
+                .requestMatchers("/api/v1/announcements/active", "/api/v1/kb/articles/**", "/api/v1/kb/categories").permitAll()
+                .requestMatchers("/api/v1/service-catalog/items/**").authenticated()
                 .requestMatchers("/api/user/**").authenticated()
-                /*.requestMatchers("/api/customers/**").hasAnyRole(UserRoles.Role.ADMIN.name(), UserRoles.Role.CUSTOMER.name())
-                .requestMatchers(HttpMethod.GET, "/api/pizzas/**").hasAnyRole(UserRoles.Role.ADMIN.name(), UserRoles.Role.CUSTOMER.name())
-                .requestMatchers(HttpMethod.POST, "/api/pizzas/**").hasRole(UserRoles.Role.ADMIN.name())
-                .requestMatchers(HttpMethod.PUT).hasRole(UserRoles.Role.ADMIN.name())
-                .requestMatchers("/api/orders/random").hasAuthority(UserRoles.Authority.RANDOM_ORDER.name())
-                .requestMatchers("/api/orders/**").hasRole(UserRoles.Role.ADMIN.name())
-                .requestMatchers(HttpMethod.GET,"/api/**").permitAll()
-                .requestMatchers(HttpMethod.PUT).denyAll()*/
                 .anyRequest().authenticated())
             .csrf(AbstractHttpConfigurer::disable)
             .cors(Customizer.withDefaults())

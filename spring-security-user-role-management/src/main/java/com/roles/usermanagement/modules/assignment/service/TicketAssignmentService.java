@@ -28,13 +28,17 @@ public class TicketAssignmentService {
 
     private final TicketAssignmentLogRepository assignmentLogs;
     private final UserCrudRepository users;
+    private final com.roles.usermanagement.modules.technician.repository.TechnicianRepository technicianRepository;
 
     @PersistenceContext
     private EntityManager entityManager;
 
-    public TicketAssignmentService(TicketAssignmentLogRepository assignmentLogs, UserCrudRepository users) {
+    public TicketAssignmentService(TicketAssignmentLogRepository assignmentLogs,
+                                   UserCrudRepository users,
+                                   com.roles.usermanagement.modules.technician.repository.TechnicianRepository technicianRepository) {
         this.assignmentLogs = assignmentLogs;
         this.users = users;
+        this.technicianRepository = technicianRepository;
     }
 
     /**
@@ -167,5 +171,87 @@ public class TicketAssignmentService {
 
     private ResponseStatusException badRequest(String message) {
         return new ResponseStatusException(HttpStatus.BAD_REQUEST, message);
+    }
+
+    // [Nueva Funcionalidad: T-01 - Auto-asignación de ticket por técnico] - Permite al técnico tomar un ticket libre de la cola - Conecta con: Ticket y TicketAssignmentLog
+    @Transactional
+    public TicketAssignmentResponse selfAssign(Long ticketId, String techUsername) {
+        UserEntity tech = findUser(techUsername, "Técnico no encontrado");
+        requireRole(tech, "TECHNICIAN", "Solo un técnico puede tomar tickets");
+
+        Ticket ticket = findTicket(ticketId);
+        if (ticket.getStatus() != TicketStatus.OPEN) {
+            throw badRequest("Solo se pueden tomar tickets en estado ABIERTO");
+        }
+
+        ticket.setTechnician(tech);
+        ticket.setStatus(TicketStatus.ASSIGNED);
+
+        TicketAssignmentLog log = TicketAssignmentLog.builder()
+                .ticket(ticket)
+                .newTechnician(tech)
+                .assignedBy(tech)
+                .assignmentType(AssignmentType.INITIAL)
+                .build();
+        assignmentLogs.save(log);
+
+        recordStatusHistory(ticket, tech, TicketStatus.OPEN, TicketStatus.ASSIGNED);
+        return toResponse(log, ticket);
+    }
+
+    // [Nueva Funcionalidad: T-04/A-16 - Reglas de asignación automática] - Asigna ticket al técnico con menor carga disponible - Conecta con: TechnicianRepository y TicketAssignmentLog
+    @Transactional
+    public TicketAssignmentResponse autoAssign(Long ticketId) {
+        var availableTechs = technicianRepository.findAvailableTechniciansWithCapacity();
+        if (availableTechs.isEmpty()) {
+            throw badRequest("No hay técnicos disponibles con capacidad libre para auto-asignación");
+        }
+        var chosenTech = availableTechs.get(0);
+        Ticket ticket = findTicket(ticketId);
+        ticket.setTechnician(chosenTech.getUser());
+        ticket.setStatus(TicketStatus.ASSIGNED);
+        chosenTech.setActiveTicketsCount(chosenTech.getActiveTicketsCount() + 1);
+
+        TicketAssignmentLog log = TicketAssignmentLog.builder()
+                .ticket(ticket)
+                .newTechnician(chosenTech.getUser())
+                .assignedBy(chosenTech.getUser())
+                .assignmentType(AssignmentType.INITIAL)
+                .justification("Auto-asignado por balanceo de carga")
+                .build();
+        assignmentLogs.save(log);
+
+        recordStatusHistory(ticket, chosenTech.getUser(), TicketStatus.OPEN, TicketStatus.ASSIGNED);
+        return toResponse(log, ticket);
+    }
+
+    // [Nueva Funcionalidad: A-26 - Reasignación masiva de tickets] - Transfiere todos los tickets activos de un técnico a otro - Conecta con: Ticket y TicketAssignmentLog
+    @Transactional
+    public int bulkReassign(String fromTechUsername, String toTechUsername, String adminUsername) {
+        UserEntity admin = findUser(adminUsername, "Admin no encontrado");
+        requireRole(admin, "ADMIN", "Solo ADMIN puede realizar reasignación masiva");
+
+        UserEntity toTech = findUser(toTechUsername, "Técnico destino no encontrado");
+        requireRole(toTech, "TECHNICIAN", "Usuario destino no es técnico");
+
+        var query = entityManager.createQuery(
+                "SELECT t FROM Ticket t WHERE t.technician.username = :fromTech AND t.status IN (com.roles.usermanagement.modules.lifecycle.enums.TicketStatus.ASSIGNED, com.roles.usermanagement.modules.lifecycle.enums.TicketStatus.IN_PROGRESS)",
+                Ticket.class);
+        query.setParameter("fromTech", fromTechUsername);
+        var tickets = query.getResultList();
+
+        for (Ticket ticket : tickets) {
+            ticket.setTechnician(toTech);
+            TicketAssignmentLog log = TicketAssignmentLog.builder()
+                    .ticket(ticket)
+                    .previousTechnician(findUser(fromTechUsername, ""))
+                    .newTechnician(toTech)
+                    .assignedBy(admin)
+                    .assignmentType(AssignmentType.REASSIGNMENT)
+                    .justification("Reasignación masiva administrativa")
+                    .build();
+            assignmentLogs.save(log);
+        }
+        return tickets.size();
     }
 }

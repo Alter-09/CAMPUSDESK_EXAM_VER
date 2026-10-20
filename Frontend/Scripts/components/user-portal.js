@@ -8,8 +8,20 @@ import {
   getTicketComments,
   addTicketComment,
   getTicketHistory,
+  cancelTicket,
+  reopenTicket,
+  cloneTicket,
+  requestTicketEscalation,
 } from "../services/ticket.service.js";
 import { attachStyles } from "../utils/shadow-styles.js";
+
+// [Nueva Funcionalidad: Integración Web Components] - Importa componentes reactivos creados - Conecta con: cd-csat-modal, cd-sla-indicator, cd-attachment-uploader, cd-kb-search, cd-pagination, cd-announcement-banner
+import "./cd-csat-modal.js";
+import "./cd-sla-indicator.js";
+import "./cd-attachment-uploader.js";
+import "./cd-kb-search.js";
+import "./cd-pagination.js";
+import "./cd-announcement-banner.js";
 
 const TEXT = MESSAGES.userPortal;
 const TICKET_TEXT = MESSAGES.tickets;
@@ -52,12 +64,15 @@ const PRIO_CLASSES = {
 
 function buildCreateTicketTemplate() {
   return `
+    <cd-announcement-banner></cd-announcement-banner>
     <section class="portal-section" aria-labelledby="create-heading">
       <header class="portal-header">
         <p class="portal-header__eyebrow">${TEXT.createTicket.eyebrow}</p>
         <h1 id="create-heading" class="portal-header__title">${TEXT.createTicket.title}</h1>
         <p class="portal-header__subtitle">${TEXT.createTicket.subtitle}</p>
       </header>
+
+      <cd-kb-search placeholder="¿Tienes dudas? Consulta soluciones en la Base de Conocimiento antes de enviar..." style="margin-bottom: 1.5rem;"></cd-kb-search>
 
       <div class="create-form-panel" id="create-form-panel">
         <form id="create-ticket-form" novalidate autocomplete="off">
@@ -151,6 +166,7 @@ function buildCreateTicketTemplate() {
 
 function buildMyTicketsTemplate() {
   return `
+    <cd-announcement-banner></cd-announcement-banner>
     <section class="portal-section" aria-labelledby="my-tickets-heading">
       <header class="portal-header">
         <p class="portal-header__eyebrow">${TEXT.myTickets.eyebrow}</p>
@@ -193,6 +209,7 @@ function buildMyTicketsTemplate() {
           ${TEXT.myTickets.retry}
         </button>
         <div class="tickets-grid" id="mt-grid" role="region" aria-label="Mis tiquetes"></div>
+        <cd-pagination id="mt-pagination"></cd-pagination>
       </div>
 
       <!-- Modal de detalle del tiquete -->
@@ -205,6 +222,7 @@ function buildMyTicketsTemplate() {
                 <span id="mt-modal-status" class="badge"></span>
                 <span id="mt-modal-priority" class="badge"></span>
                 <span id="mt-modal-category" class="badge badge--category"></span>
+                <cd-sla-indicator id="mt-modal-sla"></cd-sla-indicator>
               </div>
               <h2 id="mt-modal-title" class="modal-header__title">Cargando…</h2>
             </div>
@@ -212,6 +230,15 @@ function buildMyTicketsTemplate() {
           </header>
 
           <div class="modal-body">
+            <!-- Barra de acciones rápidas del usuario -->
+            <div class="user-ticket-actions" id="mt-user-actions" style="display:flex;gap:8px;flex-wrap:wrap;margin:12px 0;">
+              <button class="button button--secondary" id="mt-csat-btn" type="button" hidden>⭐ Calificar Atención</button>
+              <button class="button button--secondary" id="mt-clone-btn" type="button">📋 Duplicar Solicitud</button>
+              <button class="button button--danger" id="mt-cancel-btn" type="button" hidden>🚫 Cancelar Tiquete</button>
+              <button class="button button--secondary" id="mt-reopen-btn" type="button" hidden>🔄 Reabrir Tiquete</button>
+              <button class="button button--warning" id="mt-escalate-btn" type="button" hidden>⚠️ Solicitar Escalamiento</button>
+            </div>
+
             <!-- Descripción y metadatos -->
             <section class="detail-panel" aria-labelledby="mt-desc-heading">
               <h3 id="mt-desc-heading" class="detail-panel__heading">${TEXT.detail.sectionGeneral}</h3>
@@ -234,6 +261,12 @@ function buildMyTicketsTemplate() {
                   <span class="metadata-item__value" id="mt-modal-updated">—</span>
                 </div>
               </div>
+            </section>
+
+            <!-- Archivos y evidencias -->
+            <section class="detail-panel" aria-labelledby="mt-attachments-heading">
+              <h3 id="mt-attachments-heading" class="detail-panel__heading">Evidencias y Adjuntos</h3>
+              <cd-attachment-uploader id="mt-modal-attachments"></cd-attachment-uploader>
             </section>
 
             <!-- Estado y acción del ciclo de vida (usuario: CONFIRM_CLOSE) -->
@@ -310,6 +343,7 @@ function buildMyTicketsTemplate() {
               <div class="history-timeline" id="mt-history-timeline"></div>
             </section>
           </div>
+          <cd-csat-modal id="mt-csat-modal"></cd-csat-modal>
         </div>
       </dialog>
     </section>
@@ -330,6 +364,8 @@ export class UserPortal extends HTMLElement {
   #activeFilter = "ALL";
   #searchQuery = "";
   #currentTicket = null;
+  #currentPage = 0;
+  #pageSize = 10;
 
   constructor() {
     super();
@@ -512,8 +548,19 @@ export class UserPortal extends HTMLElement {
     // Search
     root.getElementById("mt-search").addEventListener("input", (e) => {
       this.#searchQuery = e.target.value.toLowerCase().trim();
+      this.#currentPage = 0;
       this.#renderMyTicketsGrid();
     });
+
+    // Paginación
+    const pagination = root.getElementById("mt-pagination");
+    if (pagination) {
+      pagination.addEventListener("page-change", (e) => {
+        this.#currentPage = e.detail.page;
+        this.#pageSize = e.detail.size;
+        this.#renderMyTicketsGrid();
+      });
+    }
 
     // Reintentar
     root.getElementById("mt-retry-btn").addEventListener("click", () => this.#loadMyTickets());
@@ -585,17 +632,31 @@ export class UserPortal extends HTMLElement {
 
     grid.innerHTML = "";
 
+    const pagination = root.getElementById("mt-pagination");
+
     if (filtered.length === 0) {
       msgEl.textContent = TEXT.myTickets.empty;
       msgEl.hidden = false;
       retryBtn.hidden = true;
+      if (pagination) pagination.hidden = true;
       return;
     }
 
     msgEl.hidden = true;
     retryBtn.hidden = true;
 
-    filtered.forEach((ticket) => {
+    if (pagination) {
+      pagination.hidden = false;
+      pagination.setAttribute("total-elements", String(filtered.length));
+      pagination.setAttribute("total-pages", String(Math.ceil(filtered.length / this.#pageSize) || 1));
+      pagination.setAttribute("page", String(this.#currentPage));
+      pagination.setAttribute("size", String(this.#pageSize));
+    }
+
+    const startIndex = this.#currentPage * this.#pageSize;
+    const pageItems = filtered.slice(startIndex, startIndex + this.#pageSize);
+
+    pageItems.forEach((ticket) => {
       const statusKey = String(ticket.status || "").toUpperCase();
       const priorityKey = String(ticket.priority || "").toUpperCase();
       const categoryKey = String(ticket.category || "").toUpperCase();
@@ -693,6 +754,77 @@ export class UserPortal extends HTMLElement {
       root.getElementById("mt-edit-category").value = categoryKey;
       root.getElementById("mt-edit-priority").value = priorityKey;
       root.getElementById("mt-edit-error").textContent = "";
+    }
+
+    // Configurar Indicador de SLA
+    const slaEl = root.getElementById("mt-modal-sla");
+    if (slaEl) {
+      slaEl.setAttribute("due-date", ticket.slaDueDate || "");
+      slaEl.setAttribute("breached", String(ticket.slaBreached || false));
+      slaEl.setAttribute("priority", priorityKey);
+      slaEl.setAttribute("status", statusKey);
+    }
+
+    // Configurar gestor de evidencias y adjuntos
+    const attEl = root.getElementById("mt-modal-attachments");
+    if (attEl) {
+      attEl.setAttribute("ticket-id", ticket.id);
+    }
+
+    // Configurar modal de satisfacción CSAT
+    const csatModal = root.getElementById("mt-csat-modal");
+    if (csatModal) {
+      csatModal.setAttribute("ticket-id", ticket.id);
+    }
+
+    // Configurar botones de acción del solicitante
+    const csatBtn = root.getElementById("mt-csat-btn");
+    if (csatBtn) {
+      csatBtn.hidden = !["RESOLVED", "CLOSED"].includes(statusKey);
+      csatBtn.onclick = () => csatModal?.setAttribute("open", "true");
+    }
+
+    const cancelBtn = root.getElementById("mt-cancel-btn");
+    if (cancelBtn) {
+      cancelBtn.hidden = ["RESOLVED", "CLOSED", "CANCELLED"].includes(statusKey);
+      cancelBtn.onclick = async () => {
+        if (confirm("¿Estás seguro de cancelar esta solicitud?")) {
+          await cancelTicket(ticket.id, "Cancelado voluntariamente por el usuario");
+          this.#openDetail(ticket.id);
+          this.#loadMyTickets();
+        }
+      };
+    }
+
+    const reopenBtn = root.getElementById("mt-reopen-btn");
+    if (reopenBtn) {
+      reopenBtn.hidden = statusKey !== "RESOLVED";
+      reopenBtn.onclick = async () => {
+        const reason = prompt("Describe el motivo de la reapertura:") || "El problema persiste";
+        await reopenTicket(ticket.id, reason);
+        this.#openDetail(ticket.id);
+        this.#loadMyTickets();
+      };
+    }
+
+    const cloneBtn = root.getElementById("mt-clone-btn");
+    if (cloneBtn) {
+      cloneBtn.onclick = async () => {
+        const cloned = await cloneTicket(ticket.id);
+        alert("Solicitud clonada exitosamente con el ID #" + cloned.id);
+        this.#loadMyTickets();
+      };
+    }
+
+    const escalateBtn = root.getElementById("mt-escalate-btn");
+    if (escalateBtn) {
+      escalateBtn.hidden = ["RESOLVED", "CLOSED", "CANCELLED"].includes(statusKey);
+      escalateBtn.onclick = async () => {
+        const reason = prompt("Indica el motivo para solicitar escalamiento:") || "Demora crítica en la atención";
+        await requestTicketEscalation(ticket.id, reason);
+        alert("Escalamiento solicitado. El supervisor y equipo técnico han sido notificados.");
+        this.#openDetail(ticket.id);
+      };
     }
 
     // Comment form management according to status

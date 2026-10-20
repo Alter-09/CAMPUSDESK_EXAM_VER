@@ -17,4 +17,8 @@ public interface TechnicianRepository extends JpaRepository<TechnicianProfile, S
      */
     List<TechnicianProfile> findByAvailabilityStatusOrderByActiveTicketsCountAsc(
             TechnicianAvailabilityStatus status);
+
+    // [Nueva Funcionalidad: T-04/A-16 - Técnicos disponibles por menor carga activa y capacidad máxima] - Selecciona el técnico óptimo para asignación automática - Conecta con: TicketAssignmentService
+    @org.springframework.data.jpa.repository.Query("SELECT tp FROM TechnicianProfile tp WHERE tp.isAvailable = true AND tp.activeTicketsCount < tp.maxActiveTickets ORDER BY tp.activeTicketsCount ASC")
+    List<TechnicianProfile> findAvailableTechniciansWithCapacity();
 }

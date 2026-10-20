@@ -72,4 +72,59 @@ public class TicketController {
                                  Authentication auth) {
         return ticketService.update(id, request, auth);
     }
+
+    // [Nueva Funcionalidad: U-01 - Endpoint de cancelación de ticket propio] - Permite al solicitante cancelar un ticket abierto - Conecta con: TicketService
+    @PostMapping("/{id}/cancel")
+    @Operation(summary = "Cancel own ticket")
+    public ResponseEntity<TicketResponse> cancel(@PathVariable Long id, Authentication auth) {
+        return ResponseEntity.ok(ticketService.cancelTicket(id, auth));
+    }
+
+    // [Nueva Funcionalidad: U-05 - Endpoint de reapertura de ticket] - Permite solicitar reapertura de un ticket cerrado - Conecta con: TicketService
+    @PostMapping("/{id}/reopen")
+    @Operation(summary = "Reopen closed ticket")
+    public ResponseEntity<TicketResponse> reopen(@PathVariable Long id,
+                                                 @RequestParam(required = false) String reason,
+                                                 Authentication auth) {
+        return ResponseEntity.ok(ticketService.reopenTicket(id, reason, auth));
+    }
+
+    // [Nueva Funcionalidad: U-13 - Endpoint de duplicación de ticket] - Duplica un ticket propio para usarlo de plantilla - Conecta con: TicketService
+    @PostMapping("/{id}/clone")
+    @Operation(summary = "Clone ticket")
+    public ResponseEntity<TicketResponse> clone(@PathVariable Long id, Authentication auth) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(ticketService.cloneTicket(id, auth));
+    }
+
+    // [Nueva Funcionalidad: U-24 - Endpoint de solicitud de escalación] - Marca un ticket para escalación prioritaria - Conecta con: TicketService
+    @PostMapping("/{id}/escalate")
+    @Operation(summary = "Request ticket escalation")
+    public ResponseEntity<TicketResponse> escalate(@PathVariable Long id,
+                                                   @RequestParam(required = false) String reason,
+                                                   Authentication auth) {
+        return ResponseEntity.ok(ticketService.requestEscalation(id, reason, auth));
+    }
+
+    // [Nueva Funcionalidad: T-27 - Endpoint de creación a nombre de otro usuario] - Permite a técnicos registrar tickets en nombre de solicitantes - Conecta con: TicketService
+    @PostMapping("/on-behalf")
+    @PreAuthorize("hasAnyRole('TECHNICIAN', 'ADMIN')")
+    @Operation(summary = "Create ticket on behalf of a user")
+    public ResponseEntity<TicketResponse> createOnBehalf(@Valid @RequestBody TicketCreateRequest request,
+                                                         @RequestParam String applicantUsername,
+                                                         Authentication auth) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(ticketService.createOnBehalf(request, applicantUsername, auth));
+    }
+
+    // [Nueva Funcionalidad: U-03/U-21/T-21 - Endpoint de listado paginado de tickets] - Consulta tickets con paginación y filtros - Conecta con: TicketService
+    @GetMapping("/paginated")
+    @Operation(summary = "List visible tickets with pagination")
+    public ResponseEntity<com.roles.usermanagement.domain.dto.PageResponse<TicketResponse>> listPaginated(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(required = false) TicketStatus status,
+            @RequestParam(required = false) TicketPriority priority,
+            @RequestParam(required = false) TicketCategory category,
+            Authentication auth) {
+        return ResponseEntity.ok(ticketService.listPaginated(page, size, status, priority, category, auth));
+    }
 }

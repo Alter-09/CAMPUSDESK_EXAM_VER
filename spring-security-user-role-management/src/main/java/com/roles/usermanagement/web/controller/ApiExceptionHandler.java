@@ -56,4 +56,15 @@ public class ApiExceptionHandler {
         body.put("message", "JSON inválido o tipo de dato incorrecto");
         return ResponseEntity.badRequest().body(body);
     }
+
+    // [Nueva Funcionalidad: Robustez Arquitectónica - Manejo de argumentos ilegales] - Convierte IllegalArgumentException en 400 Bad Request - Conecta con: Todos los Servicios REST
+    @ExceptionHandler({IllegalArgumentException.class, IllegalStateException.class})
+    public ResponseEntity<Map<String, Object>> handleIllegalArguments(RuntimeException e) {
+        Map<String, Object> body = new LinkedHashMap<>();
+        body.put("timestamp", LocalDateTime.now());
+        body.put("status", HttpStatus.BAD_REQUEST.value());
+        body.put("error", "Solicitud no válida");
+        body.put("message", e.getMessage());
+        return ResponseEntity.badRequest().body(body);
+    }
 }
