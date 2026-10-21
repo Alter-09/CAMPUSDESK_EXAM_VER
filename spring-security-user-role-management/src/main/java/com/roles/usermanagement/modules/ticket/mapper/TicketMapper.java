@@ -9,6 +9,11 @@ public class TicketMapper {
 
     // [Nueva Funcionalidad: U-04/T-18/U-26/U-28 - Mapeo de ticket extendido] - Mapea campos de SLA, catálogo y trazabilidad a la respuesta del ticket - Conecta con: Ticket y TicketResponse
     public TicketResponse toResponse(Ticket t) {
+        java.util.Set<String> tagNames = t.getTags() == null ? java.util.Collections.emptySet()
+                : t.getTags().stream()
+                .map(com.roles.usermanagement.modules.tag.entity.Tag::getNombre)
+                .collect(java.util.stream.Collectors.toSet());
+
         return new TicketResponse(
                 t.getId(), t.getTitle(), t.getDescription(),
                 t.getCategory(), t.getPriority(), t.getStatus(),
@@ -25,7 +30,8 @@ public class TicketMapper {
                 t.getIsEscalated(),
                 t.getUrgentReason(),
                 t.getRootCause(),
-                t.getResolutionSummary()
+                t.getResolutionSummary(),
+                tagNames
         );
     }
 }

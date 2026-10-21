@@ -10,13 +10,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
- * Query technicians and their availability, allowing administrator to assign tickets.
+ * Query technicians and their availability, allowing administrator to assign
+ * tickets.
  */
 @Service
 public class TechnicianService {
 
-    private final TechnicianRepository technicianRepository;  // profile data access
-    private final TechnicianMapper mapper;                    // entidad -> DTO
+    private final TechnicianRepository technicianRepository; // profile data access
+    private final TechnicianMapper mapper; // entidad -> DTO
 
     // Spring supplies both dependencies via constructor
     public TechnicianService(TechnicianRepository technicianRepository, TechnicianMapper mapper) {

@@ -98,6 +98,24 @@ public class Ticket {
     @Version
     private Long version;
 
+    // [Ejercicio 1 Examen: Relación ManyToMany con Tag mediante JoinTable]
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "ticket_tags_map",
+            joinColumns = @JoinColumn(name = "ticket_id"),
+            inverseJoinColumns = @JoinColumn(name = "tag_id")
+    )
+    @Builder.Default
+    private java.util.Set<com.roles.usermanagement.modules.tag.entity.Tag> tags = new java.util.HashSet<>();
+
+    public Integer getReaperturasCount() {
+        return this.reopenedCount;
+    }
+
+    public void setReaperturasCount(Integer reaperturasCount) {
+        this.reopenedCount = reaperturasCount;
+    }
+
     @PrePersist
     protected void onCreate() {
         this.createdAt = LocalDateTime.now();

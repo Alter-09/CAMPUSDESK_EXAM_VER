@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
  * Technician inquiry endpoints. Only administrators can access them.
  */
 @RestController
-@RequestMapping({"/api/technicians", "/api/users/technicians"})
+@RequestMapping({ "/api/technicians", "/api/users/technicians" })
 @PreAuthorize("hasRole('ADMIN')")
 @Tag(name = "Technicians", description = "Consulta de técnicos y su disponibilidad")
 @SecurityRequirement(name = OpenApiConfig.BEARER_AUTH)

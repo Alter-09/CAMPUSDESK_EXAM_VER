@@ -26,4 +26,17 @@ public interface TicketRepository extends JpaRepository<Ticket, Long>, JpaSpecif
     // [Nueva Funcionalidad: A-25 - Consulta de cola global de tickets sin asignar] - Obtiene tickets en estado OPEN sin técnico asignado - Conecta con: TicketAssignmentService
     @Query("SELECT t FROM Ticket t WHERE t.status = com.roles.usermanagement.modules.lifecycle.enums.TicketStatus.OPEN AND t.technician IS NULL ORDER BY t.createdAt ASC")
     org.springframework.data.domain.Page<Ticket> findUnassignedTickets(org.springframework.data.domain.Pageable pageable);
+
+    // [Ejercicio 1 Examen: Consultas JPQL con filtros por etiquetas respetando visibilidad de rol]
+    @Query("SELECT DISTINCT t FROM Ticket t JOIN t.tags tag WHERE UPPER(tag.nombre) = UPPER(:nombre) ORDER BY t.createdAt DESC")
+    java.util.List<Ticket> findByTagNombre(@Param("nombre") String nombre);
+
+    @Query("SELECT DISTINCT t FROM Ticket t JOIN t.tags tag WHERE UPPER(tag.nombre) = UPPER(:nombre) AND t.technician.username = :username ORDER BY t.createdAt DESC")
+    java.util.List<Ticket> findByTagNombreAndTechnician(@Param("nombre") String nombre, @Param("username") String username);
+
+    @Query("SELECT DISTINCT t FROM Ticket t JOIN t.tags tag WHERE UPPER(tag.nombre) = UPPER(:nombre) AND t.applicant.username = :username ORDER BY t.createdAt DESC")
+    java.util.List<Ticket> findByTagNombreAndApplicant(@Param("nombre") String nombre, @Param("username") String username);
+
+    // [Ejercicio 2 Examen: Consulta de tickets con reaperturas para ADMIN]
+    java.util.List<Ticket> findByReopenedCountGreaterThanOrderByUpdatedAtDesc(Integer count);
 }

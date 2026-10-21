@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="com.roles.usermanagement.JwtUtilTests" tests="2" skipped="0" failures="0" errors="0" timestamp="2026-10-20T17:38:54.529Z" hostname="SERGIOAPARICIO" time="0.172">
+<testsuite name="com.roles.usermanagement.JwtUtilTests" tests="2" skipped="0" failures="0" errors="0" timestamp="2026-10-21T00:04:12.122Z" hostname="SERGIOAPARICIO" time="0.237">
   <properties/>
-  <testcase name="rejectsExpiredTokensWrongIssuerAndMalformedInput()" classname="com.roles.usermanagement.JwtUtilTests" time="0.159"/>
-  <testcase name="usesConfiguredIssuerSecretAndExpiration()" classname="com.roles.usermanagement.JwtUtilTests" time="0.011"/>
+  <testcase name="rejectsExpiredTokensWrongIssuerAndMalformedInput()" classname="com.roles.usermanagement.JwtUtilTests" time="0.216"/>
+  <testcase name="usesConfiguredIssuerSecretAndExpiration()" classname="com.roles.usermanagement.JwtUtilTests" time="0.018"/>
   <system-out><![CDATA[]]></system-out>
   <system-err><![CDATA[]]></system-err>
 </testsuite>

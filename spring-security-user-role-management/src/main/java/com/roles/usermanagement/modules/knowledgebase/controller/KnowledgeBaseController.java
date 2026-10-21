@@ -53,7 +53,8 @@ public class KnowledgeBaseController {
 
     @PostMapping("/articles")
     @PreAuthorize("hasAnyRole('ADMIN', 'TECHNICIAN')")
-    public ResponseEntity<KbArticleResponse> createArticle(@Valid @RequestBody KbArticleRequest request, Authentication auth) {
+    public ResponseEntity<KbArticleResponse> createArticle(@Valid @RequestBody KbArticleRequest request,
+            Authentication auth) {
         return ResponseEntity.status(HttpStatus.CREATED).body(kbService.createArticle(request, auth.getName()));
     }
 
