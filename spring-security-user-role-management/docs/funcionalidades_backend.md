@@ -1,5 +1,5 @@
 # 📖 Catálogo Maestro de Funcionalidades del Backend — CampusDesk (Spring Boot & Spring Security)
-
+http://localhost:8051/swagger-ui/index.html
 ---
 
 ## 🏛️ 1. Arquitectura Técnica y Flujo de Ejecución del Backend
