@@ -217,16 +217,16 @@
         </form>
     </dialog>
 
-    <script type="module" src="./scripts/modules/sidebar-toggle.js"></script>
-    <script type="module" src="./scripts/components/cd-notification-center.js"></script>
-    <script type="module" src="./scripts/components/cd-announcement-banner.js"></script>
-    <script type="module" src="./scripts/components/toast-manager.js"></script>
-    <script type="module" src="./scripts/components/cd-kb-search.js"></script>
+    <script type="module" src="./Scripts/modules/sidebar-toggle.js"></script>
+    <script type="module" src="./Scripts/components/cd-notification-center.js"></script>
+    <script type="module" src="./Scripts/components/cd-announcement-banner.js"></script>
+    <script type="module" src="./Scripts/components/toast-manager.js"></script>
+    <script type="module" src="./Scripts/components/cd-kb-search.js"></script>
 
     <script type="module">
-        import { enforceRoleAccess, getCurrentRole, logout } from "./scripts/modules/auth-guard.js";
-        import { getRedirectUrlForRole } from "./scripts/main.js";
-        import { getKbCategories, getKbArticlesByCategory, searchKbArticles, createArticle } from "./scripts/services/knowledge-base.service.js";
+        import { enforceRoleAccess, getCurrentRole, logout } from "./Scripts/modules/auth-guard.js";
+        import { getRedirectUrlForRole } from "./Scripts/main.js";
+        import { getKbCategories, getKbArticlesByCategory, searchKbArticles, createArticle } from "./Scripts/services/knowledge-base.service.js";
 
         enforceRoleAccess();
 
