@@ -98,15 +98,15 @@
     </div>
     <cd-toast-manager></cd-toast-manager>
 
-    <script type="module" src="./scripts/components/cd-notification-center.js"></script>
-    <script type="module" src="./scripts/components/cd-announcement-banner.js"></script>
-    <script type="module" src="./scripts/components/toast-manager.js"></script>
-    <script type="module" src="./scripts/components/technician-dashboard.js"></script>
-    <script type="module" src="./scripts/components/assigned-tickets.js"></script>
-    <script type="module" src="./scripts/modules/technician-nav.js"></script>
-    <script type="module" src="./scripts/modules/sidebar-toggle.js"></script>
+    <script type="module" src="./Scripts/components/cd-notification-center.js"></script>
+    <script type="module" src="./Scripts/components/cd-announcement-banner.js"></script>
+    <script type="module" src="./Scripts/components/toast-manager.js"></script>
+    <script type="module" src="./Scripts/components/technician-dashboard.js"></script>
+    <script type="module" src="./Scripts/components/assigned-tickets.js"></script>
+    <script type="module" src="./Scripts/modules/technician-nav.js"></script>
+    <script type="module" src="./Scripts/modules/sidebar-toggle.js"></script>
     <script type="module">
-        import { enforceRoleAccess, logout } from "./scripts/modules/auth-guard.js";
+        import { enforceRoleAccess, logout } from "./Scripts/modules/auth-guard.js";
         enforceRoleAccess(["TECHNICIAN", "ADMIN", "SUPERADMIN"]);
         document.querySelector(".superadmin-nav-link--danger")?.addEventListener("click", (e) => {
             e.preventDefault();

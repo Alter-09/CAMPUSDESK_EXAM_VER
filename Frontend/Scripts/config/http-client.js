@@ -1,4 +1,4 @@
-import { API_BASE_URL, TOKEN_STORAGE_KEY } from "../config/api.config.js";
+import { API_BASE_URL, TOKEN_STORAGE_KEY } from "./api.config.js";
 import { MESSAGES } from "../constants/messages.es.js";
 
 const JSON_CONTENT_TYPE = "application/json";

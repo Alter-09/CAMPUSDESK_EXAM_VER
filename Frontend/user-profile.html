@@ -222,16 +222,16 @@
         </div>
     </div>
 
-    <script type="module" src="./scripts/modules/sidebar-toggle.js"></script>
-    <script type="module" src="./scripts/components/cd-notification-center.js"></script>
-    <script type="module" src="./scripts/components/cd-announcement-banner.js"></script>
-    <script type="module" src="./scripts/components/toast-manager.js"></script>
+    <script type="module" src="./Scripts/modules/sidebar-toggle.js"></script>
+    <script type="module" src="./Scripts/components/cd-notification-center.js"></script>
+    <script type="module" src="./Scripts/components/cd-announcement-banner.js"></script>
+    <script type="module" src="./Scripts/components/toast-manager.js"></script>
 
     <script type="module">
-        import { enforceRoleAccess, getCurrentRole, getCurrentUser, logout } from "./scripts/modules/auth-guard.js";
-        import { getRedirectUrlForRole } from "./scripts/main.js";
-        import { getUserProfile, updateUserProfile } from "./scripts/services/user.service.js";
-        import { apiRequest } from "./scripts/config/http-client.js";
+        import { enforceRoleAccess, getCurrentRole, getCurrentUser, logout } from "./Scripts/modules/auth-guard.js";
+        import { getRedirectUrlForRole } from "./Scripts/main.js";
+        import { getUserProfile, updateUserProfile } from "./Scripts/services/user.service.js";
+        import { apiRequest } from "./Scripts/config/http-client.js";
 
         enforceRoleAccess();
 
