@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 /**
- * Clase que representa la clave primaria compuesta de UserRoleEntity.
+ * Class representing composite primary key of UserRoleEntity.
  */
 @Getter
 @Setter

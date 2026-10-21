@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Base de Conocimiento y FAQ de CampusDesk — consulta soluciones y guías de soporte técnico." />
+    <title>CampusDesk | Base de Conocimiento</title>
+    <link rel="icon" href="./Assets/favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="./stylesheet/main.css" />
+    <style>
+        .kb-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+        .kb-header {
+            text-align: center;
+            padding: 20px 0 10px 0;
+        }
+        .kb-header h1 {
+            font-size: 1.85rem;
+            color: #0f172a;
+            margin: 0 0 8px 0;
+            font-weight: 800;
+        }
+        .kb-header p {
+            color: #64748b;
+            font-size: 0.95rem;
+            margin: 0;
+        }
+        .kb-categories {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .kb-category-pill {
+            background: #ffffff;
+            border: 1px solid #cbd5e1;
+            padding: 6px 14px;
+            border-radius: 999px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            color: #334155;
+            transition: all 0.15s;
+        }
+        .kb-category-pill:hover, .kb-category-pill.active {
+            background: #2563eb;
+            color: #ffffff;
+            border-color: #2563eb;
+        }
+        .kb-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+            gap: 16px;
+        }
+        .kb-card {
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 18px;
+            cursor: pointer;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.03);
+            transition: transform 0.15s, box-shadow 0.15s, border-color 0.15s;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        .kb-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(0,0,0,0.06);
+            border-color: #3b82f6;
+        }
+        .kb-card__title {
+            font-size: 1rem;
+            font-weight: 700;
+            color: #1e293b;
+            margin: 0 0 8px 0;
+        }
+        .kb-card__snippet {
+            font-size: 0.825rem;
+            color: #64748b;
+            line-height: 1.45;
+            margin-bottom: 14px;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        .kb-card__meta {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.75rem;
+            color: #94a3b8;
+            border-top: 1px solid #f1f5f9;
+            padding-top: 10px;
+        }
+        .admin-action-bar {
+            display: flex;
+            justify-content: flex-end;
+            margin-bottom: -10px;
+        }
+    </style>
+</head>
+<body>
+    <cd-toast-manager></cd-toast-manager>
+    <div class="superadmin-page" data-shell>
+        <aside id="sidebar" class="superadmin-sidebar" data-sidebar aria-label="Navegación principal">
+            <a class="superadmin-brand" href="./index.html" id="brand-link" aria-label="CampusDesk">
+                <img class="superadmin-brand__mark" src="./Assets/favicon.svg" width="40" height="40" alt="" />
+                <span class="superadmin-brand__copy">
+                    <span class="superadmin-brand__name">CAMPUSDESK</span>
+                    <span class="superadmin-brand__view" id="sidebar-role-label">Base de Conocimiento</span>
+                </span>
+            </a>
+
+            <nav class="superadmin-navigation" id="sidebar-nav">
+                <section class="superadmin-nav-group">
+                    <h2 class="superadmin-nav-group__label">Navegación</h2>
+                    <a class="superadmin-nav-link" href="#" id="nav-home">
+                        <img class="superadmin-nav-link__icon" src="./Assets/Icons/dashboard.svg" width="24" height="24" alt="" />
+                        <span class="superadmin-nav-link__text">Mi Portal</span>
+                    </a>
+                    <a class="superadmin-nav-link" href="./knowledge-base.html" aria-current="page">
+                        <img class="superadmin-nav-link__icon" src="./Assets/Icons/search.svg" width="24" height="24" alt="" />
+                        <span class="superadmin-nav-link__text">Base de Conocimiento</span>
+                    </a>
+                    <a class="superadmin-nav-link" href="./user-profile.html">
+                        <img class="superadmin-nav-link__icon" src="./Assets/Icons/user.svg" width="24" height="24" alt="" />
+                        <span class="superadmin-nav-link__text">Mi Perfil</span>
+                    </a>
+                </section>
+            </nav>
+
+            <div class="superadmin-sidebar__footer">
+                <button class="superadmin-nav-link superadmin-nav-link--danger" id="nav-logout" style="background: none; border: none; width: 100%; text-align: left; cursor: pointer;">
+                    <img class="superadmin-nav-link__icon" src="./Assets/Icons/logout.svg" width="24" height="24" alt="" />
+                    <span class="superadmin-nav-link__text">Cerrar sesión</span>
+                </button>
+            </div>
+        </aside>
+
+        <div class="superadmin-backdrop" data-sidebar-backdrop></div>
+
+        <div class="superadmin-workspace">
+            <header class="app-header">
+                <div class="app-header__start">
+                    <button class="app-header__menu-button" type="button" data-sidebar-toggle aria-controls="sidebar" aria-expanded="false" aria-label="Abrir menú">
+                        <img class="app-header__menu-icon" src="./Assets/Icons/menu.svg" width="24" height="24" alt="" />
+                    </button>
+                    <nav class="app-header__breadcrumb" aria-label="Ubicación actual">
+                        <ol class="app-header__crumbs">
+                            <li class="app-header__crumb">CampusDesk</li>
+                            <li class="app-header__crumb" aria-current="page">Base de Conocimiento</li>
+                        </ol>
+                    </nav>
+                </div>
+                <div class="app-header__user" style="display: flex; align-items: center; gap: 12px;">
+                    <cd-notification-center></cd-notification-center>
+                    <span class="app-header__role" id="header-role">Usuario</span>
+                    <img class="app-header__menu-icon" src="./Assets/Icons/user.svg" width="24" height="24" alt="" />
+                </div>
+            </header>
+
+            <main class="superadmin-content">
+                <cd-announcement-banner></cd-announcement-banner>
+                
+                <div class="kb-container">
+                    <header class="kb-header">
+                        <h1>¿En qué podemos ayudarte hoy?</h1>
+                        <p>Encuentra soluciones paso a paso, guías técnicas y respuestas a preguntas frecuentes.</p>
+                    </header>
+
+                    <div class="admin-action-bar" id="admin-actions" hidden>
+                        <button class="button button--primary" id="btn-create-article">+ Crear Nuevo Artículo</button>
+                    </div>
+
+                    <cd-kb-search id="kb-search-box" placeholder="Escribe el problema (ej: configurar correo, conectar wifi, imprimir)..."></cd-kb-search>
+
+                    <div class="kb-categories" id="kb-categories">
+                        <button class="kb-category-pill active" data-cat="">Todos los temas</button>
+                    </div>
+
+                    <div class="kb-grid" id="kb-articles-grid">
+                        <p style="text-align: center; color: #64748b; grid-column: 1 / -1;">Cargando artículos...</p>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Modal para nuevo artículo (ADMIN / TECH) -->
+    <dialog class="ticket-modal" id="modal-article" style="border: none; border-radius: 12px; padding: 24px; width: 550px; max-width: 90vw;">
+        <h3 style="margin-top:0;">Nuevo Artículo de Conocimiento</h3>
+        <form id="form-article" style="display: flex; flex-direction: column; gap: 12px;">
+            <div>
+                <label style="font-size: 0.85rem; font-weight: 600;">Título</label>
+                <input type="text" id="article-title" required style="width: 100%; box-sizing: border-box; padding: 8px; border-radius: 6px; border: 1px solid #cbd5e1;" />
+            </div>
+            <div>
+                <label style="font-size: 0.85rem; font-weight: 600;">Categoría</label>
+                <select id="article-category" required style="width: 100%; padding: 8px; border-radius: 6px; border: 1px solid #cbd5e1;">
+                    <option value="">Selecciona categoría</option>
+                </select>
+            </div>
+            <div>
+                <label style="font-size: 0.85rem; font-weight: 600;">Contenido / Pasos de Solución</label>
+                <textarea id="article-content" rows="6" required style="width: 100%; box-sizing: border-box; padding: 8px; border-radius: 6px; border: 1px solid #cbd5e1;"></textarea>
+            </div>
+            <div style="display: flex; justify-content: flex-end; gap: 8px; margin-top: 10px;">
+                <button type="button" class="button button--secondary" id="btn-cancel-article">Cancelar</button>
+                <button type="submit" class="button button--primary">Publicar</button>
+            </div>
+        </form>
+    </dialog>
+
+    <script type="module" src="./Scripts/modules/sidebar-toggle.js"></script>
+    <script type="module" src="./Scripts/components/cd-notification-center.js"></script>
+    <script type="module" src="./Scripts/components/cd-announcement-banner.js"></script>
+    <script type="module" src="./Scripts/components/toast-manager.js"></script>
+    <script type="module" src="./Scripts/components/cd-kb-search.js"></script>
+
+    <script type="module">
+        import { enforceRoleAccess, getCurrentRole, logout } from "./Scripts/modules/auth-guard.js";
+        import { getRedirectUrlForRole } from "./Scripts/main.js";
+        import { getKbCategories, getKbArticlesByCategory, searchKbArticles, createArticle } from "./Scripts/services/knowledge-base.service.js";
+
+        enforceRoleAccess();
+
+        const role = getCurrentRole();
+        const headerRole = document.getElementById("header-role");
+        const navHome = document.getElementById("nav-home");
+        const brandLink = document.getElementById("brand-link");
+        const adminActions = document.getElementById("admin-actions");
+
+        if (headerRole) headerRole.textContent = role;
+        const homeUrl = getRedirectUrlForRole(role);
+        if (navHome) navHome.href = homeUrl;
+        if (brandLink) brandLink.href = homeUrl;
+
+        // Mostrar acciones de creación si es Admin o Técnico
+        const canManage = role.includes("ADMIN") || role.includes("TECH") || role.includes("TECNICO");
+        if (adminActions && canManage) {
+            adminActions.hidden = false;
+        }
+
+        document.getElementById("nav-logout")?.addEventListener("click", logout);
+
+        // Cargar Categorías y Artículos
+        async function initKb() {
+            try {
+                const categories = await getKbCategories();
+                const catContainer = document.getElementById("kb-categories");
+                const selectCat = document.getElementById("article-category");
+
+                if (Array.isArray(categories)) {
+                    categories.forEach(c => {
+                        const btn = document.createElement("button");
+                        btn.className = "kb-category-pill";
+                        btn.textContent = c.name;
+                        btn.dataset.id = c.id;
+                        btn.addEventListener("click", () => {
+                            catContainer.querySelectorAll(".kb-category-pill").forEach(p => p.classList.remove("active"));
+                            btn.classList.add("active");
+                            loadArticles(c.id);
+                        });
+                        catContainer.appendChild(btn);
+
+                        const opt = document.createElement("option");
+                        opt.value = c.id;
+                        opt.textContent = c.name;
+                        selectCat?.appendChild(opt);
+                    });
+                }
+            } catch (err) {
+                console.warn("Error cargando categorías", err);
+            }
+
+            loadArticles();
+        }
+
+        async function loadArticles(catId = null) {
+            const grid = document.getElementById("kb-articles-grid");
+            grid.innerHTML = `<p style="text-align: center; color: #64748b; grid-column: 1 / -1;">Cargando artículos...</p>`;
+            try {
+                let articles = [];
+                if (catId) {
+                    articles = await getKbArticlesByCategory(catId);
+                } else {
+                    articles = await searchKbArticles("");
+                }
+
+                if (!articles || articles.length === 0) {
+                    grid.innerHTML = `<p style="text-align: center; color: #94a3b8; grid-column: 1 / -1; padding: 30px;">No se encontraron artículos en esta categoría.</p>`;
+                    return;
+                }
+
+                grid.innerHTML = articles.map(a => `
+                    <div class="kb-card" data-id="${a.id}">
+                        <div>
+                            <h3 class="kb-card__title">💡 ${a.title}</h3>
+                            <p class="kb-card__snippet">${a.content ? a.content.substring(0, 140) + '...' : ''}</p>
+                        </div>
+                        <div class="kb-card__meta">
+                            <span>👍 ${a.helpfulVotes || 0} útiles</span>
+                            <span>👀 ${a.viewCount || 0} vistas</span>
+                        </div>
+                    </div>
+                `).join("");
+
+                grid.querySelectorAll(".kb-card").forEach(card => {
+                    card.addEventListener("click", () => {
+                        const searchBox = document.getElementById("kb-search-box");
+                        searchBox?.openArticle(card.dataset.id);
+                    });
+                });
+            } catch (err) {
+                grid.innerHTML = `<p style="text-align: center; color: #ef4444; grid-column: 1 / -1;">Error al cargar artículos.</p>`;
+            }
+        }
+
+        // Modal de creación de artículo
+        const modal = document.getElementById("modal-article");
+        document.getElementById("btn-create-article")?.addEventListener("click", () => modal?.showModal());
+        document.getElementById("btn-cancel-article")?.addEventListener("click", () => modal?.close());
+        document.getElementById("form-article")?.addEventListener("submit", async (e) => {
+            e.preventDefault();
+            try {
+                await createArticle({
+                    title: document.getElementById("article-title").value,
+                    content: document.getElementById("article-content").value,
+                    categoryId: document.getElementById("article-category").value
+                });
+                modal?.close();
+                window.dispatchEvent(new CustomEvent("app-toast", {
+                    detail: { type: "success", title: "Artículo Creado", message: "Artículo publicado con éxito." }
+                }));
+                loadArticles();
+            } catch (err) {
+                alert("Error al publicar artículo: " + (err.message || err));
+            }
+        });
+
+        initKb();
+    </script>
+</body>
+</html>

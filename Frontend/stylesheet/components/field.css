@@ -1,6 +1,3 @@
-/**
- * Campo de formulario reutilizable (label + control + acción opcional).
- */
 .field {
   display: flex;
   flex-direction: column;
@@ -83,7 +80,7 @@
 .field__action-icon {
   width: 1.25rem;
   height: auto;
-  /* El SVG exportado es negro; lo teñimos a titanium sin editar el asset */
+  /* The exported SVG is black; tinting to titanium without modifying the asset */
   filter: invert(78%) sepia(8%) saturate(404%) hue-rotate(176deg) brightness(95%)
     contrast(88%);
   opacity: 0.95;

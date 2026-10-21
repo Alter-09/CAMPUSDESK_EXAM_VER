@@ -19,8 +19,8 @@ import java.net.http.HttpResponse;
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**
- * Suite de pruebas de integración de CAMPUSDESK.
- * Valida los casos de prueba obligatorios (CP-01 a CP-16) y el contrato de la API.
+ * CAMPUSDESK integration test suite.
+ * Validates mandatory test cases (CP-01 to CP-16) and API contract.
  */
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test")
@@ -70,7 +70,7 @@ class UsermanagementApplicationTests {
     @Test
     @Order(2)
     void authenticatesBootstrapAdmin() throws Exception {
-        String adminToken = login("superadmin", "secret");
+        String adminToken = login("superadmin", "SuperAdmin123!");
         assertThat(adminToken).isNotBlank();
     }
 
@@ -141,7 +141,7 @@ class UsermanagementApplicationTests {
     @Test
     @Order(8)
     void cp06_rejectsViewingOtherUsersTicket() throws Exception {
-        // Registrar usuario 2
+        // Register user 2
         String bodyUser2 = """
                 {
                   "username": "usuario_ajeno",
@@ -152,7 +152,7 @@ class UsermanagementApplicationTests {
         request("POST", "/api/auth/register", bodyUser2, null);
         String user2Token = login("usuario_ajeno", "Password123!");
 
-        // Usuario 2 intenta consultar el ticket 1 creado por usuario_test1
+        // User 2 attempts to query ticket 1 created by usuario_test1
         HttpResponse<String> response = request("GET", "/api/tickets/1", null, user2Token);
         assertThat(response.statusCode()).isEqualTo(403);
     }
@@ -160,9 +160,9 @@ class UsermanagementApplicationTests {
     @Test
     @Order(9)
     void cp08_and_cp07_assignTechnicianRolesAndEndpoints() throws Exception {
-        String adminToken = login("superadmin", "secret");
+        String adminToken = login("superadmin", "SuperAdmin123!");
 
-        // Crear técnico con rol TECHNICIAN usando /api/user/add
+        // Create technician with TECHNICIAN role using /api/user/add
         String createTechBody = """
                 {
                   "username": "tecnico_soporte",
@@ -173,13 +173,13 @@ class UsermanagementApplicationTests {
                 """;
         request("POST", "/api/user/add", createTechBody, adminToken);
 
-        // CP-08: Usuario común intenta asignar técnico -> 403
+        // CP-08: Standard user attempts to assign technician -> 403
         String userToken = login("usuario_test1", "Password123!");
         String assignBody = "{\"technicianUsername\": \"tecnico_soporte\"}";
         HttpResponse<String> userAssign = request("PATCH", "/api/tickets/1/assign", assignBody, userToken);
         assertThat(userAssign.statusCode()).isEqualTo(403);
 
-        // CP-07: Admin asigna técnico con PATCH /api/tickets/1/assign -> 200 y estado ASSIGNED
+        // CP-07: Admin assigns technician with PATCH /api/tickets/1/assign -> 200 and ASSIGNED status
         HttpResponse<String> adminAssign = request("PATCH", "/api/tickets/1/assign", assignBody, adminToken);
         assertThat(adminAssign.statusCode()).isEqualTo(200);
 
@@ -208,7 +208,7 @@ class UsermanagementApplicationTests {
     void cp10_rejectsResolvingTicketWithoutInProgress() throws Exception {
         String techToken = login("tecnico_soporte", "Password123!");
 
-        // Intentar pasar de ASSIGNED directo a RESOLVED (saltando IN_PROGRESS) -> 409
+        // Attempt transition directly from ASSIGNED to RESOLVED (skipping IN_PROGRESS) -> 409
         String body = "{\"action\": \"RESOLVE\"}";
         HttpResponse<String> response = request("POST", "/api/tickets/1/transitions", body, techToken);
         assertThat(response.statusCode()).isEqualTo(409);
@@ -220,19 +220,19 @@ class UsermanagementApplicationTests {
         String techToken = login("tecnico_soporte", "Password123!");
         String userToken = login("usuario_test1", "Password123!");
 
-        // 1. Iniciar atención (ASSIGNED -> IN_PROGRESS)
+        // 1. Start progress (ASSIGNED -> IN_PROGRESS)
         HttpResponse<String> startProgress = request("PATCH", "/api/tickets/1/status", "{\"status\": \"IN_PROGRESS\"}", techToken);
         assertThat(startProgress.statusCode()).isEqualTo(200);
 
-        // 2. Marcar como resuelto (IN_PROGRESS -> RESOLVED)
+        // 2. Mark as resolved (IN_PROGRESS -> RESOLVED)
         HttpResponse<String> resolve = request("PATCH", "/api/tickets/1/status", "{\"status\": \"RESOLVED\"}", techToken);
         assertThat(resolve.statusCode()).isEqualTo(200);
 
-        // 3. Solicitante confirma el cierre (RESOLVED -> CLOSED)
+        // 3. Requester confirms closure (RESOLVED -> CLOSED)
         HttpResponse<String> close = request("PATCH", "/api/tickets/1/status", "{\"status\": \"CLOSED\"}", userToken);
         assertThat(close.statusCode()).isEqualTo(200);
 
-        // CP-11: Verificar que se registraron los cambios en el historial
+        // CP-11: Verify that changes were recorded in status history
         HttpResponse<String> historyResp = request("GET", "/api/tickets/1/history", null, userToken);
         assertThat(historyResp.statusCode()).isEqualTo(200);
         JsonNode historyJson = mapper.readTree(historyResp.body());
@@ -252,13 +252,13 @@ class UsermanagementApplicationTests {
     @Test
     @Order(14)
     void cp14_returnsReportsSummaryAndDashboardMetrics() throws Exception {
-        String adminToken = login("superadmin", "secret");
+        String adminToken = login("superadmin", "SuperAdmin123!");
 
-        // RT-03 exige GET /api/reports/summary
+        // RT-03 requires GET /api/reports/summary
         HttpResponse<String> summary = request("GET", "/api/reports/summary", null, adminToken);
         assertThat(summary.statusCode()).isEqualTo(200);
 
-        // /api/dashboard/stats también responde
+        // /api/dashboard/stats also responds
         HttpResponse<String> stats = request("GET", "/api/dashboard/stats", null, adminToken);
         assertThat(stats.statusCode()).isEqualTo(200);
     }
@@ -266,13 +266,13 @@ class UsermanagementApplicationTests {
     @Test
     @Order(15)
     void technicianEndpointsAreAccessible() throws Exception {
-        String adminToken = login("superadmin", "secret");
+        String adminToken = login("superadmin", "SuperAdmin123!");
 
-        // RT-03 exige GET /api/users/technicians
+        // RT-03 requires GET /api/users/technicians
         HttpResponse<String> usersTech = request("GET", "/api/users/technicians", null, adminToken);
         assertThat(usersTech.statusCode()).isEqualTo(200);
 
-        // /api/technicians también responde
+        // /api/technicians also responds
         HttpResponse<String> tech = request("GET", "/api/technicians", null, adminToken);
         assertThat(tech.statusCode()).isEqualTo(200);
     }

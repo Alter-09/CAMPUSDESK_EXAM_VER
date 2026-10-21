@@ -1,7 +1,3 @@
-/**
- * Textos y etiquetas para el portal de usuario (interfaz en español).
- * Se integra en MESSAGES con: userPortal: USER_PORTAL_MESSAGES
- */
 export const USER_PORTAL_MESSAGES = Object.freeze({
   createTicket: Object.freeze({
     eyebrow: "Portal de Soporte",

@@ -1,11 +1,3 @@
-/**
- * Componente: Dashboard Especializado para Técnicos (<cd-technician-dashboard>).
- * Basado en la interfaz dark de referencia Fortify360 y adaptado a las responsabilidades de soporte:
- * - Tarjetas KPI con barras de progreso y badges (Asignados, En Proceso, Resueltos, Cerrados, Efectividad)
- * - Gráfico de ondas curvas de productividad personal (Resueltos vs. Carga activa)
- * - Cola de Prioridades de Tiquetes (Remediation Priority Queue)
- * 100% Vanilla JS + HTML5 + CSS3 sin frameworks externos.
- */
 import { apiRequest } from "../config/http-client.js";
 
 const SVG_NS = "http://www.w3.org/2000/svg";
@@ -62,7 +54,7 @@ class TechnicianDashboard extends HTMLElement {
     this.monthlyData = [];
     this.pointsCyan = [];
     this.pointsPurple = [];
-    this.activeIndex = 9; // Octubre (mes actual)
+    this.activeIndex = new Date().getMonth();
     this.loading = true;
   }
 
@@ -112,50 +104,64 @@ class TechnicianDashboard extends HTMLElement {
 
     const activeTotal = assigned + inProgress;
     const completedTotal = resolved + closed;
-
-    const baseActive = Math.max(activeTotal, 2);
-    const baseDone = Math.max(completedTotal, 2);
-
-    const curveDistribution = [
-      { month: 0, activeRatio: 0.20, doneRatio: 0.15, growth: "+8.5%" },
-      { month: 1, activeRatio: 0.35, doneRatio: 0.25, growth: "+12.0%" },
-      { month: 2, activeRatio: 0.25, doneRatio: 0.40, growth: "+15.0%" },
-      { month: 3, activeRatio: 0.50, doneRatio: 0.55, growth: "+18.2%" },
-      { month: 4, activeRatio: 0.60, doneRatio: 0.68, growth: "+21.4%" },
-      { month: 5, activeRatio: 0.45, doneRatio: 0.75, growth: "+16.8%" },
-      { month: 6, activeRatio: 0.70, doneRatio: 0.82, growth: "+22.5%" },
-      { month: 7, activeRatio: 0.85, doneRatio: 0.90, growth: "+25.1%" },
-      { month: 8, activeRatio: 0.65, doneRatio: 0.95, growth: "+20.3%" },
-      { month: 9, activeRatio: 1.00, doneRatio: 1.00, growth: "+24.8%" }, // Mes actual (octubre)
-      { month: 10, activeRatio: 0.75, doneRatio: 1.10, growth: "+27.0%" },
-      { month: 11, activeRatio: 0.80, doneRatio: 1.25, growth: "+30.2%" },
-    ];
-
-    this.monthlyData = curveDistribution.map((w, idx) => {
-      let activeVal = Math.round(baseActive * w.activeRatio);
-      let doneVal = Math.round(baseDone * w.doneRatio);
-
-      if (idx === 9) {
-        activeVal = activeTotal;
-        doneVal = completedTotal;
+    const total = activeTotal + completedTotal;
+    const buckets = Array.from({ length: 12 }, (_, idx) => ({
+      index: idx,
+      shortLabel: MONTH_LABELS[idx],
+      fullLabel: MONTH_NAMES[idx],
+      cyan: 0, 
+      purple: 0,
+      total: 0,
+      growth: "0.0%",
+      efficiency: "0%",
+    }));
+    let hasRealTicketDates = false;
+    if (Array.isArray(this.tickets) && this.tickets.length > 0) {
+      this.tickets.forEach((ticket) => {
+        const rawDate = ticket.createdAt || ticket.creationDate;
+        if (rawDate) {
+          const d = new Date(rawDate);
+          if (!isNaN(d.getTime())) {
+            const m = d.getMonth();
+            if (m >= 0 && m < 12) {
+              hasRealTicketDates = true;
+              const isResolved = ticket.status === "RESOLVED" || ticket.status === "CLOSED";
+              if (isResolved) {
+                buckets[m].purple += 1;
+              } else if (ticket.status === "ASSIGNED" || ticket.status === "IN_PROGRESS") {
+                buckets[m].cyan += 1;
+              }
+            }
+          }
+        }
+      });
+    }
+    const currentMonth = new Date().getMonth();
+    if (!hasRealTicketDates && total > 0) {
+      buckets[currentMonth].cyan = activeTotal;
+      buckets[currentMonth].purple = completedTotal;
+    }
+    let prevTotal = 0;
+    this.monthlyData = buckets.map((b, idx) => {
+      const mTotal = b.cyan + b.purple;
+      b.total = mTotal;
+      const eff = mTotal > 0 ? ((b.purple / mTotal) * 100).toFixed(0) : "0";
+      b.efficiency = `${eff}%`;
+      let growth = "0.0%";
+      if (idx > 0) {
+        if (prevTotal === 0 && mTotal > 0) {
+          growth = `+${mTotal * 100}%`;
+        } else if (prevTotal > 0) {
+          const diff = ((mTotal - prevTotal) / prevTotal) * 100;
+          growth = diff >= 0 ? `+${diff.toFixed(1)}%` : `${diff.toFixed(1)}%`;
+        }
       }
-
-      const totalM = activeVal + doneVal;
-      const efficiency = totalM > 0 ? ((doneVal / totalM) * 100).toFixed(0) : "0";
-
-      return {
-        index: idx,
-        shortLabel: MONTH_LABELS[idx],
-        fullLabel: MONTH_NAMES[idx],
-        cyan: activeVal,
-        purple: doneVal,
-        total: totalM,
-        growth: w.growth,
-        efficiency: `${efficiency}%`,
-      };
+      b.growth = growth;
+      prevTotal = mTotal;
+      return b;
     });
+    this.activeIndex = currentMonth;
   }
-
   renderLoading() {
     this.shadowRoot.innerHTML = `
       <style>
@@ -184,15 +190,11 @@ class TechnicianDashboard extends HTMLElement {
 
     const total = assigned + inProgress + resolved + closed;
     const completed = resolved + closed;
-    const efficiency = total > 0 ? Math.round((completed / total) * 100) : 100;
-
-    // Calcular porcentajes de barra
+    const efficiency = total > 0 ? Math.round((completed / total) * 100) : 0;
     const pctAssigned = total > 0 ? Math.min(100, Math.round((assigned / total) * 100)) : 0;
     const pctInProgress = total > 0 ? Math.min(100, Math.round((inProgress / total) * 100)) : 0;
     const pctResolved = total > 0 ? Math.min(100, Math.round((resolved / total) * 100)) : 0;
     const pctClosed = total > 0 ? Math.min(100, Math.round((closed / total) * 100)) : 0;
-
-    // Filtrar tiquetes activos asignados para la cola de prioridad
     const priorityTickets = this.tickets
       .filter((t) => t.status === "ASSIGNED" || t.status === "IN_PROGRESS" || t.status === "OPEN")
       .sort((a, b) => {
@@ -210,7 +212,7 @@ class TechnicianDashboard extends HTMLElement {
             iconSymbol = "⚠";
           } else if (t.priority === "HIGH") {
             iconClass = "priority-queue-item__icon--high";
-            iconSymbol = "⚡";
+            iconSymbol = "";
           }
 
           const statusLabel = t.status === "IN_PROGRESS" ? "EN ATENCIÓN" : "ASIGNADO";
@@ -233,7 +235,6 @@ class TechnicianDashboard extends HTMLElement {
           `;
         }).join("")
       : `<div class="empty-queue-msg">✓ No tienes tiquetes pendientes de atención en tu cola. ¡Todo al día!</div>`;
-
     this.shadowRoot.innerHTML = `
       <style>
         @import url("./stylesheet/tokens.css");
@@ -262,7 +263,6 @@ class TechnicianDashboard extends HTMLElement {
           <!-- Card 1: Asignados -->
           <article class="role-kpi-card">
             <div class="role-kpi-card__top">
-              <div class="role-kpi-card__icon-wrap">📌</div>
               <span class="role-kpi-card__badge role-kpi-card__badge--cyan">Por Iniciar</span>
             </div>
             <p class="role-kpi-card__label">Tiquetes Asignados</p>
@@ -278,7 +278,6 @@ class TechnicianDashboard extends HTMLElement {
           <!-- Card 2: En Proceso -->
           <article class="role-kpi-card">
             <div class="role-kpi-card__top">
-              <div class="role-kpi-card__icon-wrap">⚙️</div>
               <span class="role-kpi-card__badge role-kpi-card__badge--amber">En Atención</span>
             </div>
             <p class="role-kpi-card__label">En Proceso</p>
@@ -294,7 +293,6 @@ class TechnicianDashboard extends HTMLElement {
           <!-- Card 3: Resueltos -->
           <article class="role-kpi-card">
             <div class="role-kpi-card__top">
-              <div class="role-kpi-card__icon-wrap">✅</div>
               <span class="role-kpi-card__badge role-kpi-card__badge--green">Solucionados</span>
             </div>
             <p class="role-kpi-card__label">Resueltos por Mí</p>
@@ -310,7 +308,6 @@ class TechnicianDashboard extends HTMLElement {
           <!-- Card 4: Cerrados -->
           <article class="role-kpi-card">
             <div class="role-kpi-card__top">
-              <div class="role-kpi-card__icon-wrap">🔒</div>
               <span class="role-kpi-card__badge role-kpi-card__badge--purple">Finalizados</span>
             </div>
             <p class="role-kpi-card__label">Cerrados Definitivos</p>
@@ -326,7 +323,6 @@ class TechnicianDashboard extends HTMLElement {
           <!-- Card 5: Tasa de Efectividad -->
           <article class="role-kpi-card">
             <div class="role-kpi-card__top">
-              <div class="role-kpi-card__icon-wrap">🎯</div>
               <span class="role-kpi-card__badge role-kpi-card__badge--green">Efectividad</span>
             </div>
             <p class="role-kpi-card__label">Tasa de Resolución</p>
@@ -373,7 +369,7 @@ class TechnicianDashboard extends HTMLElement {
                 <p class="revenue-chart__tooltip-date" id="tt-date">Octubre 2026</p>
                 <div class="revenue-chart__tooltip-top">
                   <strong class="revenue-chart__tooltip-total" id="tt-total">0 tiquetes</strong>
-                  <span class="revenue-chart__tooltip-growth" id="tt-badge">+24% ↗</span>
+                  <span class="revenue-chart__tooltip-growth" id="tt-badge">0.0%</span>
                 </div>
                 <div class="revenue-chart__tooltip-divider"></div>
                 <div class="revenue-chart__tooltip-row">
@@ -449,8 +445,8 @@ class TechnicianDashboard extends HTMLElement {
       ...this.monthlyData.map((d) => d.cyan),
       ...this.monthlyData.map((d) => d.purple),
     ];
-    const maxVal = Math.max(...allValues, 6);
-    const ceiling = Math.ceil((maxVal * 1.3) / 2) * 2;
+    const maxVal = Math.max(...allValues, 2);
+    const ceiling = Math.max(4, Math.ceil((maxVal * 1.2) / 2) * 2);
 
     const toY = (val) => bounds.bottom - (val / ceiling) * (bounds.bottom - bounds.top);
     const stepX = (bounds.right - bounds.left) / (this.monthlyData.length - 1);
@@ -486,7 +482,7 @@ class TechnicianDashboard extends HTMLElement {
     this.pointsCyan = this.monthlyData.map((d, i) => ({ x: toX(i), y: toY(d.cyan), data: d }));
     this.pointsPurple = this.monthlyData.map((d, i) => ({ x: toX(i), y: toY(d.purple), data: d }));
 
-    // Área luminosa Cyan
+    // Cyan luminous area
     svg.append(
       createSvg("path", {
         class: "revenue-chart__wave-area",
@@ -495,7 +491,7 @@ class TechnicianDashboard extends HTMLElement {
       })
     );
 
-    // Curva Púrpura
+    // Purple curve
     svg.append(
       createSvg("path", {
         class: "revenue-chart__wave-line revenue-chart__wave-line--purple",
@@ -534,7 +530,7 @@ class TechnicianDashboard extends HTMLElement {
     });
     svg.append(xGroup);
 
-    // Eventos de puntero para el tooltip
+    // Pointer events for tooltip
     const showTooltip = (idx) => {
       const item = this.monthlyData[idx];
       const ptC = this.pointsCyan[idx];
@@ -547,7 +543,7 @@ class TechnicianDashboard extends HTMLElement {
       const ttResolved = this.shadowRoot.getElementById("tt-resolved");
       const ttActive = this.shadowRoot.getElementById("tt-active");
 
-      if (ttDate) ttDate.textContent = `${item.fullLabel} 2026`;
+      if (ttDate) ttDate.textContent = `${item.fullLabel} ${new Date().getFullYear()}`;
       if (ttTotal) ttTotal.textContent = `${item.total} tiquetes`;
       if (ttBadge) ttBadge.textContent = item.growth;
       if (ttResolved) ttResolved.textContent = String(item.purple);
@@ -574,7 +570,7 @@ class TechnicianDashboard extends HTMLElement {
     });
 
     svg.addEventListener("pointerleave", () => {
-      showTooltip(9);
+      showTooltip(this.activeIndex);
     });
 
     showTooltip(activeIdx);

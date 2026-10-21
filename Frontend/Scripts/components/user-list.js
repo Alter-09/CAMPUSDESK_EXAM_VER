@@ -1,14 +1,3 @@
-/**
- * <cd-user-list>: listado de usuarios con su rol y el combo de permisos.
- *
- * Contrato:
- *  - Emite "user-add-requested" cuando se pulsa el botón de agregar usuario.
- *  - reload(): vuelve a consultar la API y repinta.
- *  - notify(mensaje): muestra un aviso de operación exitosa.
- *
- * Los textos son constantes de MESSAGES; los datos de la API se insertan
- * siempre con textContent (nunca como HTML).
- */
 import { MESSAGES } from "../constants/messages.es.js";
 import { listUsers } from "../services/user.service.js";
 import { listRoles } from "../services/role.service.js";
@@ -40,13 +29,13 @@ export class UserList extends HTMLElement {
     clearTimeout(this.#noticeTimer);
   }
 
-  /** Vuelve a consultar usuarios y roles y repinta el listado. */
+  /** Queries users and roles again and re-renders listing. */
   async reload() {
     await this.#initialization;
     return this.#load();
   }
 
-  /** @param {string} message Aviso de operación exitosa. */
+  /** @param {string} message Success notice. */
   async notify(message) {
     await this.#initialization;
     const { notice } = this.#refs;
@@ -207,7 +196,7 @@ export class UserList extends HTMLElement {
 
   /**
    * @param {"th" | "td"} tag
-   * @param {string} label Etiqueta que se muestra en la vista de tarjetas (móvil).
+   * @param {string} label Label displayed in card view (mobile).
    */
   #buildCell(tag, label) {
     const cell = document.createElement(tag);

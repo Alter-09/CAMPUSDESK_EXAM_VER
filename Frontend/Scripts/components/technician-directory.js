@@ -1,7 +1,3 @@
-/**
- * <cd-technician-directory>: Directorio de técnicos basado en la API del backend.
- * Sigue la misma arquitectura que <cd-user-directory>, aplicando SOLID, DRY, CRUD y Mobile First.
- */
 import { MESSAGES } from "../constants/messages.es.js";
 import { listTechnicians, deleteTechnician } from "../services/technician.service.js";
 import { attachStyles } from "../utils/shadow-styles.js";
@@ -111,7 +107,7 @@ export class TechnicianDirectory extends HTMLElement {
     this.#refs.dialogCancelBtn.addEventListener("click", () => this.#closeDialog());
     this.#refs.dialogConfirmBtn.addEventListener("click", () => this.#handleConfirmDelete());
 
-    // Cierre al hacer clic fuera del contenido del dialogo
+    // Close when clicking outside dialog content
     this.#refs.dialog.addEventListener("click", (e) => {
       if (e.target === this.#refs.dialog) {
         this.#closeDialog();
@@ -164,7 +160,7 @@ export class TechnicianDirectory extends HTMLElement {
         userCell.scope = "row";
         userCell.textContent = tech.username;
 
-        // Correo Electrónico
+        // Email
         const emailCell = document.createElement("td");
         emailCell.textContent = tech.email || "—";
 
@@ -196,7 +192,7 @@ export class TechnicianDirectory extends HTMLElement {
         statusBadge.textContent = statusLabel;
         statusCell.append(statusBadge);
 
-        // Acciones (Botón eliminar)
+        // Actions (Delete button)
         const actionsCell = document.createElement("td");
         actionsCell.className = "technician-table__cell--center";
 
@@ -256,7 +252,7 @@ export class TechnicianDirectory extends HTMLElement {
       await deleteTechnician(username);
 
       this.#closeDialog();
-      await this.#load(); // Recarga la lista inmediatamente
+      await this.#load(); // Reloads list immediately
     } catch (error) {
       dialogConfirmBtn.disabled = false;
       dialogError.textContent = error?.message || TEXT.deleteError || "Error al eliminar técnico.";

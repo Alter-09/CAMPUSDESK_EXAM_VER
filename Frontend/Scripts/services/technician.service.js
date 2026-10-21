@@ -1,28 +1,5 @@
-/**
- * Servicio para gestión y consulta de técnicos.
- * Sigue principios SOLID (Single Responsibility, Dependency Inversion con http-client).
- */
 import { apiRequest } from "../config/http-client.js";
 import { listUsers, deleteUser } from "./user.service.js";
-
-/**
- * @typedef {{
- *   username: string,
- *   email: string,
- *   role: string,
- *   specialty?: string,
- *   availabilityStatus?: string,
- *   activeTicketsCount?: number,
- *   locked?: boolean,
- *   disabled?: boolean,
- * }} TechnicianItem
- */
-
-/**
- * Consulta la lista unificada de técnicos del sistema.
- * Combina /api/user/all (usuarios con rol TECHNICIAN) con /api/technicians (perfiles y carga de tiquetes).
- * @returns {Promise<TechnicianItem[]>}
- */
 export async function listTechnicians() {
   const [usersResult, techResult] = await Promise.allSettled([
     listUsers(),
@@ -44,20 +21,38 @@ export async function listTechnicians() {
     }
   }
 
-  // Filtrar usuarios cuyo rol sea TECHNICIAN o contenga TECH
-  const technicianUsers = allUsers.filter((u) => {
-    const role = String(u.role || "").toUpperCase();
-    return role === "TECHNICIAN" || role.includes("TECH") || role.includes("TECNICO");
-  });
+  const usersByUsername = new Map();
+  for (const u of allUsers) {
+    if (u?.username) {
+      usersByUsername.set(u.username.toLowerCase(), u);
+    }
+  }
 
-  // Mapear y enriquecer con los datos de TechnicianProfile si existen
-  return technicianUsers.map((u) => {
-    const profile = profilesByUsername.get(u.username.toLowerCase());
+  // Collect all unique technician usernames from both users and profile queries
+  const technicianUsernames = new Set();
+  for (const u of allUsers) {
+    const role = String(u.role || "").toUpperCase();
+    if (role === "TECHNICIAN" || role.includes("TECH") || role.includes("TECNICO")) {
+      technicianUsernames.add(u.username.toLowerCase());
+    }
+  }
+  for (const p of techProfiles) {
+    if (p?.username) {
+      technicianUsernames.add(p.username.toLowerCase());
+    }
+  }
+
+  return Array.from(technicianUsernames).map((lower) => {
+    const u = usersByUsername.get(lower);
+    const profile = profilesByUsername.get(lower);
+    const username = u?.username || profile?.username || lower;
+    const email = u?.email || "—";
+    const role = u?.role || "TECHNICIAN";
     const count = typeof profile?.activeTicketsCount === "number" ? profile.activeTicketsCount : 0;
-    
+
     let availability = profile?.availabilityStatus;
     if (!availability) {
-      if (u.disabled || u.locked) {
+      if (u?.disabled || u?.locked) {
         availability = "OFFLINE";
       } else if (count > 0) {
         availability = "BUSY";
@@ -67,20 +62,20 @@ export async function listTechnicians() {
     }
 
     return {
-      username: u.username,
-      email: u.email || "—",
-      role: u.role || "TECHNICIAN",
+      username,
+      email,
+      role,
       specialty: profile?.specialty || "Soporte General",
       activeTicketsCount: count,
       availabilityStatus: availability,
-      locked: Boolean(u.locked),
-      disabled: Boolean(u.disabled),
+      locked: Boolean(u?.locked),
+      disabled: Boolean(u?.disabled),
     };
   });
 }
 
 /**
- * Elimina un técnico por su nombre de usuario.
+ * Deletes a technician by username.
  * @param {string} username
  * @returns {Promise<void>}
  */

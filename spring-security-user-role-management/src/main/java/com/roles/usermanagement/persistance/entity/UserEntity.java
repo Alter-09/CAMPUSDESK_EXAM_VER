@@ -18,7 +18,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 /**
- * Representa la entidad de usuario en la base de datos.
+ * Represents the user entity in the database.
  */
 @Getter
 @Setter
@@ -31,8 +31,8 @@ public class UserEntity {
   private String username;
 
   @Column(name = "must_change_password", nullable = false)
-  private Boolean mustChangePassword = true; // se agrega el atributo  dentro de la clase para activar el cambio
-                                             // de la contraseña.
+  private Boolean mustChangePassword = true; // attribute added to class to enable password
+                                             // change.
   @Column(nullable = false, length = 200, unique = true)
   private String email;
 
@@ -44,6 +44,13 @@ public class UserEntity {
 
   @Column(nullable = false, length = 200)
   private String password;
+
+  // [Nueva Funcionalidad: U-15 - Extensión de perfil de usuario] - Almacena teléfono y departamento institucional - Conecta con: UserController y UserProfileDto
+  @Column(name = "phone_number", length = 20)
+  private String phoneNumber;
+
+  @Column(name = "department", length = 100)
+  private String department;
 
   @OneToMany(mappedBy = "user", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
   private List<UserRoleEntity> roles;

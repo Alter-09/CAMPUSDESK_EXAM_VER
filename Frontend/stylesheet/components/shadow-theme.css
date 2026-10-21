@@ -1,12 +1,3 @@
-/**
- * Tema compartido por los Web Components (Shadow DOM).
- * Las variables --cd-* atraviesan el Shadow DOM: para conectarlas con tokens.css
- * basta con reasignarlas aquí o desde la página, ej.:
- *   cd-user-list, cd-user-form-modal { --cd-surface: var(--tu-token); }
- *
- * Valores tomados de la interfaz actual de CampusDesk (superficies, texto, acento)
- * y de main.css (gris de los enlaces y rojo de "Cerrar sesión").
- */
 :host {
   --cd-surface: #011e44;
   --cd-surface-sunken: #010e24;
@@ -23,8 +14,6 @@
   --cd-font-display: "Hanken Grotesk", "Inter", system-ui, sans-serif;
   --cd-font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
 }
-
-/* Un display explícito en una clase no debe anular el atributo hidden. */
 [hidden] {
   display: none !important;
 }

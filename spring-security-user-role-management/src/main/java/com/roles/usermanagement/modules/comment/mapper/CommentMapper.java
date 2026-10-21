@@ -6,14 +6,17 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class CommentMapper {
+    // [Nueva Funcionalidad: T-03 - Mapeo de campos ampliados de comentario] - Mapea isInternal y editedAt al DTO de respuesta - Conecta con: Comment y CommentResponse
     public CommentResponse toResponse(Comment com){
         return new CommentResponse(
                 com.getId(),
                 com.getTicket().getId(),
-                com.getAuthor().getUsername(),
                 com.getContent(),
+                com.getAuthor().getUsername(),
                 com.getVisibility(),
-                com.getCreatedAt()
+                com.getCreatedAt(),
+                com.getIsInternal(),
+                com.getEditedAt()
         );
     }
 }

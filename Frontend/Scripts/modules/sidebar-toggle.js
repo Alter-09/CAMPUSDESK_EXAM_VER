@@ -1,11 +1,3 @@
-/**
- * Menú lateral deslizable para pantallas menores a 1024px.
- * Responsabilidad única: abrir y cerrar el sidebar y mantener aria-expanded sincronizado.
- * Los estilos viven en layouts/superadmin.css; aquí solo se alterna data-sidebar-open.
- * Los hooks de comportamiento son atributos data-*, no clases, para no mezclarlos con el estilo.
- */
-
-// Debe coincidir con el breakpoint del sidebar fijo en layouts/superadmin.css
 const DESKTOP_MEDIA_QUERY = "(min-width: 1024px)";
 
 export function initSidebarToggle() {
@@ -27,13 +19,10 @@ export function initSidebarToggle() {
   toggleButton.addEventListener("click", () => {
     setOpen(!isOpen());
 
-    // El foco entra al menú para que el teclado y los lectores de pantalla lo recorran
     if (isOpen()) {
       sidebar.querySelector("a")?.focus();
     }
   });
-
-  // Cierra al tocar el fondo oscuro o al elegir un enlace del menú
   shell.addEventListener("click", (event) => {
     const clickedBackdrop = event.target.closest("[data-sidebar-backdrop]");
     const clickedLink = event.target.closest("[data-sidebar] a");
@@ -50,7 +39,7 @@ export function initSidebarToggle() {
     }
   });
 
-  // Si la pantalla crece hasta el layout de escritorio, el menú deja de ser un panel superpuesto
+  // If screen expands to desktop layout, menu stops behaving as overlay panel
   window.matchMedia(DESKTOP_MEDIA_QUERY).addEventListener("change", (event) => {
     if (event.matches) {
       setOpen(false);

@@ -1,11 +1,3 @@
-/**
- * Utilidades compartidas por todas las páginas del portal de usuario.
- * Principio DRY: sincronizar la cabecera con datos de sesión y gestionar logout.
- */
-
-/**
- * Lee sessionStorage y actualiza el rol y avatar del header con el nombre real del usuario.
- */
 export function syncSessionHeader() {
   const headerRole = document.getElementById("header-role");
   const headerAvatar = document.getElementById("header-avatar");
@@ -32,7 +24,7 @@ export function syncSessionHeader() {
 }
 
 /**
- * Enlaza el enlace de cierre de sesión para limpiar sessionStorage al hacer clic.
+ * Binds logout link to clear sessionStorage on click.
  */
 export function bindLogout() {
   const logoutLink = document.getElementById("nav-logout");
@@ -44,8 +36,8 @@ export function bindLogout() {
 }
 
 /**
- * Inicialización estándar para páginas del portal de usuario.
- * Llama a syncSessionHeader y bindLogout cuando el DOM está listo.
+ * Standard initialization for user portal pages.
+ * Calls syncSessionHeader and bindLogout when DOM is ready.
  */
 export function initUserPage() {
   syncSessionHeader();

@@ -5,14 +5,14 @@ import com.roles.usermanagement.modules.lifecycle.enums.TransitionAction;
 
 import java.time.LocalDateTime;
 
-/** Resultado de un cambio de estado: qué pasó, de qué estado a cuál y quién lo hizo. */
+/** Result of a status change: what happened, from which status to which, and who performed it. */
 public record StateTransitionResponse(
         Long ticketId,
         TransitionAction action,
         TicketStatus previousStatus,
         TicketStatus newStatus,
-        String technicianUsername,   // técnico asignado tras el cambio (puede ser null)
-        String performedBy,          // usuario que ejecutó la acción
+        String technicianUsername,   // assigned technician after transition (can be null)
+        String performedBy,          // user who performed the action
         LocalDateTime transitionedAt
 ) {
 }

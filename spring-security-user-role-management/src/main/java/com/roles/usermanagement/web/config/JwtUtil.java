@@ -8,7 +8,7 @@ import java.time.Instant;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.stereotype.Component;
 
-/** Firma y verifica los tokens usando la configuración security.jwt. */
+/** Signs and verifies tokens using security.jwt configuration. */
 @Component
 @EnableConfigurationProperties(JwtProperties.class)
 public class JwtUtil {

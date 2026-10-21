@@ -9,31 +9,36 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import java.util.Arrays;
 
 /**
- * Configuración para permitir solicitudes CORS (Cross-Origin Resource Sharing).
+ * Configuration to allow CORS (Cross-Origin Resource Sharing) requests.
  */
 @Configuration
 public class CorsConfig {
 
     /**
-     * Define la configuración CORS permitida para la aplicación.
+     * Defines the permitted CORS configuration for the application.
      *
-     * @return Fuente de configuración CORS.
+     * @return CORS configuration source.
      */
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
-        // Configuración de CORS
+        // CORS configuration
         CorsConfiguration corsConfiguration = new CorsConfiguration();
 
-        // Permitir todas las solicitudes desde cualquier origen (aquí se puede restringir a orígenes específicos)
-        corsConfiguration.setAllowedOrigins(Arrays.asList("*")); // Se puede cambiar a una lista de orígenes permitidos EJ: /http://localhost:4200
+        // Allow all requests from any origin (can be restricted to specific origins here)
+        corsConfiguration.setAllowedOrigins(Arrays.asList(
+            "http://localhost:5500",
+            "http://127.0.0.1:5500",
+            "http://localhost:5501",
+            "http://127.0.0.1:5501"
+        )); // Can be changed to a list of allowed origins e.g.: http://localhost:4200
 
-        // Permitir métodos HTTP específicos (GET, POST, PUT, PATCH, DELETE, OPTIONS)
+        // Allow specific HTTP methods (GET, POST, PUT, PATCH, DELETE, OPTIONS)
         corsConfiguration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
 
-        // Permitir todos los encabezados en las solicitudes
+        // Allow all headers in requests
         corsConfiguration.setAllowedHeaders(Arrays.asList("*"));
 
-        // Configuración de CORS basada en URL
+        // URL-based CORS configuration
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", corsConfiguration);
 

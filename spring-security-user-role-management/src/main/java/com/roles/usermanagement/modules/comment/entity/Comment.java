@@ -51,6 +51,14 @@ public class Comment {
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
+    // [Nueva Funcionalidad: T-03 - Notas internas privadas para técnicos] - Oculta comentarios internos a solicitantes - Conecta con: CommentRepository y CommentService
+    @Column(name = "is_internal", nullable = false)
+    @Builder.Default
+    private Boolean isInternal = false;
+
+    @Column(name = "edited_at")
+    private LocalDateTime editedAt;
+
     /** Sets the creation timestamp and the default public visibility. */
     @PrePersist
     protected void onCreate() {

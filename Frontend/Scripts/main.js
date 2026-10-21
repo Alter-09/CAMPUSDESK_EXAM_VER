@@ -1,16 +1,8 @@
-/**
- * Arranque de la página de login y enrutamiento según rol.
- */
+import './components/change-password-modal.js';
 import { bindPasswordToggle } from "./modules/password-toggle.js";
 import { bindLoginForm } from "./modules/login-form.js";
 import { MESSAGES } from "./constants/messages.es.js";
 import { API_BASE_URL, TOKEN_STORAGE_KEY } from "./config/api.config.js";
-
-/**
- * Determina la URL de redirección según el rol de usuario.
- * @param {string} role
- * @returns {string}
- */
 export function getRedirectUrlForRole(role) {
   const upperRole = String(role || "").toUpperCase().trim();
 
@@ -33,7 +25,7 @@ export function getRedirectUrlForRole(role) {
 }
 
 /**
- * Extrae el rol principal desde diferentes estructuras devueltas por la API.
+ * Extracts the primary role from various structures returned by the API.
  * @param {any} data
  * @returns {string}
  */
@@ -63,7 +55,7 @@ export function extractRole(data) {
 }
 
 /**
- * Muestra mensaje de error en el cuadro de alerta del formulario.
+ * Displays an error message in the form alert box.
  * @param {HTMLFormElement} form
  * @param {string} message
  */
@@ -118,7 +110,7 @@ function initLoginPage() {
             });
           } catch (networkError) {
             console.warn("Backend no disponible por red:", networkError);
-            // Modo offline/demostración si el backend no está disponible
+            // Offline/demo mode if backend is unavailable
             const lowerUser = credentials.username.toLowerCase();
             let fallbackRole = "USER";
             if (lowerUser.includes("superadmin") || lowerUser.includes("admin")) {
@@ -142,7 +134,7 @@ function initLoginPage() {
                 errorMsg = errData.message;
               }
             } catch {
-              // Mantener mensaje por defecto si no es json
+              // Keep default message if not json
             }
             showFormError(form, errorMsg);
             return;
@@ -158,7 +150,7 @@ function initLoginPage() {
           let role = extractRole(dataResult);
           let userProfile = null;
 
-          // Consultar /api/auth/me para obtener rol y permisos del usuario autenticado
+          // Query /api/auth/me to obtain role and permissions of the authenticated user
           if (token) {
             try {
               const profileResponse = await fetch(`${API_BASE_URL}/api/auth/me`, {
@@ -179,7 +171,21 @@ function initLoginPage() {
             }
           }
 
-          // Guardar información relevante en sessionStorage
+                    // Intercept first login if user must change password
+          if (dataResult && dataResult.mustChangePassword) {
+            let pwdModal = document.querySelector("cd-change-password-modal");
+            if (!pwdModal) {
+              pwdModal = document.createElement("cd-change-password-modal");
+              document.body.appendChild(pwdModal);
+            }
+            await pwdModal.promptChangePassword({
+              token,
+              username: credentials.username,
+              currentPassword: credentials.password
+            });
+          }
+
+// Save relevant information in sessionStorage
           if (role) {
             sessionStorage.setItem("userRole", role);
           }
@@ -192,7 +198,7 @@ function initLoginPage() {
             sessionStorage.setItem("username", credentials.username);
           }
 
-          // Redirección según rol:
+          // Redirect based on role:
           // ADMIN / SUPERADMIN -> superadmin.html
           // TECHNICIAN -> technician.html
           // USER -> user.html

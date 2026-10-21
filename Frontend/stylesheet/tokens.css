@@ -1,9 +1,4 @@
-/**
- * Tokens Titan Meridian (06-design-system.md).
- * Única fuente de valores crudos — el resto del CSS solo referencia variables.
- */
 :root {
-  /* Color — literales de DESIGN.md */
   --cd-color-surface-canvas: #010e24;
   --cd-color-surface-navy-deep: #011e44;
   --cd-color-surface-card: #062654;
@@ -45,7 +40,7 @@
   --cd-color-chart-grid: rgba(203, 213, 225, 0.1);
   --cd-color-chart-crosshair: rgba(203, 213, 225, 0.45);
 
-  /* Tipografía — familias pedidas; sin CDN hasta Q-39 (fuentes autoalojadas) */
+  /* Typography — requested families; no CDN until Q-39 (self-hosted fonts) */
   --cd-font-display: "Hanken Grotesk", system-ui, -apple-system, "Segoe UI", sans-serif;
   --cd-font-body: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
   --cd-font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
@@ -75,7 +70,7 @@
   --cd-radius-lg: 0.5rem;
   --cd-radius-xl: 0.75rem;
 
-  /* Elevación */
+  /* Elevation */
   --cd-elevation-float: 0 12px 32px -4px rgba(1, 14, 36, 0.7),
     0 0 0 1px rgba(203, 213, 225, 0.15);
 
@@ -85,7 +80,7 @@
   --cd-login-brand-max: 48rem;
   --cd-touch-target: 2.75rem;
 
-  /* Layout de aplicación */
+  /* Application layout */
   --cd-sidebar-width: 16rem;
   --cd-header-height: 4rem;
   --cd-app-content-max: 78rem;

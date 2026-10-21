@@ -37,7 +37,7 @@ public class DashboardService {
         UserEntity user = users.findById(username)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "El usuario no existe"));
 
-        if (hasRole(user, "ADMIN")) {
+        if ("superadmin".equalsIgnoreCase(user.getUsername()) || hasRole(user, "ADMIN") || hasRole(user, "SUPERADMIN")) {
             return new DashboardMetrics(
                     reports.count(),
                     reports.countByStatus(TicketStatus.OPEN),

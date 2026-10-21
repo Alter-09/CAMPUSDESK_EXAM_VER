@@ -1,8 +1,3 @@
-/**
- * Módulo de navegación e integración de vistas para technician.html.
- * Maneja el cambio de secciones por hash de URL y sincroniza la cabecera.
- */
-
 function setupTechnicianNavigation() {
   const links = document.querySelectorAll(".superadmin-navigation a[href^='#']");
   const assignedSection = document.getElementById("section-assigned-tickets");
@@ -11,8 +6,6 @@ function setupTechnicianNavigation() {
   const breadcrumbCurrent = document.querySelector(".app-header__crumbs [aria-current='page']");
   const headerRole = document.querySelector(".app-header__role");
   const headerAvatar = document.querySelector(".app-header__avatar");
-
-  // Mostrar el nombre real o iniciales del técnico si está logueado
   try {
     const userJson = sessionStorage.getItem("currentUser");
     const storedUsername = sessionStorage.getItem("username");
@@ -34,7 +27,7 @@ function setupTechnicianNavigation() {
   function handleRoute() {
     const hash = window.location.hash || "#overview";
 
-    // Actualizar estados visuales de los enlaces del sidebar
+    // Update visual state of sidebar links
     links.forEach((link) => {
       const isTarget = link.getAttribute("href") === hash;
       if (isTarget) {
@@ -44,7 +37,7 @@ function setupTechnicianNavigation() {
       }
     });
 
-    // Ocultar todas las secciones
+    // Hide all sections
     if (assignedSection) assignedSection.hidden = true;
     if (overviewSection) overviewSection.hidden = true;
     if (queueSection) queueSection.hidden = true;
@@ -60,13 +53,13 @@ function setupTechnicianNavigation() {
     } else if (hash === "#resolved-tickets") {
       if (assignedSection) assignedSection.hidden = false;
       if (breadcrumbCurrent) breadcrumbCurrent.textContent = "Historial de Resueltos";
-      // Activar filtro de resueltos en el componente si está disponible
+      // Activate resolved filter in component if available
       if (ticketsComp && ticketsComp.shadowRoot) {
         const tab = ticketsComp.shadowRoot.querySelector("[data-filter='RESOLVED']");
         if (tab) tab.click();
       }
     } else {
-      // Por defecto: Tiquetes Asignados
+      // Default: Assigned Tickets
       if (assignedSection) assignedSection.hidden = false;
       if (breadcrumbCurrent) breadcrumbCurrent.textContent = "Tiquetes Asignados";
       if (ticketsComp && ticketsComp.shadowRoot && hash === "#assigned-tickets") {

@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -34,6 +35,9 @@ public class AuthController {
     private final UserRepository users;
     private final UserCrudRepository userCrudRepository;
     private final UserService userService;
+
+    private static final Pattern PASSWORD_PATTERN = Pattern.compile("^(?=.*[A-Z])(?=.*[^a-zA-Z0-9\\s]).{6,}$");
+    private static final Pattern EMAIL_PATTERN = Pattern.compile("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$");
 
     public AuthController(AuthenticationManager authenticationManager, 
                           JwtUtil jwtUtil, 
@@ -56,6 +60,17 @@ public class AuthController {
                 || registerDto.getPassword() == null || registerDto.getPassword().isBlank()) {
             return ResponseEntity.badRequest().body(Map.of("error", "Todos los campos son obligatorios"));
         }
+
+        if (!EMAIL_PATTERN.matcher(registerDto.getEmail().trim()).matches()) {
+            return ResponseEntity.badRequest().body(Map.of("error", "El correo electrónico debe tener un formato válido"));
+        }
+
+        if (!PASSWORD_PATTERN.matcher(registerDto.getPassword()).matches()) {
+            return ResponseEntity.badRequest().body(Map.of(
+                    "error", "La contraseña debe tener al menos 6 caracteres, al menos una letra mayúscula y al menos un carácter especial"
+            ));
+        }
+
         var created = userService.register(registerDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(Map.of(
                 "message", "Usuario registrado exitosamente con rol USER",
@@ -72,13 +87,19 @@ public class AuthController {
         if (identifier == null || loginDto.getPassword() == null || loginDto.getPassword().isBlank()) {
             return ResponseEntity.badRequest().body(Map.of("error", "Usuario/correo y contraseña son obligatorios"));
         }
+
+        if (!PASSWORD_PATTERN.matcher(loginDto.getPassword()).matches()) {
+            return ResponseEntity.badRequest().body(Map.of(
+                    "error", "La contraseña debe tener al menos 6 caracteres, al menos una letra mayúscula y al menos un carácter especial"
+            ));
+        }
         try {
             var authentication = authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(identifier, loginDto.getPassword()));
 
             String token = jwtUtil.create(authentication.getName());
 
-            // Consultar si el usuario debe cambiar su clave
+            // Check if user must change password
             UserEntity user = userCrudRepository.findById(authentication.getName()).orElse(null);
             boolean mustChange = user != null && Boolean.TRUE.equals(user.getMustChangePassword());
 

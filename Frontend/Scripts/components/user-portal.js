@@ -1,11 +1,3 @@
-/**
- * <cd-user-portal>: Componente Web con Shadow DOM para el portal de usuario.
- * Modo 'create-ticket': formulario para crear nuevas solicitudes (RF-03).
- * Modo 'my-tickets': cuadrícula de tiquetes propios con detalle completo (RF-01 Usuario).
- *
- * Principios: SOLID · DRY · Mobile-First · Web Components + Shadow DOM.
- */
-
 import { MESSAGES } from "../constants/messages.es.js";
 import {
   listTickets,
@@ -16,8 +8,20 @@ import {
   getTicketComments,
   addTicketComment,
   getTicketHistory,
+  cancelTicket,
+  reopenTicket,
+  cloneTicket,
+  requestTicketEscalation,
 } from "../services/ticket.service.js";
 import { attachStyles } from "../utils/shadow-styles.js";
+
+// [Nueva Funcionalidad: Integración Web Components] - Importa componentes reactivos creados - Conecta con: cd-csat-modal, cd-sla-indicator, cd-attachment-uploader, cd-kb-search, cd-pagination, cd-announcement-banner
+import "./cd-csat-modal.js";
+import "./cd-sla-indicator.js";
+import "./cd-attachment-uploader.js";
+import "./cd-kb-search.js";
+import "./cd-pagination.js";
+import "./cd-announcement-banner.js";
 
 const TEXT = MESSAGES.userPortal;
 const TICKET_TEXT = MESSAGES.tickets;
@@ -60,12 +64,15 @@ const PRIO_CLASSES = {
 
 function buildCreateTicketTemplate() {
   return `
+    <cd-announcement-banner></cd-announcement-banner>
     <section class="portal-section" aria-labelledby="create-heading">
       <header class="portal-header">
         <p class="portal-header__eyebrow">${TEXT.createTicket.eyebrow}</p>
         <h1 id="create-heading" class="portal-header__title">${TEXT.createTicket.title}</h1>
         <p class="portal-header__subtitle">${TEXT.createTicket.subtitle}</p>
       </header>
+
+      <cd-kb-search placeholder="¿Tienes dudas? Consulta soluciones en la Base de Conocimiento antes de enviar..." style="margin-bottom: 1.5rem;"></cd-kb-search>
 
       <div class="create-form-panel" id="create-form-panel">
         <form id="create-ticket-form" novalidate autocomplete="off">
@@ -159,6 +166,7 @@ function buildCreateTicketTemplate() {
 
 function buildMyTicketsTemplate() {
   return `
+    <cd-announcement-banner></cd-announcement-banner>
     <section class="portal-section" aria-labelledby="my-tickets-heading">
       <header class="portal-header">
         <p class="portal-header__eyebrow">${TEXT.myTickets.eyebrow}</p>
@@ -201,6 +209,7 @@ function buildMyTicketsTemplate() {
           ${TEXT.myTickets.retry}
         </button>
         <div class="tickets-grid" id="mt-grid" role="region" aria-label="Mis tiquetes"></div>
+        <cd-pagination id="mt-pagination"></cd-pagination>
       </div>
 
       <!-- Modal de detalle del tiquete -->
@@ -213,6 +222,7 @@ function buildMyTicketsTemplate() {
                 <span id="mt-modal-status" class="badge"></span>
                 <span id="mt-modal-priority" class="badge"></span>
                 <span id="mt-modal-category" class="badge badge--category"></span>
+                <cd-sla-indicator id="mt-modal-sla"></cd-sla-indicator>
               </div>
               <h2 id="mt-modal-title" class="modal-header__title">Cargando…</h2>
             </div>
@@ -220,6 +230,15 @@ function buildMyTicketsTemplate() {
           </header>
 
           <div class="modal-body">
+            <!-- Barra de acciones rápidas del usuario -->
+            <div class="user-ticket-actions" id="mt-user-actions" style="display:flex;gap:8px;flex-wrap:wrap;margin:12px 0;">
+              <button class="button button--secondary" id="mt-csat-btn" type="button" hidden>⭐ Calificar Atención</button>
+              <button class="button button--secondary" id="mt-clone-btn" type="button">📋 Duplicar Solicitud</button>
+              <button class="button button--danger" id="mt-cancel-btn" type="button" hidden>🚫 Cancelar Tiquete</button>
+              <button class="button button--secondary" id="mt-reopen-btn" type="button" hidden>🔄 Reabrir Tiquete</button>
+              <button class="button button--warning" id="mt-escalate-btn" type="button" hidden>⚠️ Solicitar Escalamiento</button>
+            </div>
+
             <!-- Descripción y metadatos -->
             <section class="detail-panel" aria-labelledby="mt-desc-heading">
               <h3 id="mt-desc-heading" class="detail-panel__heading">${TEXT.detail.sectionGeneral}</h3>
@@ -242,6 +261,12 @@ function buildMyTicketsTemplate() {
                   <span class="metadata-item__value" id="mt-modal-updated">—</span>
                 </div>
               </div>
+            </section>
+
+            <!-- Archivos y evidencias -->
+            <section class="detail-panel" aria-labelledby="mt-attachments-heading">
+              <h3 id="mt-attachments-heading" class="detail-panel__heading">Evidencias y Adjuntos</h3>
+              <cd-attachment-uploader id="mt-modal-attachments"></cd-attachment-uploader>
             </section>
 
             <!-- Estado y acción del ciclo de vida (usuario: CONFIRM_CLOSE) -->
@@ -318,6 +343,7 @@ function buildMyTicketsTemplate() {
               <div class="history-timeline" id="mt-history-timeline"></div>
             </section>
           </div>
+          <cd-csat-modal id="mt-csat-modal"></cd-csat-modal>
         </div>
       </dialog>
     </section>
@@ -338,6 +364,8 @@ export class UserPortal extends HTMLElement {
   #activeFilter = "ALL";
   #searchQuery = "";
   #currentTicket = null;
+  #currentPage = 0;
+  #pageSize = 10;
 
   constructor() {
     super();
@@ -365,7 +393,7 @@ export class UserPortal extends HTMLElement {
     this.#initialized ??= this.#initialize();
   }
 
-  /** Permite que el módulo de navegación fuerce una recarga (e.g. al volver a la sección) */
+  /** Allows navigation module to force reload (e.g. when returning to section) */
   async reload() {
     await this.#initialized;
     if (this.#mode === "my-tickets") {
@@ -373,7 +401,7 @@ export class UserPortal extends HTMLElement {
     }
   }
 
-  // ─── Inicialización ────────────────────────────────────────────────────────
+  // ─── Initialization ────────────────────────────────────────────────────────
 
   async #initialize() {
     await attachStyles(this.#root, "user-portal.css");
@@ -405,7 +433,7 @@ export class UserPortal extends HTMLElement {
     const successState = root.getElementById("success-state");
     const newBtn = root.getElementById("ct-new-btn");
 
-    // Contadores de caracteres en tiempo real
+    // Real-time character counters
     titleInput.addEventListener("input", () => {
       const len = titleInput.value.length;
       titleCount.textContent = `${len} / 150`;
@@ -427,7 +455,7 @@ export class UserPortal extends HTMLElement {
       this.#clearFieldError("ct-priority-error")
     );
 
-    // Envío del formulario
+    // Form submission
     form.addEventListener("submit", async (e) => {
       e.preventDefault();
       this.#clearAllCreateErrors();
@@ -457,7 +485,7 @@ export class UserPortal extends HTMLElement {
       }
       if (hasError) return;
 
-      // Envío a la API
+      // Submit to API
       submitBtn.disabled = true;
       submitBtn.querySelector("span").textContent = TEXT.createTicket.submitting;
 
@@ -473,7 +501,7 @@ export class UserPortal extends HTMLElement {
       }
     });
 
-    // Botón «Crear otra solicitud»
+    // "Create another request" button
     newBtn.addEventListener("click", () => {
       form.reset();
       titleCount.textContent = "0 / 150";
@@ -505,7 +533,7 @@ export class UserPortal extends HTMLElement {
   #setupMyTickets() {
     const root = this.#root;
 
-    // Filtros por pestaña
+    // Tab filters
     const tabs = root.querySelectorAll(".filter-tab");
     tabs.forEach((tab) => {
       tab.addEventListener("click", () => {
@@ -517,16 +545,27 @@ export class UserPortal extends HTMLElement {
       });
     });
 
-    // Búsqueda
+    // Search
     root.getElementById("mt-search").addEventListener("input", (e) => {
       this.#searchQuery = e.target.value.toLowerCase().trim();
+      this.#currentPage = 0;
       this.#renderMyTicketsGrid();
     });
+
+    // Paginación
+    const pagination = root.getElementById("mt-pagination");
+    if (pagination) {
+      pagination.addEventListener("page-change", (e) => {
+        this.#currentPage = e.detail.page;
+        this.#pageSize = e.detail.size;
+        this.#renderMyTicketsGrid();
+      });
+    }
 
     // Reintentar
     root.getElementById("mt-retry-btn").addEventListener("click", () => this.#loadMyTickets());
 
-    // Cierre del modal
+    // Close modal
     root.getElementById("mt-modal-close").addEventListener("click", () => this.#closeModal());
     root.getElementById("mt-modal").addEventListener("click", (e) => {
       if (e.target === root.getElementById("mt-modal")) this.#closeModal();
@@ -538,7 +577,7 @@ export class UserPortal extends HTMLElement {
       this.#submitComment();
     });
 
-    // Edición
+    // Editing
     root.getElementById("mt-edit-form").addEventListener("submit", (e) => {
       e.preventDefault();
       this.#saveEdit();
@@ -575,13 +614,13 @@ export class UserPortal extends HTMLElement {
     const msgEl = root.getElementById("mt-status-msg");
     const retryBtn = root.getElementById("mt-retry-btn");
 
-    // Filtrar por estado activo
+    // Filter by active status
     let filtered = this.#tickets;
     if (this.#activeFilter !== "ALL") {
       filtered = filtered.filter((t) => String(t.status || "").toUpperCase() === this.#activeFilter);
     }
 
-    // Filtrar por búsqueda
+    // Filter by search query
     if (this.#searchQuery) {
       filtered = filtered.filter((t) => {
         return (
@@ -593,17 +632,31 @@ export class UserPortal extends HTMLElement {
 
     grid.innerHTML = "";
 
+    const pagination = root.getElementById("mt-pagination");
+
     if (filtered.length === 0) {
       msgEl.textContent = TEXT.myTickets.empty;
       msgEl.hidden = false;
       retryBtn.hidden = true;
+      if (pagination) pagination.hidden = true;
       return;
     }
 
     msgEl.hidden = true;
     retryBtn.hidden = true;
 
-    filtered.forEach((ticket) => {
+    if (pagination) {
+      pagination.hidden = false;
+      pagination.setAttribute("total-elements", String(filtered.length));
+      pagination.setAttribute("total-pages", String(Math.ceil(filtered.length / this.#pageSize) || 1));
+      pagination.setAttribute("page", String(this.#currentPage));
+      pagination.setAttribute("size", String(this.#pageSize));
+    }
+
+    const startIndex = this.#currentPage * this.#pageSize;
+    const pageItems = filtered.slice(startIndex, startIndex + this.#pageSize);
+
+    pageItems.forEach((ticket) => {
       const statusKey = String(ticket.status || "").toUpperCase();
       const priorityKey = String(ticket.priority || "").toUpperCase();
       const categoryKey = String(ticket.category || "").toUpperCase();
@@ -653,7 +706,7 @@ export class UserPortal extends HTMLElement {
   async #openDetail(ticketId) {
     const root = this.#root;
 
-    // Buscar en memoria primero; si no lo tiene, pedir al backend
+    // Search in memory first; if absent, fetch from backend
     try {
       this.#currentTicket = await getTicketById(ticketId);
     } catch {
@@ -688,10 +741,10 @@ export class UserPortal extends HTMLElement {
     root.getElementById("mt-modal-created").textContent = formatDate(ticket.createdAt);
     root.getElementById("mt-modal-updated").textContent = formatDate(ticket.updatedAt);
 
-    // Ciclo de vida (acciones del usuario)
+    // Lifecycle (user actions)
     this.#renderUserLifecycle(ticket);
 
-    // Panel de edición (solo si el ticket está OPEN y sin técnico)
+    // Edit panel (only if ticket is OPEN and unassigned)
     const editPanel = root.getElementById("mt-edit-panel");
     const isEditable = statusKey === "OPEN" && !ticket.technicianUsername;
     editPanel.hidden = !isEditable;
@@ -703,7 +756,78 @@ export class UserPortal extends HTMLElement {
       root.getElementById("mt-edit-error").textContent = "";
     }
 
-    // Gestión del formulario de comentarios según estado
+    // Configurar Indicador de SLA
+    const slaEl = root.getElementById("mt-modal-sla");
+    if (slaEl) {
+      slaEl.setAttribute("due-date", ticket.slaDueDate || "");
+      slaEl.setAttribute("breached", String(ticket.slaBreached || false));
+      slaEl.setAttribute("priority", priorityKey);
+      slaEl.setAttribute("status", statusKey);
+    }
+
+    // Configurar gestor de evidencias y adjuntos
+    const attEl = root.getElementById("mt-modal-attachments");
+    if (attEl) {
+      attEl.setAttribute("ticket-id", ticket.id);
+    }
+
+    // Configurar modal de satisfacción CSAT
+    const csatModal = root.getElementById("mt-csat-modal");
+    if (csatModal) {
+      csatModal.setAttribute("ticket-id", ticket.id);
+    }
+
+    // Configurar botones de acción del solicitante
+    const csatBtn = root.getElementById("mt-csat-btn");
+    if (csatBtn) {
+      csatBtn.hidden = !["RESOLVED", "CLOSED"].includes(statusKey);
+      csatBtn.onclick = () => csatModal?.setAttribute("open", "true");
+    }
+
+    const cancelBtn = root.getElementById("mt-cancel-btn");
+    if (cancelBtn) {
+      cancelBtn.hidden = ["RESOLVED", "CLOSED", "CANCELLED"].includes(statusKey);
+      cancelBtn.onclick = async () => {
+        if (confirm("¿Estás seguro de cancelar esta solicitud?")) {
+          await cancelTicket(ticket.id, "Cancelado voluntariamente por el usuario");
+          this.#openDetail(ticket.id);
+          this.#loadMyTickets();
+        }
+      };
+    }
+
+    const reopenBtn = root.getElementById("mt-reopen-btn");
+    if (reopenBtn) {
+      reopenBtn.hidden = statusKey !== "RESOLVED";
+      reopenBtn.onclick = async () => {
+        const reason = prompt("Describe el motivo de la reapertura:") || "El problema persiste";
+        await reopenTicket(ticket.id, reason);
+        this.#openDetail(ticket.id);
+        this.#loadMyTickets();
+      };
+    }
+
+    const cloneBtn = root.getElementById("mt-clone-btn");
+    if (cloneBtn) {
+      cloneBtn.onclick = async () => {
+        const cloned = await cloneTicket(ticket.id);
+        alert("Solicitud clonada exitosamente con el ID #" + cloned.id);
+        this.#loadMyTickets();
+      };
+    }
+
+    const escalateBtn = root.getElementById("mt-escalate-btn");
+    if (escalateBtn) {
+      escalateBtn.hidden = ["RESOLVED", "CLOSED", "CANCELLED"].includes(statusKey);
+      escalateBtn.onclick = async () => {
+        const reason = prompt("Indica el motivo para solicitar escalamiento:") || "Demora crítica en la atención";
+        await requestTicketEscalation(ticket.id, reason);
+        alert("Escalamiento solicitado. El supervisor y equipo técnico han sido notificados.");
+        this.#openDetail(ticket.id);
+      };
+    }
+
+    // Comment form management according to status
     const isClosed = statusKey === "CLOSED";
     const commentForm = root.getElementById("mt-comment-form");
     commentForm.hidden = isClosed;
@@ -729,7 +853,7 @@ export class UserPortal extends HTMLElement {
     };
 
     if (status === "RESOLVED") {
-      // El usuario puede confirmar el cierre (RF-04, regla 6)
+      // User can confirm closure (RF-04, rule 6)
       const notice = document.createElement("div");
       notice.className = "status-notice";
       notice.textContent = TEXT.detail.resolvedNotice;
@@ -820,7 +944,7 @@ export class UserPortal extends HTMLElement {
         card.className = "comment-card";
         const isInternal = c.visibility === "INTERNAL";
 
-        // Los usuarios no ven comentarios internos (notas entre técnicos/admins)
+        // Users do not see internal comments (technician/admin internal notes)
         if (isInternal) return;
 
         card.innerHTML = `
@@ -855,7 +979,7 @@ export class UserPortal extends HTMLElement {
     submitBtn.textContent = TEXT.detail.submittingComment;
 
     try {
-      // Los usuarios solo envían comentarios públicos
+      // Users only post public comments
       await addTicketComment(ticketId, { content, visibility: "PUBLIC" });
       input.value = "";
       await this.#loadComments(ticketId);

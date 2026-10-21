@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Perfil de usuario y configuración de cuenta en CampusDesk." />
+    <title>CampusDesk | Mi Perfil</title>
+    <link rel="icon" href="./Assets/favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="./stylesheet/main.css" />
+    <style>
+        .profile-container {
+            max-width: 800px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        .profile-card {
+            background: #ffffff;
+            border-radius: 14px;
+            border: 1px solid #e2e8f0;
+            padding: 24px;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+        }
+        .profile-header {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+            margin-bottom: 20px;
+            padding-bottom: 18px;
+            border-bottom: 1px solid #f1f5f9;
+        }
+        .profile-avatar {
+            width: 72px;
+            height: 72px;
+            border-radius: 999px;
+            background: #eff6ff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            color: #2563eb;
+            font-weight: 700;
+        }
+        .profile-header-info h2 {
+            margin: 0 0 4px 0;
+            font-size: 1.35rem;
+            color: #0f172a;
+        }
+        .profile-header-info p {
+            margin: 0;
+            color: #64748b;
+            font-size: 0.9rem;
+        }
+        .profile-role-badge {
+            display: inline-block;
+            background: #2563eb;
+            color: white;
+            font-size: 0.75rem;
+            font-weight: 700;
+            padding: 2px 10px;
+            border-radius: 999px;
+            margin-top: 6px;
+        }
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+        @media (max-width: 600px) {
+            .form-grid { grid-template-columns: 1fr; }
+        }
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        .form-group label {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #334155;
+        }
+        .form-group input {
+            padding: 10px 12px;
+            border-radius: 8px;
+            border: 1px solid #cbd5e1;
+            font-family: inherit;
+            font-size: 0.9rem;
+        }
+        .form-group input:disabled {
+            background: #f8fafc;
+            color: #64748b;
+            cursor: not-allowed;
+        }
+        .permissions-box {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 10px;
+        }
+        .perm-pill {
+            background: #f1f5f9;
+            color: #334155;
+            font-size: 0.75rem;
+            font-weight: 600;
+            padding: 4px 10px;
+            border-radius: 6px;
+            border: 1px solid #e2e8f0;
+        }
+    </style>
+</head>
+<body>
+    <cd-toast-manager></cd-toast-manager>
+    <div class="superadmin-page" data-shell>
+        <aside id="sidebar" class="superadmin-sidebar" data-sidebar aria-label="Navegación principal">
+            <a class="superadmin-brand" href="#" id="brand-link" aria-label="CampusDesk">
+                <img class="superadmin-brand__mark" src="./Assets/favicon.svg" width="40" height="40" alt="" />
+                <span class="superadmin-brand__copy">
+                    <span class="superadmin-brand__name">CAMPUSDESK</span>
+                    <span class="superadmin-brand__view">Mi Cuenta</span>
+                </span>
+            </a>
+
+            <nav class="superadmin-navigation" id="sidebar-nav">
+                <section class="superadmin-nav-group">
+                    <h2 class="superadmin-nav-group__label">Navegación</h2>
+                    <a class="superadmin-nav-link" href="#" id="nav-home">
+                        <img class="superadmin-nav-link__icon" src="./Assets/Icons/dashboard.svg" width="24" height="24" alt="" />
+                        <span class="superadmin-nav-link__text">Mi Portal</span>
+                    </a>
+                    <a class="superadmin-nav-link" href="./knowledge-base.html">
+                        <img class="superadmin-nav-link__icon" src="./Assets/Icons/search.svg" width="24" height="24" alt="" />
+                        <span class="superadmin-nav-link__text">Base de Conocimiento</span>
+                    </a>
+                    <a class="superadmin-nav-link" href="./user-profile.html" aria-current="page">
+                        <img class="superadmin-nav-link__icon" src="./Assets/Icons/user.svg" width="24" height="24" alt="" />
+                        <span class="superadmin-nav-link__text">Mi Perfil</span>
+                    </a>
+                </section>
+            </nav>
+
+            <div class="superadmin-sidebar__footer">
+                <button class="superadmin-nav-link superadmin-nav-link--danger" id="nav-logout" style="background: none; border: none; width: 100%; text-align: left; cursor: pointer;">
+                    <img class="superadmin-nav-link__icon" src="./Assets/Icons/logout.svg" width="24" height="24" alt="" />
+                    <span class="superadmin-nav-link__text">Cerrar sesión</span>
+                </button>
+            </div>
+        </aside>
+
+        <div class="superadmin-backdrop" data-sidebar-backdrop></div>
+
+        <div class="superadmin-workspace">
+            <header class="app-header">
+                <div class="app-header__start">
+                    <button class="app-header__menu-button" type="button" data-sidebar-toggle aria-controls="sidebar" aria-expanded="false" aria-label="Abrir menú">
+                        <img class="app-header__menu-icon" src="./Assets/Icons/menu.svg" width="24" height="24" alt="" />
+                    </button>
+                    <nav class="app-header__breadcrumb" aria-label="Ubicación actual">
+                        <ol class="app-header__crumbs">
+                            <li class="app-header__crumb">CampusDesk</li>
+                            <li class="app-header__crumb" aria-current="page">Mi Perfil</li>
+                        </ol>
+                    </nav>
+                </div>
+                <div class="app-header__user" style="display: flex; align-items: center; gap: 12px;">
+                    <cd-notification-center></cd-notification-center>
+                    <span class="app-header__role" id="header-role">Usuario</span>
+                    <img class="app-header__menu-icon" src="./Assets/Icons/user.svg" width="24" height="24" alt="" />
+                </div>
+            </header>
+
+            <main class="superadmin-content">
+                <cd-announcement-banner></cd-announcement-banner>
+
+                <div class="profile-container">
+                    <div class="profile-card">
+                        <div class="profile-header">
+                            <div class="profile-avatar" id="avatar-initial">U</div>
+                            <div class="profile-header-info">
+                                <h2 id="prof-display-name">Cargando perfil...</h2>
+                                <p id="prof-email">usuario@campus.edu</p>
+                                <span class="profile-role-badge" id="prof-role-badge">USUARIO</span>
+                            </div>
+                        </div>
+
+                        <form id="profile-form">
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label>Nombre de Usuario</label>
+                                    <input type="text" id="prof-username" disabled />
+                                </div>
+                                <div class="form-group">
+                                    <label>Correo Electrónico Institucional</label>
+                                    <input type="email" id="prof-email-input" disabled />
+                                </div>
+                                <div class="form-group">
+                                    <label>Teléfono o Celular</label>
+                                    <input type="tel" id="prof-phone" placeholder="Ej: +57 300 123 4567" />
+                                </div>
+                                <div class="form-group">
+                                    <label>Facultad o Departamento</label>
+                                    <input type="text" id="prof-department" placeholder="Ej: Ingeniería de Sistemas" />
+                                </div>
+                            </div>
+
+                            <div style="margin-top: 20px; display: flex; justify-content: flex-end;">
+                                <button type="submit" class="button button--primary" id="btn-save-profile">Guardar Cambios</button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <div class="profile-card">
+                        <h3 style="margin-top: 0; font-size: 1.05rem; color: #0f172a;">Permisos y Privilegios Asignados</h3>
+                        <p style="font-size: 0.85rem; color: #64748b; margin-bottom: 12px;">Tu cuenta cuenta con las siguientes autorizaciones en el sistema CampusDesk:</p>
+                        <div class="permissions-box" id="prof-permissions-list">
+                            <span class="perm-pill">TICKET_CREATE</span>
+                            <span class="perm-pill">TICKET_VIEW_OWN</span>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <script type="module" src="./Scripts/modules/sidebar-toggle.js"></script>
+    <script type="module" src="./Scripts/components/cd-notification-center.js"></script>
+    <script type="module" src="./Scripts/components/cd-announcement-banner.js"></script>
+    <script type="module" src="./Scripts/components/toast-manager.js"></script>
+
+    <script type="module">
+        import { enforceRoleAccess, getCurrentRole, getCurrentUser, logout } from "./Scripts/modules/auth-guard.js";
+        import { getRedirectUrlForRole } from "./Scripts/main.js";
+        import { getUserProfile, updateUserProfile } from "./Scripts/services/user.service.js";
+        import { apiRequest } from "./Scripts/config/http-client.js";
+
+        enforceRoleAccess();
+
+        const role = getCurrentRole();
+        const username = getCurrentUser();
+
+        document.getElementById("header-role").textContent = role;
+        document.getElementById("prof-role-badge").textContent = role;
+        const homeUrl = getRedirectUrlForRole(role);
+        document.getElementById("nav-home").href = homeUrl;
+        document.getElementById("brand-link").href = homeUrl;
+        document.getElementById("nav-logout").addEventListener("click", logout);
+
+        async function loadProfile() {
+            try {
+                // 1. Obtener perfil
+                const profile = await getUserProfile();
+                document.getElementById("prof-display-name").textContent = profile.username || username;
+                document.getElementById("prof-username").value = profile.username || username;
+                document.getElementById("prof-email").textContent = profile.email || "—";
+                document.getElementById("prof-email-input").value = profile.email || "—";
+                document.getElementById("prof-phone").value = profile.phoneNumber || "";
+                document.getElementById("prof-department").value = profile.department || "";
+                document.getElementById("avatar-initial").textContent = (profile.username || username).charAt(0).toUpperCase();
+
+                // 2. Obtener detalles de permisos desde /api/auth/me
+                const meData = await apiRequest("/api/auth/me", { method: "GET" });
+                const permContainer = document.getElementById("prof-permissions-list");
+                if (meData && Array.isArray(meData.authorities) && meData.authorities.length > 0) {
+                    permContainer.innerHTML = meData.authorities.map(a => `<span class="perm-pill">${a}</span>`).join("");
+                } else if (meData && Array.isArray(meData.permissions)) {
+                    permContainer.innerHTML = meData.permissions.map(p => `<span class="perm-pill">${p}</span>`).join("");
+                }
+            } catch (err) {
+                console.warn("Error cargando perfil", err);
+            }
+        }
+
+        document.getElementById("profile-form")?.addEventListener("submit", async (e) => {
+            e.preventDefault();
+            const btn = document.getElementById("btn-save-profile");
+            btn.disabled = true;
+            btn.textContent = "Guardando...";
+            try {
+                const phone = document.getElementById("prof-phone").value.trim();
+                const dept = document.getElementById("prof-department").value.trim();
+                await updateUserProfile({ phoneNumber: phone, department: dept });
+                window.dispatchEvent(new CustomEvent("app-toast", {
+                    detail: { type: "success", title: "Perfil Actualizado", message: "Tus datos han sido guardados correctamente." }
+                }));
+            } catch (err) {
+                alert("Error al actualizar perfil: " + (err.message || err));
+            } finally {
+                btn.disabled = false;
+                btn.textContent = "Guardar Cambios";
+            }
+        });
+
+        loadProfile();
+    </script>
+</body>
+</html>

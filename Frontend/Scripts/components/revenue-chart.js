@@ -1,9 +1,3 @@
-/**
- * Componente de Gráfico de Líneas de Rendimiento y Productividad de Tiquetes.
- * Implementa curvas cúbicas Bezier con relleno degradado luminiscente
- * basado en los datos reales de la API Spring Boot (GET /api/dashboard/stats y GET /api/tickets).
- * Desarrollado 100% en Vanilla JS, HTML y SVG sin dependencias externas.
- */
 import { apiRequest } from "../config/http-client.js";
 
 const SVG_NS = "http://www.w3.org/2000/svg";
@@ -64,7 +58,7 @@ export class RevenueChart {
     this.monthlyData = [];
     this.pointsCyan = [];
     this.pointsPurple = [];
-    this.activeIndex = 9; // Octubre por defecto (mes actual)
+    this.activeIndex = 9; 
     this.abortController = null;
   }
 
@@ -85,7 +79,7 @@ export class RevenueChart {
     this.tooltip = this.root.querySelector("[data-chart-tooltip]");
     this.statusEl = this.root.querySelector("[data-chart-status]");
 
-    // Elementos de métricas del DOM
+    // DOM metric elements
     this.ui = {
       total: this.root.querySelector("[data-stat-total]"),
       growth: this.root.querySelector("[data-stat-growth]"),
@@ -160,52 +154,64 @@ export class RevenueChart {
 
     const activeTotal = open + assigned + inProgress;
     const completedTotal = resolved + closed;
+    const buckets = Array.from({ length: 12 }, (_, idx) => ({
+      index: idx,
+      shortLabel: MONTH_LABELS[idx],
+      fullLabel: MONTH_NAMES[idx],
+      cyan: 0, 
+      purple: 0,
+      total: 0,
+      growth: "0.0%",
+      efficiency: "0%",
+    }));
+    let hasRealTicketDates = false;
+    if (Array.isArray(this.tickets) && this.tickets.length > 0) {
+      this.tickets.forEach((ticket) => {
+        const rawDate = ticket.createdAt || ticket.creationDate;
+        if (rawDate) {
+          const d = new Date(rawDate);
+          if (!isNaN(d.getTime())) {
+            const m = d.getMonth();
+            if (m >= 0 && m < 12) {
+              hasRealTicketDates = true;
+              const isResolved = ticket.status === "RESOLVED" || ticket.status === "CLOSED";
+              if (isResolved) {
+                buckets[m].purple += 1;
+              } else {
+                buckets[m].cyan += 1;
+              }
+            }
+          }
+        }
+      });
+    }
+    const currentMonth = new Date().getMonth();
+    if (!hasRealTicketDates && total > 0) {
+      buckets[currentMonth].cyan = activeTotal;
+      buckets[currentMonth].purple = completedTotal;
+    }
+    let prevTotal = 0;
+    this.monthlyData = buckets.map((b, idx) => {
+      const mTotal = b.cyan + b.purple;
+      b.total = mTotal;
+      const eff = mTotal > 0 ? ((b.purple / mTotal) * 100).toFixed(0) : "0";
+      b.efficiency = `${eff}%`;
 
-    // Factores de curva orgánica que reflejan el ciclo empresarial del año (similar a la curva de referencia)
-    // Octubre (índice 9) refleja el estado en tiempo real de la base de datos
-    const waveDistribution = [
-      { month: 0, openRatio: 0.25, doneRatio: 0.10, growth: "+8.2%" },
-      { month: 1, openRatio: 0.35, doneRatio: 0.18, growth: "+11.0%" },
-      { month: 2, openRatio: 0.22, doneRatio: 0.32, growth: "+14.5%" },
-      { month: 3, openRatio: 0.45, doneRatio: 0.48, growth: "+16.8%" },
-      { month: 4, openRatio: 0.58, doneRatio: 0.62, growth: "+19.2%" },
-      { month: 5, openRatio: 0.40, doneRatio: 0.70, growth: "+15.4%" },
-      { month: 6, openRatio: 0.65, doneRatio: 0.78, growth: "+21.0%" },
-      { month: 7, openRatio: 0.90, doneRatio: 0.85, growth: "+24.6%" },
-      { month: 8, openRatio: 0.75, doneRatio: 0.92, growth: "+18.3%" },
-      { month: 9, openRatio: 1.00, doneRatio: 1.00, growth: "+22.5%" }, // Mes actual (octubre)
-      { month: 10, openRatio: 0.70, doneRatio: 1.15, growth: "+26.0%" },
-      { month: 11, openRatio: 0.80, doneRatio: 1.30, growth: "+28.4%" },
-    ];
-
-    // Escala base basada en los datos reales del backend
-    const baseActive = Math.max(activeTotal, 3);
-    const baseDone = Math.max(completedTotal, 2);
-
-    this.monthlyData = waveDistribution.map((w, idx) => {
-      let openVal = Math.round(baseActive * w.openRatio);
-      let doneVal = Math.round(baseDone * w.doneRatio);
-
-      // Si es el mes actual (octubre, índice 9), asignamos exactamente los valores actuales
-      if (idx === 9) {
-        openVal = activeTotal;
-        doneVal = completedTotal;
+      let growth = "0.0%";
+      if (idx > 0) {
+        if (prevTotal === 0 && mTotal > 0) {
+          growth = `+${mTotal * 100}%`;
+        } else if (prevTotal > 0) {
+          const diff = ((mTotal - prevTotal) / prevTotal) * 100;
+          growth = diff >= 0 ? `+${diff.toFixed(1)}%` : `${diff.toFixed(1)}%`;
+        }
       }
-
-      const mTotal = openVal + doneVal;
-      const efficiency = mTotal > 0 ? ((doneVal / mTotal) * 100).toFixed(0) : "0";
-
-      return {
-        index: idx,
-        shortLabel: MONTH_LABELS[idx],
-        fullLabel: MONTH_NAMES[idx],
-        cyan: openVal,     // Abiertos / En proceso
-        purple: doneVal,   // Resueltos / Cerrados
-        total: mTotal,
-        growth: w.growth,
-        efficiency: `${efficiency}%`,
-      };
+      b.growth = growth;
+      prevTotal = mTotal;
+      return b;
     });
+
+    this.activeIndex = currentMonth;
   }
 
   updateKPIs() {
@@ -221,7 +227,7 @@ export class RevenueChart {
     const efficiencyRate = total > 0 ? ((done / total) * 100).toFixed(1) : "0.0";
 
     if (this.ui.total) this.ui.total.textContent = total.toLocaleString("es-CO");
-    if (this.ui.growth) this.ui.growth.textContent = total > 0 ? `+${(efficiencyRate * 0.8).toFixed(1)}% ↗` : "0% —";
+    if (this.ui.growth) this.ui.growth.textContent = total > 0 ? `${efficiencyRate}% Eficiencia` : "0.0% —";
     if (this.ui.open) this.ui.open.textContent = open.toLocaleString("es-CO");
     if (this.ui.progress) this.ui.progress.textContent = (assigned + inProgress).toLocaleString("es-CO");
     if (this.ui.done) this.ui.done.textContent = done.toLocaleString("es-CO");
@@ -230,19 +236,13 @@ export class RevenueChart {
 
   renderChart() {
     this.svg.replaceChildren();
-
-    // 1. Definición de gradientes y filtros
     const defs = createSvg("defs");
-
-    // Gradiente de relleno Cyan (área bajo la curva azul)
     const cyanGrad = createSvg("linearGradient", { id: "cyanWaveArea", x1: "0", y1: "0", x2: "0", y2: "1" });
     cyanGrad.append(
       createSvg("stop", { offset: "0%", "stop-color": "#22d3ee", "stop-opacity": "0.38" }),
       createSvg("stop", { offset: "45%", "stop-color": "#0284c7", "stop-opacity": "0.15" }),
       createSvg("stop", { offset: "100%", "stop-color": "#070f24", "stop-opacity": "0.0" }),
     );
-
-    // Gradiente de relleno Purple
     const purpleGrad = createSvg("linearGradient", { id: "purpleWaveArea", x1: "0", y1: "0", x2: "0", y2: "1" });
     purpleGrad.append(
       createSvg("stop", { offset: "0%", "stop-color": "#c084fc", "stop-opacity": "0.22" }),
@@ -252,8 +252,6 @@ export class RevenueChart {
 
     defs.append(cyanGrad, purpleGrad);
     this.svg.append(defs);
-
-    // 2. Cálculo de métricas y coordenadas
     const bounds = {
       left: VIEWBOX.left,
       right: VIEWBOX.width - VIEWBOX.right,
@@ -265,22 +263,17 @@ export class RevenueChart {
       ...this.monthlyData.map((d) => d.cyan),
       ...this.monthlyData.map((d) => d.purple),
     ];
-    const maxVal = Math.max(...allValues, 10);
-    // Techo redondeado agradable (múltiplo de 5 o 10)
-    const ceiling = Math.ceil((maxVal * 1.25) / 5) * 5;
+    const maxVal = Math.max(...allValues, 2);
+    const ceiling = Math.max(4, Math.ceil((maxVal * 1.2) / 2) * 2);
 
     const toY = (val) => bounds.bottom - (val / ceiling) * (bounds.bottom - bounds.top);
     const stepX = (bounds.right - bounds.left) / (this.monthlyData.length - 1);
     const toX = (idx) => bounds.left + idx * stepX;
-
-    // 3. Renderizar Rejilla y Eje Y
     const gridGroup = createSvg("g", { class: "revenue-chart__grid" });
     const steps = 4;
     for (let i = 0; i <= steps; i++) {
       const val = Math.round((ceiling / steps) * i);
       const y = toY(val);
-
-      // Línea horizontal punteada
       gridGroup.append(
         createSvg("line", {
           class: "revenue-chart__grid-line",
@@ -290,8 +283,6 @@ export class RevenueChart {
           y2: y,
         })
       );
-
-      // Texto eje Y
       const text = createSvg("text", {
         class: "revenue-chart__axis-text revenue-chart__axis-text--y",
         x: bounds.left - 12,
@@ -301,12 +292,8 @@ export class RevenueChart {
       gridGroup.append(text);
     }
     this.svg.append(gridGroup);
-
-    // 4. Mapear puntos de ambas series
     this.pointsCyan = this.monthlyData.map((d, i) => ({ x: toX(i), y: toY(d.cyan), data: d }));
     this.pointsPurple = this.monthlyData.map((d, i) => ({ x: toX(i), y: toY(d.purple), data: d }));
-
-    // 5. Renderizar área luminiscente bajo la curva Cyan (como en la imagen)
     const cyanAreaPath = getCurvedAreaPath(this.pointsCyan, bounds.bottom);
     this.svg.append(
       createSvg("path", {
@@ -315,8 +302,6 @@ export class RevenueChart {
         fill: "url(#cyanWaveArea)",
       })
     );
-
-    // 6. Renderizar curvas de línea
     const purpleLinePath = getCurvedPath(this.pointsPurple);
     this.svg.append(
       createSvg("path", {
@@ -332,19 +317,13 @@ export class RevenueChart {
         d: cyanLinePath,
       })
     );
-
-    // 7. Renderizar puntos destacados en el extremo final (mes 11) o mes actual
     const highlightIdx = Math.min(this.activeIndex, this.pointsCyan.length - 1);
     const pC = this.pointsCyan[highlightIdx];
     const pP = this.pointsPurple[highlightIdx];
-
-    // Puntos brillantes
     this.svg.append(
       createSvg("circle", { cx: pC.x, cy: pC.y, r: 4.5, fill: "#22d3ee", stroke: "#070f24", "stroke-width": 2 }),
       createSvg("circle", { cx: pP.x, cy: pP.y, r: 4.5, fill: "#c084fc", stroke: "#070f24", "stroke-width": 2 })
     );
-
-    // 8. Elementos interactivos (guía vertical y puntos de hover)
     this.guideLine = createSvg("line", {
       class: "revenue-chart__guide-line",
       x1: pC.x,
@@ -377,8 +356,6 @@ export class RevenueChart {
     });
 
     this.svg.append(this.guideLine, this.activeDotCyan, this.activeDotPurple);
-
-    // 9. Renderizar etiquetas del Eje X (meses)
     this.xLabels = [];
     const xLabelsGroup = createSvg("g", { class: "revenue-chart__x-labels" });
     this.monthlyData.forEach((d, i) => {
@@ -392,8 +369,6 @@ export class RevenueChart {
       this.xLabels.push(text);
     });
     this.svg.append(xLabelsGroup);
-
-    // Posicionar tooltip en el mes activo inicial
     this.showTooltipAt(highlightIdx);
   }
 
@@ -409,8 +384,6 @@ export class RevenueChart {
       right: VIEWBOX.width - VIEWBOX.right,
     };
     const stepX = (bounds.right - bounds.left) / (this.monthlyData.length - 1);
-
-    // Encontrar el mes más cercano al cursor
     let nearestIdx = Math.round((pointerX - bounds.left) / stepX);
     nearestIdx = Math.max(0, Math.min(nearestIdx, this.monthlyData.length - 1));
 
@@ -418,8 +391,7 @@ export class RevenueChart {
   }
 
   handlePointerLeave() {
-    // Al salir, dejar posicionado en el mes actual (octubre)
-    this.showTooltipAt(9);
+    this.showTooltipAt(new Date().getMonth());
   }
 
   showTooltipAt(index) {
@@ -429,15 +401,11 @@ export class RevenueChart {
     const item = this.monthlyData[index];
     const pC = this.pointsCyan[index];
     const pP = this.pointsPurple[index];
-
-    // Actualizar guía vertical
     if (this.guideLine) {
       this.guideLine.setAttribute("x1", String(pC.x));
       this.guideLine.setAttribute("x2", String(pC.x));
       this.guideLine.setAttribute("opacity", "1");
     }
-
-    // Actualizar puntos de hover
     if (this.activeDotCyan) {
       this.activeDotCyan.setAttribute("cx", String(pC.x));
       this.activeDotCyan.setAttribute("cy", String(pC.y));
@@ -449,23 +417,17 @@ export class RevenueChart {
       this.activeDotPurple.setAttribute("cy", String(pP.y));
       this.activeDotPurple.setAttribute("opacity", "1");
     }
-
-    // Resaltar etiqueta X activa
     if (this.xLabels) {
       this.xLabels.forEach((el, idx) => {
         el.classList.toggle("is-active", idx === index);
       });
     }
-
-    // Contenido del tooltip
-    if (this.ui.tooltipDate) this.ui.tooltipDate.textContent = `${item.fullLabel} 2026`;
+    if (this.ui.tooltipDate) this.ui.tooltipDate.textContent = `${item.fullLabel} ${new Date().getFullYear()}`;
     if (this.ui.tooltipTotal) this.ui.tooltipTotal.textContent = `${item.total} incidencias`;
     if (this.ui.tooltipBadge) this.ui.tooltipBadge.textContent = item.growth;
     if (this.ui.tooltipResolved) this.ui.tooltipResolved.textContent = String(item.purple);
     if (this.ui.tooltipOpen) this.ui.tooltipOpen.textContent = String(item.cyan);
     if (this.ui.tooltipEfficiency) this.ui.tooltipEfficiency.textContent = item.efficiency;
-
-    // Posición del tooltip en coordenadas de pantalla relativas a plot
     const plotWidth = this.plot.clientWidth;
     const plotHeight = this.plot.clientHeight;
     const xPct = pC.x / VIEWBOX.width;

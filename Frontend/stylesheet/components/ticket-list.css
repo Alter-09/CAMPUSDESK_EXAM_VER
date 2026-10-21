@@ -49,7 +49,7 @@
   color: var(--cd-color-signal-coral-glow, #ff6b79);
 }
 
-/* Contenedor de la tabla con scroll horizontal adaptable */
+/* Responsive table container with horizontal scroll */
 .ticket-table-wrapper {
   background: rgba(255, 255, 255, 0.03);
   border: 1px solid rgba(255, 255, 255, 0.1);
@@ -91,7 +91,7 @@
   font-weight: 500;
 }
 
-/* Badges de Estado */
+/* Status Badges */
 .status-badge {
   display: inline-block;
   padding: 0.25rem 0.5rem;
@@ -120,7 +120,7 @@
   border: 1px solid rgba(34, 197, 94, 0.3);
 }
 
-/* Responsive para dispositivos móviles */
+/* Responsive for mobile devices */
 @media screen and (max-width: 768px) {
   .ticket-directory {
     padding: var(--cd-space-md);

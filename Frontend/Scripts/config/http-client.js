@@ -1,32 +1,15 @@
-/**
- * Cliente HTTP único del frontend.
- * Agrega el token, interpreta la respuesta (JSON o texto plano)
- * y convierte cualquier fallo en un ApiError con mensaje listo para mostrar.
- */
-import { API_BASE_URL, TOKEN_STORAGE_KEY } from "../config/api.config.js";
+import { API_BASE_URL, TOKEN_STORAGE_KEY } from "./api.config.js";
 import { MESSAGES } from "../constants/messages.es.js";
 
 const JSON_CONTENT_TYPE = "application/json";
 
 export class ApiError extends Error {
-  /**
-   * @param {number} status Código HTTP (0 si no hubo conexión).
-   * @param {string} message Mensaje legible para el usuario.
-   */
   constructor(status, message) {
     super(message);
     this.name = "ApiError";
     this.status = status;
   }
 }
-
-/**
- * El backend responde errores en texto plano (ej. 409 "El usuario ya existe"),
- * pero se contempla también un JSON con message/error.
- * @param {unknown} payload
- * @param {number} status
- * @returns {string}
- */
 function extractMessage(payload, status) {
   if (typeof payload === "string" && payload.trim()) {
     return payload.trim();
@@ -62,7 +45,7 @@ async function readPayload(response) {
 }
 
 /**
- * @param {string} path Ruta relativa a la API, ej. "/api/user/all".
+ * @param {string} path Relative API route, e.g. "/api/user/all".
  * @param {{ method?: string, body?: unknown }} [options]
  * @returns {Promise<any>}
  * @throws {ApiError}
@@ -70,7 +53,13 @@ async function readPayload(response) {
 export async function apiRequest(path, { method = "GET", body } = {}) {
   /** @type {Record<string, string>} */
   const headers = {};
-  const token = sessionStorage.getItem(TOKEN_STORAGE_KEY);
+  const token = sessionStorage.getItem(TOKEN_STORAGE_KEY)
+    || localStorage.getItem(TOKEN_STORAGE_KEY)
+    || sessionStorage.getItem("token")
+    || localStorage.getItem("token")
+    || sessionStorage.getItem("jwt")
+    || localStorage.getItem("jwt")
+    || "";
 
   if (token) {
     headers.Authorization = `Bearer ${token}`;

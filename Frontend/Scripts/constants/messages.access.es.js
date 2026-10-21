@@ -1,8 +1,3 @@
-/**
- * Textos de la pantalla "Roles y permisos" (interfaz en español).
- * Se integra en MESSAGES con: access: ACCESS_MESSAGES
- * Los códigos de permiso (ej. TICKET_READ_ALL) vienen del backend y se muestran tal cual.
- */
 export const ACCESS_MESSAGES = {
   eyebrow: "Control de acceso",
   title: "Asignación de roles y permisos",

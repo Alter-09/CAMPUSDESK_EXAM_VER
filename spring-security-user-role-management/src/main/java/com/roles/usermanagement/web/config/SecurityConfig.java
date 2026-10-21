@@ -18,8 +18,8 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 
 /**
- * Configuración de seguridad de la aplicación. Esta clase configura la seguridad de la aplicación
- * estableciendo permisos de acceso para diferentes rutas y definiendo el comportamiento de autenticación.
+ * Application security configuration. This class configures application security
+ * by setting access permissions for different routes and defining authentication behavior.
  */
 @Configuration
 @EnableMethodSecurity(securedEnabled = true)
@@ -32,11 +32,11 @@ public class SecurityConfig {
     }
 
     /**
-     * Define la configuración de seguridad para las rutas y restricciones de acceso.
+     * Defines security configuration for routes and access restrictions.
      *
-     * @param http El objeto HttpSecurity para configurar la seguridad.
-     * @return El filtro de seguridad configurado para la aplicación.
-     * @throws Exception Si hay errores al configurar la seguridad.
+     * @param http The HttpSecurity object to configure security.
+     * @return The security filter configured for the application.
+     * @throws Exception If there are errors configuring security.
      */
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -44,15 +44,10 @@ public class SecurityConfig {
             .authorizeHttpRequests(customRequest -> customRequest
                 .requestMatchers("/swagger-ui.html", "/swagger-ui/**", "/v3/api-docs", "/v3/api-docs/**", "/v3/api-docs.yaml").permitAll()
                 .requestMatchers("/api/auth/**").permitAll()
+                // [Nueva Funcionalidad: A-21/U-16 - Rutas públicas de avisos y base de conocimiento] - Permite acceso a anuncios y KB sin alterar autenticación existente - Conecta con: SecurityConfig
+                .requestMatchers("/api/v1/announcements/active", "/api/v1/kb/articles/**", "/api/v1/kb/categories").permitAll()
+                .requestMatchers("/api/v1/service-catalog/items/**").authenticated()
                 .requestMatchers("/api/user/**").authenticated()
-                /*.requestMatchers("/api/customers/**").hasAnyRole(UserRoles.Role.ADMIN.name(), UserRoles.Role.CUSTOMER.name())
-                .requestMatchers(HttpMethod.GET, "/api/pizzas/**").hasAnyRole(UserRoles.Role.ADMIN.name(), UserRoles.Role.CUSTOMER.name())
-                .requestMatchers(HttpMethod.POST, "/api/pizzas/**").hasRole(UserRoles.Role.ADMIN.name())
-                .requestMatchers(HttpMethod.PUT).hasRole(UserRoles.Role.ADMIN.name())
-                .requestMatchers("/api/orders/random").hasAuthority(UserRoles.Authority.RANDOM_ORDER.name())
-                .requestMatchers("/api/orders/**").hasRole(UserRoles.Role.ADMIN.name())
-                .requestMatchers(HttpMethod.GET,"/api/**").permitAll()
-                .requestMatchers(HttpMethod.PUT).denyAll()*/
                 .anyRequest().authenticated())
             .csrf(AbstractHttpConfigurer::disable)
             .cors(Customizer.withDefaults())
@@ -64,11 +59,11 @@ public class SecurityConfig {
     }
 
     /**
-     * Define el administrador de autenticación personalizado utilizado para la autenticación de usuarios.
+     * Defines custom authentication manager used for user authentication.
      *
-     * @param configuration La configuración de autenticación.
-     * @return El administrador de autenticación personalizado.
-     * @throws Exception Si hay errores al obtener el administrador de autenticación.
+     * @param configuration Authentication configuration.
+     * @return The custom authentication manager.
+     * @throws Exception If there are errors retrieving the authentication manager.
      */
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
@@ -76,9 +71,9 @@ public class SecurityConfig {
     }
 
     /**
-     * Devuelve el codificador de contraseñas utilizado para el almacenamiento seguro de contraseñas.
+     * Returns the password encoder used for secure password storage.
      *
-     * @return El codificador de contraseñas utilizado para encriptar y comparar contraseñas.
+     * @return The password encoder used to encrypt and match passwords.
      */
     @Bean
     public static PasswordEncoder passwordEncoder() {
