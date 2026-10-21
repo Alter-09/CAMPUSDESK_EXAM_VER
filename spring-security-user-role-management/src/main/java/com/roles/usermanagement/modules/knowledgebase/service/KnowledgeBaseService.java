@@ -95,6 +95,15 @@ public class KnowledgeBaseService {
                 .toList();
     }
 
+    @Transactional(readOnly = true)
+    public List<KbArticleResponse> getFaqArticles() {
+        return articleRepository.findByIsPublishedTrue(PageRequest.of(0, 10))
+                .getContent()
+                .stream()
+                .map(this::toResponse)
+                .toList();
+    }
+
     private KbArticleResponse toResponse(KbArticle a) {
         return new KbArticleResponse(
                 a.getId(),

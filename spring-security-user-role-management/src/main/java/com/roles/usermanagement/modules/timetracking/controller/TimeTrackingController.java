@@ -3,6 +3,10 @@ package com.roles.usermanagement.modules.timetracking.controller;
 import com.roles.usermanagement.modules.timetracking.dto.TimeLogRequest;
 import com.roles.usermanagement.modules.timetracking.dto.TimeLogResponse;
 import com.roles.usermanagement.modules.timetracking.service.TimeTrackingService;
+import com.roles.usermanagement.web.config.OpenApiConfig;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -18,12 +22,15 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api/v1/timetracking")
 @RequiredArgsConstructor
+@Tag(name = "Time Tracking", description = "Control y registro de horas y tiempos de atención técnica")
+@SecurityRequirement(name = OpenApiConfig.BEARER_AUTH)
 public class TimeTrackingController {
 
     private final TimeTrackingService timeTrackingService;
 
     @PostMapping("/tickets/{ticketId}/logs")
     @PreAuthorize("hasAnyRole('TECHNICIAN', 'ADMIN')")
+    @Operation(summary = "Registrar bloque de tiempo invertido en un ticket (MOD-33, T-02)")
     public ResponseEntity<TimeLogResponse> logTime(
             @PathVariable Long ticketId,
             @Valid @RequestBody TimeLogRequest request,
@@ -32,11 +39,13 @@ public class TimeTrackingController {
     }
 
     @GetMapping("/tickets/{ticketId}/logs")
+    @Operation(summary = "Listar registros de tiempo de un ticket (MOD-33)")
     public ResponseEntity<List<TimeLogResponse>> getLogs(@PathVariable Long ticketId) {
         return ResponseEntity.ok(timeTrackingService.getTimeLogs(ticketId));
     }
 
     @GetMapping("/tickets/{ticketId}/total-minutes")
+    @Operation(summary = "Obtener total acumulado de minutos trabajados en un ticket (MOD-33)")
     public ResponseEntity<Map<String, Integer>> getTotalMinutes(@PathVariable Long ticketId) {
         return ResponseEntity.ok(Map.of("totalMinutes", timeTrackingService.getTotalMinutes(ticketId)));
     }

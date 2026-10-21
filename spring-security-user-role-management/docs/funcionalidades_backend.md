@@ -67,6 +67,51 @@ Cada funcionalidad en el backend sigue una secuencia estructurada y predecible:
 
 ---
 
+### 🛠️ 1.2 Documentación Interactiva y Especificación OpenAPI / Swagger (SpringDoc)
+
+El backend de **CampusDesk** integra la especificación OpenAPI 3.0 mediante la librería `org.springdoc:springdoc-openapi-starter-webmvc-ui:3.1.1`. Esto garantiza que el **100% de los endpoints** del sistema se encuentren completamente expuestos, tipificados y documentados para su invocación interactiva y generación automática de SDKs clientes.
+
+#### 📌 Endpoints de Documentación
+- **Interfaz Interactiva Swagger UI:** `http://localhost:8080/swagger-ui.html` (o `http://localhost:8080/swagger-ui/index.html`)
+- **Especificación OpenAPI v3 en formato JSON:** `http://localhost:8080/v3/api-docs`
+
+#### 🔐 Esquema de Autenticación Global (Bearer JWT)
+Definido en [`OpenApiConfig.java`](file:///c:/Users/sergi/OneDrive/Desktop/springboot/PROYECTO/CAMPUSDESK/spring-security-user-role-management/src/main/java/com/roles/usermanagement/web/config/OpenApiConfig.java):
+- Esquema HTTP de tipo `bearer` con formato `JWT` (`bearerAuth`).
+- Permite a los desarrolladores y evaluadores ingresar una sola vez el token JWT emitido por `/api/auth/login` mediante el botón **"Authorize"** en Swagger UI.
+- Todos los controladores protegidos integran `@SecurityRequirement(name = OpenApiConfig.BEARER_AUTH)` para propagar automáticamente la cabecera `Authorization: Bearer <token>`.
+
+#### 🏷️ Cobertura Completa de Controladores y Tags OpenAPI (24 Controladores / 100%)
+
+| # | Controlador | Tag en Swagger UI | Descripción y Alcance Funcional |
+|:---:|:---|:---|:---|
+| 1 | [`AuthController.java`](file:///c:/Users/sergi/OneDrive/Desktop/springboot/PROYECTO/CAMPUSDESK/spring-security-user-role-management/src/main/java/com/roles/usermanagement/web/controller/AuthController.java) | `Auth` | Autenticación, registro, login JWT, renovación de clave e identidad `/me` |
+| 2 | [`UserController.java`](file:///c:/Users/sergi/OneDrive/Desktop/springboot/PROYECTO/CAMPUSDESK/spring-security-user-role-management/src/main/java/com/roles/usermanagement/web/controller/UserController.java) | `Users` | Gestión de usuarios, perfiles, asignación de roles, permisos y bloqueo en lote |
+| 3 | [`SecurityCatalogController.java`](file:///c:/Users/sergi/OneDrive/Desktop/springboot/PROYECTO/CAMPUSDESK/spring-security-user-role-management/src/main/java/com/roles/usermanagement/web/controller/SecurityCatalogController.java) | `Catálogos de seguridad` | Catálogos RBAC: administración dinámica de roles y permisos del sistema |
+| 4 | [`TicketController.java`](file:///c:/Users/sergi/OneDrive/Desktop/springboot/PROYECTO/CAMPUSDESK/spring-security-user-role-management/src/main/java/com/roles/usermanagement/modules/ticket/controller/TicketController.java) | `Tickets` | CRUD de incidencias, filtros, diagnóstico técnico, subtareas/checklist y colas |
+| 5 | [`TechnicianController.java`](file:///c:/Users/sergi/OneDrive/Desktop/springboot/PROYECTO/CAMPUSDESK/spring-security-user-role-management/src/main/java/com/roles/usermanagement/modules/technician/controller/TechnicianController.java) | `Technicians` | Directorio de técnicos, ordenamiento por carga y actualización de disponibilidad |
+| 6 | [`TicketAssignmentController.java`](file:///c:/Users/sergi/OneDrive/Desktop/springboot/PROYECTO/CAMPUSDESK/spring-security-user-role-management/src/main/java/com/roles/usermanagement/modules/assignment/controller/TicketAssignmentController.java) | `Assignments` | Asignación manual, reasignación con justificación, auto-asignación y balanceo |
+| 7 | [`TicketLifecycleController.java`](file:///c:/Users/sergi/OneDrive/Desktop/springboot/PROYECTO/CAMPUSDESK/spring-security-user-role-management/src/main/java/com/roles/usermanagement/modules/lifecycle/controller/TicketLifecycleController.java) | `Lifecycle` | Motor de transiciones del ciclo de vida y validación de reglas de estado |
+| 8 | [`CommentController.java`](file:///c:/Users/sergi/OneDrive/Desktop/springboot/PROYECTO/CAMPUSDESK/spring-security-user-role-management/src/main/java/com/roles/usermanagement/modules/comment/controller/CommentController.java) | `Comments` | Comentarios públicos de tickets y notas internas privadas para técnicos |
+| 9 | [`AttachmentController.java`](file:///c:/Users/sergi/OneDrive/Desktop/springboot/PROYECTO/CAMPUSDESK/spring-security-user-role-management/src/main/java/com/roles/usermanagement/modules/attachment/controller/AttachmentController.java) | `Attachments` | Carga de metadatos de archivos adjuntos y evidencias asociadas a tickets |
+| 10 | [`KnowledgeBaseController.java`](file:///c:/Users/sergi/OneDrive/Desktop/springboot/PROYECTO/CAMPUSDESK/spring-security-user-role-management/src/main/java/com/roles/usermanagement/modules/knowledgebase/controller/KnowledgeBaseController.java) | `Knowledge Base` | Base de conocimiento, artículos públicos, búsqueda por keywords, sugerencias y FAQ |
+| 11 | [`ServiceCatalogController.java`](file:///c:/Users/sergi/OneDrive/Desktop/springboot/PROYECTO/CAMPUSDESK/spring-security-user-role-management/src/main/java/com/roles/usermanagement/modules/servicecatalog/controller/ServiceCatalogController.java) | `Service Catalog` | Catálogo de servicios IT universitarios solicitables organizados por categoría |
+| 12 | [`AnnouncementController.java`](file:///c:/Users/sergi/OneDrive/Desktop/springboot/PROYECTO/CAMPUSDESK/spring-security-user-role-management/src/main/java/com/roles/usermanagement/modules/announcement/controller/AnnouncementController.java) | `Announcements` | Avisos y alertas institucionales de mantenimiento e incidencias masivas |
+| 13 | [`SatisfactionController.java`](file:///c:/Users/sergi/OneDrive/Desktop/springboot/PROYECTO/CAMPUSDESK/spring-security-user-role-management/src/main/java/com/roles/usermanagement/modules/satisfaction/controller/SatisfactionController.java) | `Satisfaction (CSAT)` | Encuestas de satisfacción de solicitantes y reporte promedio de calidad |
+| 14 | [`TimeTrackingController.java`](file:///c:/Users/sergi/OneDrive/Desktop/springboot/PROYECTO/CAMPUSDESK/spring-security-user-role-management/src/main/java/com/roles/usermanagement/modules/timetracking/controller/TimeTrackingController.java) | `Time Tracking` | Bitácora de tiempos, registro de minutos trabajados y tiempos totales |
+| 15 | [`AssetController.java`](file:///c:/Users/sergi/OneDrive/Desktop/springboot/PROYECTO/CAMPUSDESK/spring-security-user-role-management/src/main/java/com/roles/usermanagement/modules/asset/controller/AssetController.java) | `Assets` | Inventario de hardware/activos asociados a usuarios y vinculación a tickets |
+| 16 | [`TagController.java`](file:///c:/Users/sergi/OneDrive/Desktop/springboot/PROYECTO/CAMPUSDESK/spring-security-user-role-management/src/main/java/com/roles/usermanagement/modules/tag/controller/TagController.java) | `Tags` | Catálogo global de etiquetas para clasificación y búsqueda de incidencias |
+| 17 | [`SlaController.java`](file:///c:/Users/sergi/OneDrive/Desktop/springboot/PROYECTO/CAMPUSDESK/spring-security-user-role-management/src/main/java/com/roles/usermanagement/modules/sla/controller/SlaController.java) | `SLA Policies` | Configuración de políticas de SLA por prioridad, plazos de respuesta y solución |
+| 18 | [`AuditController.java`](file:///c:/Users/sergi/OneDrive/Desktop/springboot/PROYECTO/CAMPUSDESK/spring-security-user-role-management/src/main/java/com/roles/usermanagement/modules/audit/controller/AuditController.java) | `Audit Logs` | Trazabilidad inmutable de eventos, auditoría de entidades y cambios del sistema |
+| 19 | [`QuickResponseController.java`](file:///c:/Users/sergi/OneDrive/Desktop/springboot/PROYECTO/CAMPUSDESK/spring-security-user-role-management/src/main/java/com/roles/usermanagement/modules/cannedresponse/controller/QuickResponseController.java) | `Técnicos - Plantillas de Respuesta` | Plantillas privadas creadas por técnicos y aplicación directa a tickets |
+| 20 | [`CannedResponseController.java`](file:///c:/Users/sergi/OneDrive/Desktop/springboot/PROYECTO/CAMPUSDESK/spring-security-user-role-management/src/main/java/com/roles/usermanagement/modules/cannedresponse/controller/CannedResponseController.java) | `Canned Responses` | Biblioteca institucional de respuestas predefinidas para soporte técnico |
+| 21 | [`DashboardController.java`](file:///c:/Users/sergi/OneDrive/Desktop/springboot/PROYECTO/CAMPUSDESK/spring-security-user-role-management/src/main/java/com/roles/usermanagement/modules/dashboard/controller/DashboardController.java) | `Dashboard` | Métricas operativas, agregados estadísticos y KPIs personalizados por rol |
+| 22 | [`ReportController.java`](file:///c:/Users/sergi/OneDrive/Desktop/springboot/PROYECTO/CAMPUSDESK/spring-security-user-role-management/src/main/java/com/roles/usermanagement/modules/report/controller/ReportController.java) | `Reports` | Exportación de datos de incidencias a formato plano CSV descargable |
+| 23 | [`StatusHistoryController.java`](file:///c:/Users/sergi/OneDrive/Desktop/springboot/PROYECTO/CAMPUSDESK/spring-security-user-role-management/src/main/java/com/roles/usermanagement/modules/statushistory/controller/StatusHistoryController.java) | `Status History` | Línea de tiempo inmutable con registro cronológico de estados de cada ticket |
+| 24 | [`NotificationController.java`](file:///c:/Users/sergi/OneDrive/Desktop/springboot/PROYECTO/CAMPUSDESK/spring-security-user-role-management/src/main/java/com/roles/usermanagement/modules/notification/controller/NotificationController.java) | `Notifications` | Centro de notificaciones in-app, marcas de lectura y contadores de no leídas |
+
+---
+
 # PARTE I: MÓDULO DE SEGURIDAD Y CONTROL DE ACCESO (SPRING SECURITY)
 
 Este módulo abarca la autenticación basada en JWT, la gestión de usuarios, la administración jerárquica de roles y la asignación granular de permisos individuales dinámicos.

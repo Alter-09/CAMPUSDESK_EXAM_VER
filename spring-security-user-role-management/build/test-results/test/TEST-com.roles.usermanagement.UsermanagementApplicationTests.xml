@@ -1,26 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="com.roles.usermanagement.UsermanagementApplicationTests" tests="16" skipped="0" failures="0" errors="0" timestamp="2026-10-21T00:04:31.624Z" hostname="SERGIOAPARICIO" time="5.992">
+<testsuite name="com.roles.usermanagement.UsermanagementApplicationTests" tests="16" skipped="0" failures="0" errors="0" timestamp="2026-10-21T00:33:16.141Z" hostname="SERGIOAPARICIO" time="5.848">
   <properties/>
-  <testcase name="exposesSwaggerUiAndOpenApiDocs()" classname="com.roles.usermanagement.UsermanagementApplicationTests" time="2.934"/>
-  <testcase name="authenticatesBootstrapAdmin()" classname="com.roles.usermanagement.UsermanagementApplicationTests" time="0.466"/>
-  <testcase name="cp01_registersValidUserWithRoleUser()" classname="com.roles.usermanagement.UsermanagementApplicationTests" time="0.179"/>
-  <testcase name="cp02_rejectsDuplicateEmailWithConflict()" classname="com.roles.usermanagement.UsermanagementApplicationTests" time="0.04"/>
-  <testcase name="cp03_logsInSuccessfullyAndReturnsJwt()" classname="com.roles.usermanagement.UsermanagementApplicationTests" time="0.12"/>
-  <testcase name="cp04_rejectsProtectedEndpointWithoutToken()" classname="com.roles.usermanagement.UsermanagementApplicationTests" time="0.02"/>
-  <testcase name="cp05_createsTicketInOpenStatus()" classname="com.roles.usermanagement.UsermanagementApplicationTests" time="0.228"/>
-  <testcase name="cp06_rejectsViewingOtherUsersTicket()" classname="com.roles.usermanagement.UsermanagementApplicationTests" time="0.267"/>
-  <testcase name="cp08_and_cp07_assignTechnicianRolesAndEndpoints()" classname="com.roles.usermanagement.UsermanagementApplicationTests" time="0.493"/>
-  <testcase name="cp09_rejectsModificationOfTicketByTechnician()" classname="com.roles.usermanagement.UsermanagementApplicationTests" time="0.146"/>
-  <testcase name="cp10_rejectsResolvingTicketWithoutInProgress()" classname="com.roles.usermanagement.UsermanagementApplicationTests" time="0.154"/>
-  <testcase name="cp11_and_cp12_transitionsThroughLifecycleAndClosesTicket()" classname="com.roles.usermanagement.UsermanagementApplicationTests" time="0.379"/>
-  <testcase name="cp13_rejectsCommentsOnClosedTicket()" classname="com.roles.usermanagement.UsermanagementApplicationTests" time="0.151"/>
-  <testcase name="cp14_returnsReportsSummaryAndDashboardMetrics()" classname="com.roles.usermanagement.UsermanagementApplicationTests" time="0.165"/>
-  <testcase name="technicianEndpointsAreAccessible()" classname="com.roles.usermanagement.UsermanagementApplicationTests" time="0.169"/>
-  <testcase name="cp16_rejectsInvalidOrExpiredJwt()" classname="com.roles.usermanagement.UsermanagementApplicationTests" time="0.008"/>
-  <system-out><![CDATA[19:04:12.726 [Test worker] INFO org.springframework.test.context.support.AnnotationConfigContextLoaderUtils -- Could not detect default configuration classes for test class [com.roles.usermanagement.UsermanagementApplicationTests]: UsermanagementApplicationTests does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
-19:04:13.053 [Test worker] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper -- Found @SpringBootConfiguration com.roles.usermanagement.UsermanagementApplication for test class com.roles.usermanagement.UsermanagementApplicationTests
-19:04:13.229 [Test worker] INFO org.springframework.test.context.support.AnnotationConfigContextLoaderUtils -- Could not detect default configuration classes for test class [com.roles.usermanagement.UsermanagementApplicationTests]: UsermanagementApplicationTests does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
-19:04:13.233 [Test worker] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper -- Found @SpringBootConfiguration com.roles.usermanagement.UsermanagementApplication for test class com.roles.usermanagement.UsermanagementApplicationTests
+  <testcase name="exposesSwaggerUiAndOpenApiDocs()" classname="com.roles.usermanagement.UsermanagementApplicationTests" time="2.847"/>
+  <testcase name="authenticatesBootstrapAdmin()" classname="com.roles.usermanagement.UsermanagementApplicationTests" time="0.417"/>
+  <testcase name="cp01_registersValidUserWithRoleUser()" classname="com.roles.usermanagement.UsermanagementApplicationTests" time="0.171"/>
+  <testcase name="cp02_rejectsDuplicateEmailWithConflict()" classname="com.roles.usermanagement.UsermanagementApplicationTests" time="0.041"/>
+  <testcase name="cp03_logsInSuccessfullyAndReturnsJwt()" classname="com.roles.usermanagement.UsermanagementApplicationTests" time="0.131"/>
+  <testcase name="cp04_rejectsProtectedEndpointWithoutToken()" classname="com.roles.usermanagement.UsermanagementApplicationTests" time="0.028"/>
+  <testcase name="cp05_createsTicketInOpenStatus()" classname="com.roles.usermanagement.UsermanagementApplicationTests" time="0.23"/>
+  <testcase name="cp06_rejectsViewingOtherUsersTicket()" classname="com.roles.usermanagement.UsermanagementApplicationTests" time="0.252"/>
+  <testcase name="cp08_and_cp07_assignTechnicianRolesAndEndpoints()" classname="com.roles.usermanagement.UsermanagementApplicationTests" time="0.491"/>
+  <testcase name="cp09_rejectsModificationOfTicketByTechnician()" classname="com.roles.usermanagement.UsermanagementApplicationTests" time="0.144"/>
+  <testcase name="cp10_rejectsResolvingTicketWithoutInProgress()" classname="com.roles.usermanagement.UsermanagementApplicationTests" time="0.141"/>
+  <testcase name="cp11_and_cp12_transitionsThroughLifecycleAndClosesTicket()" classname="com.roles.usermanagement.UsermanagementApplicationTests" time="0.361"/>
+  <testcase name="cp13_rejectsCommentsOnClosedTicket()" classname="com.roles.usermanagement.UsermanagementApplicationTests" time="0.157"/>
+  <testcase name="cp14_returnsReportsSummaryAndDashboardMetrics()" classname="com.roles.usermanagement.UsermanagementApplicationTests" time="0.182"/>
+  <testcase name="technicianEndpointsAreAccessible()" classname="com.roles.usermanagement.UsermanagementApplicationTests" time="0.176"/>
+  <testcase name="cp16_rejectsInvalidOrExpiredJwt()" classname="com.roles.usermanagement.UsermanagementApplicationTests" time="0.011"/>
+  <system-out><![CDATA[19:32:56.596 [Test worker] INFO org.springframework.test.context.support.AnnotationConfigContextLoaderUtils -- Could not detect default configuration classes for test class [com.roles.usermanagement.UsermanagementApplicationTests]: UsermanagementApplicationTests does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+19:32:56.945 [Test worker] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper -- Found @SpringBootConfiguration com.roles.usermanagement.UsermanagementApplication for test class com.roles.usermanagement.UsermanagementApplicationTests
+19:32:57.128 [Test worker] INFO org.springframework.test.context.support.AnnotationConfigContextLoaderUtils -- Could not detect default configuration classes for test class [com.roles.usermanagement.UsermanagementApplicationTests]: UsermanagementApplicationTests does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+19:32:57.132 [Test worker] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper -- Found @SpringBootConfiguration com.roles.usermanagement.UsermanagementApplication for test class com.roles.usermanagement.UsermanagementApplicationTests
                           =====================                                 
                   ==================================                            
               =====================================                             
@@ -86,21 +86,21 @@
   Perfil Activo: dev
  ================================================================
 
-2026-10-20T19:04:14.148-05:00  INFO 5560 --- [    Test worker] c.r.u.UsermanagementApplicationTests     : Starting UsermanagementApplicationTests using Java 21.0.11 with PID 5560 (started by sergi in C:\Users\sergi\OneDrive\Desktop\springboot\PROYECTO\CAMPUSDESK\spring-security-user-role-management)
-2026-10-20T19:04:14.151-05:00  INFO 5560 --- [    Test worker] c.r.u.UsermanagementApplicationTests     : The following 1 profile is active: "test"
-2026-10-20T19:04:16.253-05:00  INFO 5560 --- [    Test worker] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
-2026-10-20T19:04:16.668-05:00  INFO 5560 --- [    Test worker] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 399 ms. Found 34 JPA repository interfaces.
-2026-10-20T19:04:18.399-05:00  INFO 5560 --- [    Test worker] o.s.boot.tomcat.TomcatWebServer          : Tomcat initialized with port 0 (http)
-2026-10-20T19:04:18.428-05:00  INFO 5560 --- [    Test worker] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
-2026-10-20T19:04:18.430-05:00  INFO 5560 --- [    Test worker] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/11.0.24]
-2026-10-20T19:04:18.578-05:00  INFO 5560 --- [    Test worker] b.w.c.s.WebApplicationContextInitializer : Root WebApplicationContext: initialization completed in 4387 ms
-2026-10-20T19:04:19.266-05:00  INFO 5560 --- [    Test worker] org.hibernate.orm.jpa                    : HHH008540: Processing PersistenceUnitInfo [name: default]
-2026-10-20T19:04:19.404-05:00  INFO 5560 --- [    Test worker] org.hibernate.orm.core                   : HHH000001: Hibernate ORM core version 7.4.5.Final
-2026-10-20T19:04:20.536-05:00  INFO 5560 --- [    Test worker] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
-2026-10-20T19:04:20.602-05:00  INFO 5560 --- [    Test worker] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
-2026-10-20T19:04:20.953-05:00  INFO 5560 --- [    Test worker] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection conn0: url=jdbc:h2:mem:userroles user=SA
-2026-10-20T19:04:20.957-05:00  INFO 5560 --- [    Test worker] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
-2026-10-20T19:04:21.081-05:00  INFO 5560 --- [    Test worker] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
+2026-10-20T19:32:58.071-05:00  INFO 20912 --- [    Test worker] c.r.u.UsermanagementApplicationTests     : Starting UsermanagementApplicationTests using Java 21.0.11 with PID 20912 (started by sergi in C:\Users\sergi\OneDrive\Desktop\springboot\PROYECTO\CAMPUSDESK\spring-security-user-role-management)
+2026-10-20T19:32:58.074-05:00  INFO 20912 --- [    Test worker] c.r.u.UsermanagementApplicationTests     : The following 1 profile is active: "test"
+2026-10-20T19:33:00.185-05:00  INFO 20912 --- [    Test worker] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-10-20T19:33:00.642-05:00  INFO 20912 --- [    Test worker] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 442 ms. Found 34 JPA repository interfaces.
+2026-10-20T19:33:02.481-05:00  INFO 20912 --- [    Test worker] o.s.boot.tomcat.TomcatWebServer          : Tomcat initialized with port 0 (http)
+2026-10-20T19:33:02.513-05:00  INFO 20912 --- [    Test worker] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2026-10-20T19:33:02.514-05:00  INFO 20912 --- [    Test worker] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/11.0.24]
+2026-10-20T19:33:02.653-05:00  INFO 20912 --- [    Test worker] b.w.c.s.WebApplicationContextInitializer : Root WebApplicationContext: initialization completed in 4542 ms
+2026-10-20T19:33:03.436-05:00  INFO 20912 --- [    Test worker] org.hibernate.orm.jpa                    : HHH008540: Processing PersistenceUnitInfo [name: default]
+2026-10-20T19:33:03.564-05:00  INFO 20912 --- [    Test worker] org.hibernate.orm.core                   : HHH000001: Hibernate ORM core version 7.4.5.Final
+2026-10-20T19:33:04.567-05:00  INFO 20912 --- [    Test worker] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-10-20T19:33:04.642-05:00  INFO 20912 --- [    Test worker] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2026-10-20T19:33:05.070-05:00  INFO 20912 --- [    Test worker] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection conn0: url=jdbc:h2:mem:userroles user=SA
+2026-10-20T19:33:05.074-05:00  INFO 20912 --- [    Test worker] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2026-10-20T19:33:05.204-05:00  INFO 20912 --- [    Test worker] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
 	Database JDBC URL [jdbc:h2:mem:userroles]
 	Database driver: H2 JDBC Driver
 	Database dialect: H2Dialect
@@ -112,19 +112,19 @@
 	Pool: DataSourceConnectionProvider
 	Minimum pool size: undefined/unknown
 	Maximum pool size: undefined/unknown
-2026-10-20T19:04:24.661-05:00  INFO 5560 --- [    Test worker] org.hibernate.orm.core                   : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
-2026-10-20T19:04:24.918-05:00  INFO 5560 --- [    Test worker] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
-2026-10-20T19:04:25.071-05:00  INFO 5560 --- [    Test worker] o.s.d.j.r.query.QueryEnhancerFactories   : Hibernate is in classpath; If applicable, HQL parser will be used.
-2026-10-20T19:04:29.026-05:00  INFO 5560 --- [    Test worker] r$InitializeUserDetailsManagerConfigurer : Global AuthenticationManager configured with UserDetailsService bean with name userSecurityService
-2026-10-20T19:04:29.274-05:00  WARN 5560 --- [    Test worker] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
-2026-10-20T19:04:30.910-05:00  INFO 5560 --- [    Test worker] o.s.boot.tomcat.TomcatWebServer          : Tomcat started on port 58356 (http) with context path '/'
-2026-10-20T19:04:30.928-05:00  INFO 5560 --- [    Test worker] c.r.u.UsermanagementApplicationTests     : Started UsermanagementApplicationTests in 17.379 seconds (process running for 20.847)
-2026-10-20T19:04:31.619-05:00  WARN 5560 --- [    Test worker] o.s.core.events.SpringDocAppInitializer  : SpringDoc /v3/api-docs endpoint is enabled by default. To disable it in production, set the property 'springdoc.api-docs.enabled=false'
-2026-10-20T19:04:31.619-05:00  WARN 5560 --- [    Test worker] o.s.core.events.SpringDocAppInitializer  : SpringDoc /swagger-ui.html endpoint is enabled by default. To disable it in production, set the property 'springdoc.swagger-ui.enabled=false'
-2026-10-20T19:04:32.354-05:00  INFO 5560 --- [o-auto-1-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
-2026-10-20T19:04:32.355-05:00  INFO 5560 --- [o-auto-1-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
-2026-10-20T19:04:32.358-05:00  INFO 5560 --- [o-auto-1-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 2 ms
-2026-10-20T19:04:34.379-05:00  INFO 5560 --- [o-auto-1-exec-1] o.springdoc.api.AbstractOpenApiResource  : Init duration for springdoc-openapi is: 1905 ms
+2026-10-20T19:33:08.881-05:00  INFO 20912 --- [    Test worker] org.hibernate.orm.core                   : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-10-20T19:33:09.173-05:00  INFO 20912 --- [    Test worker] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-10-20T19:33:09.345-05:00  INFO 20912 --- [    Test worker] o.s.d.j.r.query.QueryEnhancerFactories   : Hibernate is in classpath; If applicable, HQL parser will be used.
+2026-10-20T19:33:13.347-05:00  INFO 20912 --- [    Test worker] r$InitializeUserDetailsManagerConfigurer : Global AuthenticationManager configured with UserDetailsService bean with name userSecurityService
+2026-10-20T19:33:13.578-05:00  WARN 20912 --- [    Test worker] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2026-10-20T19:33:15.299-05:00  INFO 20912 --- [    Test worker] o.s.boot.tomcat.TomcatWebServer          : Tomcat started on port 56684 (http) with context path '/'
+2026-10-20T19:33:15.318-05:00  INFO 20912 --- [    Test worker] c.r.u.UsermanagementApplicationTests     : Started UsermanagementApplicationTests in 17.869 seconds (process running for 21.393)
+2026-10-20T19:33:16.137-05:00  WARN 20912 --- [    Test worker] o.s.core.events.SpringDocAppInitializer  : SpringDoc /v3/api-docs endpoint is enabled by default. To disable it in production, set the property 'springdoc.api-docs.enabled=false'
+2026-10-20T19:33:16.138-05:00  WARN 20912 --- [    Test worker] o.s.core.events.SpringDocAppInitializer  : SpringDoc /swagger-ui.html endpoint is enabled by default. To disable it in production, set the property 'springdoc.swagger-ui.enabled=false'
+2026-10-20T19:33:16.907-05:00  INFO 20912 --- [o-auto-1-exec-2] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-10-20T19:33:16.908-05:00  INFO 20912 --- [o-auto-1-exec-2] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2026-10-20T19:33:16.910-05:00  INFO 20912 --- [o-auto-1-exec-2] o.s.web.servlet.DispatcherServlet        : Completed initialization in 2 ms
+2026-10-20T19:33:18.831-05:00  INFO 20912 --- [o-auto-1-exec-2] o.springdoc.api.AbstractOpenApiResource  : Init duration for springdoc-openapi is: 1831 ms
 ]]></system-out>
   <system-err><![CDATA[Mockito is currently self-attaching to enable the inline-mock-maker. This will no longer work in future releases of the JDK. Please add Mockito as an agent to your build as described in Mockito's documentation: https://javadoc.io/doc/org.mockito/mockito-core/latest/org.mockito/org/mockito/Mockito.html#0.3
 WARNING: A Java agent has been loaded dynamically (C:\Users\sergi\.gradle\caches\modules-2\files-2.1\net.bytebuddy\byte-buddy-agent\1.18.11\82212e5b3633e7a65fca8bec525762cfb6c9bae4\byte-buddy-agent-1.18.11.jar)

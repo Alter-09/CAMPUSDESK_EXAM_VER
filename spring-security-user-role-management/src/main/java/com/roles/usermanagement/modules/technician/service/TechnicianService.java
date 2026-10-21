@@ -2,6 +2,7 @@ package com.roles.usermanagement.modules.technician.service;
 
 import com.roles.usermanagement.modules.technician.dto.TechnicianAvailabilityResponse;
 import com.roles.usermanagement.modules.technician.dto.TechnicianResponse;
+import com.roles.usermanagement.modules.technician.entity.TechnicianProfile;
 import com.roles.usermanagement.modules.technician.enums.TechnicianAvailabilityStatus;
 import com.roles.usermanagement.modules.technician.mapper.TechnicianMapper;
 import com.roles.usermanagement.modules.technician.repository.TechnicianRepository;
@@ -42,5 +43,16 @@ public class TechnicianService {
                 .stream()
                 .map(mapper::toAvailabilityResponse)
                 .toList();
+    }
+
+    /** Actualiza el estado de disponibilidad del técnico (T-19). */
+    @Transactional
+    public TechnicianResponse updateAvailability(String username, TechnicianAvailabilityStatus status) {
+        TechnicianProfile profile = technicianRepository.findById(username)
+                .orElseThrow(() -> new org.springframework.web.server.ResponseStatusException(
+                        org.springframework.http.HttpStatus.NOT_FOUND, "Perfil técnico no encontrado para: " + username));
+        profile.setAvailabilityStatus(status);
+        profile.setIsAvailable(status == TechnicianAvailabilityStatus.AVAILABLE);
+        return mapper.toResponse(technicianRepository.save(profile));
     }
 }

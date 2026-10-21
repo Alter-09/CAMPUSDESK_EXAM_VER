@@ -3,6 +3,10 @@ package com.roles.usermanagement.modules.announcement.controller;
 import com.roles.usermanagement.modules.announcement.dto.AnnouncementRequest;
 import com.roles.usermanagement.modules.announcement.dto.AnnouncementResponse;
 import com.roles.usermanagement.modules.announcement.service.AnnouncementService;
+import com.roles.usermanagement.web.config.OpenApiConfig;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -17,17 +21,21 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/v1/announcements")
 @RequiredArgsConstructor
+@Tag(name = "Announcements", description = "Avisos institucionales, mantenimientos y novedades del campus")
+@SecurityRequirement(name = OpenApiConfig.BEARER_AUTH)
 public class AnnouncementController {
 
     private final AnnouncementService announcementService;
 
     @GetMapping("/active")
+    @Operation(summary = "Consultar anuncios y avisos activos del sistema (Público) (MOD-30, U-16)")
     public ResponseEntity<List<AnnouncementResponse>> getActive() {
         return ResponseEntity.ok(announcementService.getActiveAnnouncements());
     }
 
     @PostMapping
     @PreAuthorize("hasRole('ADMIN')")
+    @Operation(summary = "Publicar nuevo aviso institucional o de mantenimiento (ADMIN) (MOD-31, A-05)")
     public ResponseEntity<AnnouncementResponse> create(
             @Valid @RequestBody AnnouncementRequest request,
             Authentication auth) {
