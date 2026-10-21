@@ -13,7 +13,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 /**
- * Representa la relación entre usuarios y roles en la base de datos.
+ * Represents the relationship between users and roles in the database.
  */
 @Getter
 @Setter
@@ -35,7 +35,7 @@ public class UserRoleEntity {
 
   @PrePersist
   protected void onCreate() {
-    grantedDate = LocalDateTime.now(); // Establecer la fecha actual al crear el rol
+    grantedDate = LocalDateTime.now(); // Set current date when creating role
   }
 
   @ManyToOne

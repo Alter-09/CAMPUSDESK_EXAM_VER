@@ -99,7 +99,7 @@ public class AuthController {
 
             String token = jwtUtil.create(authentication.getName());
 
-            // Consultar si el usuario debe cambiar su clave
+            // Check if user must change password
             UserEntity user = userCrudRepository.findById(authentication.getName()).orElse(null);
             boolean mustChange = user != null && Boolean.TRUE.equals(user.getMustChangePassword());
 

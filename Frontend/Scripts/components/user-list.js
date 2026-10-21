@@ -29,13 +29,13 @@ export class UserList extends HTMLElement {
     clearTimeout(this.#noticeTimer);
   }
 
-  /** Vuelve a consultar usuarios y roles y repinta el listado. */
+  /** Queries users and roles again and re-renders listing. */
   async reload() {
     await this.#initialization;
     return this.#load();
   }
 
-  /** @param {string} message Aviso de operación exitosa. */
+  /** @param {string} message Success notice. */
   async notify(message) {
     await this.#initialization;
     const { notice } = this.#refs;
@@ -196,7 +196,7 @@ export class UserList extends HTMLElement {
 
   /**
    * @param {"th" | "td"} tag
-   * @param {string} label Etiqueta que se muestra en la vista de tarjetas (móvil).
+   * @param {string} label Label displayed in card view (mobile).
    */
   #buildCell(tag, label) {
     const cell = document.createElement(tag);

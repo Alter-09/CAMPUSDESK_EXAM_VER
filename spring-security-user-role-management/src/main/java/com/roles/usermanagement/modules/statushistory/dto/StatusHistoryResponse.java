@@ -5,8 +5,8 @@ import com.roles.usermanagement.modules.statushistory.enums.StatusHistoryAction;
 import java.time.LocalDateTime;
 
 /**
- * Representación pública de un cambio de estado de un ticket.
- * Solo expone datos seguros: el usuario responsable aparece únicamente por su username.
+ * Public representation of a ticket status change.
+ * Exposes safe data only: responsible user is identified solely by username.
  */
 public record StatusHistoryResponse(
         Long id,

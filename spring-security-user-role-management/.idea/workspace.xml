@@ -5,7 +5,68 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="0f2af6fc-9140-43a6-8d5a-ba73add84703" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/../Frontend/Scripts/components/ticket-assign.js" beforeDir="false" afterPath="$PROJECT_DIR$/../Frontend/Scripts/components/ticket-assign.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Frontend/Scripts/config/http-client.js" beforeDir="false" afterPath="$PROJECT_DIR$/../Frontend/Scripts/config/http-client.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Frontend/Scripts/services/technician.service.js" beforeDir="false" afterPath="$PROJECT_DIR$/../Frontend/Scripts/services/technician.service.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Frontend/assignation.html" beforeDir="false" afterPath="$PROJECT_DIR$/../Frontend/assignation.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Frontend/create-ticket.html" beforeDir="false" afterPath="$PROJECT_DIR$/../Frontend/create-ticket.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Frontend/my-tickets.html" beforeDir="false" afterPath="$PROJECT_DIR$/../Frontend/my-tickets.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Frontend/newuser.html" beforeDir="false" afterPath="$PROJECT_DIR$/../Frontend/newuser.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Frontend/roleselector.html" beforeDir="false" afterPath="$PROJECT_DIR$/../Frontend/roleselector.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Frontend/superadmin.html" beforeDir="false" afterPath="$PROJECT_DIR$/../Frontend/superadmin.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Frontend/techguys.html" beforeDir="false" afterPath="$PROJECT_DIR$/../Frontend/techguys.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Frontend/technician.html" beforeDir="false" afterPath="$PROJECT_DIR$/../Frontend/technician.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Frontend/ticketlist.html" beforeDir="false" afterPath="$PROJECT_DIR$/../Frontend/ticketlist.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Frontend/user.html" beforeDir="false" afterPath="$PROJECT_DIR$/../Frontend/user.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Frontend/userlist.html" beforeDir="false" afterPath="$PROJECT_DIR$/../Frontend/userlist.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/8.14.3/executionHistory/executionHistory.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/8.14.3/executionHistory/executionHistory.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/8.14.3/executionHistory/executionHistory.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/8.14.3/executionHistory/executionHistory.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/8.14.3/fileHashes/fileHashes.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/8.14.3/fileHashes/fileHashes.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/8.14.3/fileHashes/fileHashes.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/8.14.3/fileHashes/fileHashes.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/8.14.3/fileHashes/resourceHashesCache.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/8.14.3/fileHashes/resourceHashesCache.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/file-system.probe" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/file-system.probe" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/roles/usermanagement/domain/service/SecurityBootstrapService.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/com/roles/usermanagement/domain/service/SecurityBootstrapService.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/roles/usermanagement/domain/service/SecurityCatalogService.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/com/roles/usermanagement/domain/service/SecurityCatalogService.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/roles/usermanagement/domain/service/UserRoles$Authority.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/com/roles/usermanagement/domain/service/UserRoles$Authority.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/roles/usermanagement/domain/service/UserRoles$Role.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/com/roles/usermanagement/domain/service/UserRoles$Role.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/roles/usermanagement/domain/service/UserSecurityService.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/com/roles/usermanagement/domain/service/UserSecurityService.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/roles/usermanagement/modules/assignment/service/TicketAssignmentService.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/com/roles/usermanagement/modules/assignment/service/TicketAssignmentService.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/roles/usermanagement/modules/comment/service/CommentService.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/com/roles/usermanagement/modules/comment/service/CommentService.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/roles/usermanagement/modules/dashboard/service/DashboardService.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/com/roles/usermanagement/modules/dashboard/service/DashboardService.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/roles/usermanagement/modules/lifecycle/service/TicketLifecycleService$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/com/roles/usermanagement/modules/lifecycle/service/TicketLifecycleService$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/roles/usermanagement/modules/lifecycle/service/TicketLifecycleService.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/com/roles/usermanagement/modules/lifecycle/service/TicketLifecycleService.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/roles/usermanagement/modules/ticket/service/TicketAccessPolicy.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/com/roles/usermanagement/modules/ticket/service/TicketAccessPolicy.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/roles/usermanagement/modules/ticket/service/TicketService.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/com/roles/usermanagement/modules/ticket/service/TicketService.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/roles/usermanagement/persistance/repository/UserRepository.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/com/roles/usermanagement/persistance/repository/UserRepository.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/reports/tests/test/classes/com.roles.usermanagement.JwtUtilTests.html" beforeDir="false" afterPath="$PROJECT_DIR$/build/reports/tests/test/classes/com.roles.usermanagement.JwtUtilTests.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/reports/tests/test/classes/com.roles.usermanagement.UsermanagementApplicationTests.html" beforeDir="false" afterPath="$PROJECT_DIR$/build/reports/tests/test/classes/com.roles.usermanagement.UsermanagementApplicationTests.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/reports/tests/test/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/build/reports/tests/test/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/reports/tests/test/packages/com.roles.usermanagement.html" beforeDir="false" afterPath="$PROJECT_DIR$/build/reports/tests/test/packages/com.roles.usermanagement.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/resources/main/application-dev.properties" beforeDir="false" afterPath="$PROJECT_DIR$/build/resources/main/application-dev.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/test-results/test/TEST-com.roles.usermanagement.JwtUtilTests.xml" beforeDir="false" afterPath="$PROJECT_DIR$/build/test-results/test/TEST-com.roles.usermanagement.JwtUtilTests.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/test-results/test/TEST-com.roles.usermanagement.UsermanagementApplicationTests.xml" beforeDir="false" afterPath="$PROJECT_DIR$/build/test-results/test/TEST-com.roles.usermanagement.UsermanagementApplicationTests.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/test-results/test/binary/output.bin" beforeDir="false" afterPath="$PROJECT_DIR$/build/test-results/test/binary/output.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/test-results/test/binary/output.bin.idx" beforeDir="false" afterPath="$PROJECT_DIR$/build/test-results/test/binary/output.bin.idx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/test-results/test/binary/results.bin" beforeDir="false" afterPath="$PROJECT_DIR$/build/test-results/test/binary/results.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/tmp/compileJava/previous-compilation-data.bin" beforeDir="false" afterPath="$PROJECT_DIR$/build/tmp/compileJava/previous-compilation-data.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/roles/usermanagement/domain/service/SecurityBootstrapService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/roles/usermanagement/domain/service/SecurityBootstrapService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/roles/usermanagement/domain/service/SecurityCatalogService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/roles/usermanagement/domain/service/SecurityCatalogService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/roles/usermanagement/domain/service/UserRoles.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/roles/usermanagement/domain/service/UserRoles.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/roles/usermanagement/domain/service/UserSecurityService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/roles/usermanagement/domain/service/UserSecurityService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/roles/usermanagement/modules/assignment/service/TicketAssignmentService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/roles/usermanagement/modules/assignment/service/TicketAssignmentService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/roles/usermanagement/modules/audit/controller/AuditController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/roles/usermanagement/modules/audit/controller/AuditController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/roles/usermanagement/modules/audit/service/AuditService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/roles/usermanagement/modules/audit/service/AuditService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/roles/usermanagement/modules/comment/service/CommentService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/roles/usermanagement/modules/comment/service/CommentService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/roles/usermanagement/modules/dashboard/service/DashboardService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/roles/usermanagement/modules/dashboard/service/DashboardService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/roles/usermanagement/modules/lifecycle/service/TicketLifecycleService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/roles/usermanagement/modules/lifecycle/service/TicketLifecycleService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/roles/usermanagement/modules/ticket/controller/TicketController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/roles/usermanagement/modules/ticket/controller/TicketController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/roles/usermanagement/modules/ticket/service/TicketAccessPolicy.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/roles/usermanagement/modules/ticket/service/TicketAccessPolicy.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/roles/usermanagement/modules/ticket/service/TicketService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/roles/usermanagement/modules/ticket/service/TicketService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/roles/usermanagement/persistance/repository/UserRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/roles/usermanagement/persistance/repository/UserRepository.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/application-dev.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/application-dev.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/resources/application-test.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/resources/application-test.properties" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -114,28 +175,28 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;Gradle.Build spring-security-user-role-management.executor&quot;: &quot;Run&quot;,
-    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.MCP Project settings loaded&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.typescript.service.memoryLimit.init&quot;: &quot;true&quot;,
-    &quot;Spring Boot.UsermanagementApplication.executor&quot;: &quot;Run&quot;,
-    &quot;codeWithMe.voiceChat.enabledByDefault&quot;: &quot;false&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;DevSergio&quot;,
-    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
-    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/sergi/OneDrive/Desktop/springboot/PROYECTO/CAMPUSDESK/spring-security-user-role-management&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.lookFeel&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Gradle.Build spring-security-user-role-management.executor": "Run",
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "RunOnceActivity.MCP Project settings loaded": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "RunOnceActivity.typescript.service.memoryLimit.init": "true",
+    "Spring Boot.UsermanagementApplication.executor": "Run",
+    "codeWithMe.voiceChat.enabledByDefault": "false",
+    "git-widget-placeholder": "DevSergio",
+    "ignore.virus.scanning.warn.message": "true",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "C:/Users/sergi/OneDrive/Desktop/springboot/PROYECTO/CAMPUSDESK/spring-security-user-role-management",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "settings.editor.selected.configurable": "preferences.lookFeel"
   }
-}</component>
+}]]></component>
   <component name="SharedIndexes">
     <attachedChunks>
       <set>

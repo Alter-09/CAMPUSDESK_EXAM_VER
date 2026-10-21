@@ -6,42 +6,42 @@ import com.roles.usermanagement.persistance.entity.UserEntity;
 import java.util.List;
 
 /**
- * Interfaz que define las operaciones para acceder a usuarios en el dominio.
+ * Interface defining operations to access users in the domain.
  */
 public interface IUserRepository {
 
   /**
-   * Carga un usuario por su nombre de usuario.
+   * Loads a user by their username.
    *
-   * @param username El nombre de usuario del usuario que se busca.
-   * @return La entidad UserEntity correspondiente al nombre de usuario proporcionado.
+   * @param username The username of the user to find.
+   * @return The UserEntity corresponding to the provided username.
    */
   UserDto loadUserByUsername(String username);
 
   /**
-   * Crear o actualizar un usuario en la base de datos.
+   * Creates or updates a user in the database.
    *
-   * @param userDto La entidad UserEntity que se desea crear o actualizar.
-   *                   Si el nombre de usuario ya existe, se actualiza.
-   *                   Si el nombre de usuario no existe, se crea.
+   * @param userDto The UserEntity to create or update.
+   *                   If the username already exists, it is updated.
+   *                   If the username does not exist, it is created.
    */
   UserDto save(UserDto userDto);
 
   /**
-   * Obtiene todos los usuarios de la base de datos.
-   * @return Lista de usuarios.
+   * Retrieves all users from the database.
+   * @return List of users.
    */
   List<UserDto> getAllUsers();
 
   /**
-   * Elimina un usuario de la base de datos.
-   * @param username El nombre de usuario del usuario que se desea eliminar.
+   * Deletes a user from the database.
+   * @param username The username of the user to delete.
    */
   void deleteUser(String username);
 
   /**
-   * Si existe un usuario con el nombre de usuario proporcionado.
-   * @param username El nombre de usuario del usuario que se desea buscar.
+   * Checks if a user exists with the provided username.
+   * @param username The username of the user to check.
    */
   boolean existsByUsername(String username);
 }

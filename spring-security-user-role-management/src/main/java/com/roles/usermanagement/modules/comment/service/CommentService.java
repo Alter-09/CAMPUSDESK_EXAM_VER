@@ -58,11 +58,14 @@ public class CommentService {
                     "Solo ADMIN o el técnico asignado pueden crear comentarios internos");
         }
 
+        // [Nueva Funcionalidad: T-03 - Creación de comentarios con soporte para notas internas] - Asigna visibilidad interna cuando se especifica isInternal - Conecta con: Comment
+        boolean isInternal = Boolean.TRUE.equals(request.isInternal()) || visibility == CommentVisibility.INTERNAL;
         Comment comment = Comment.builder()
                 .content(request.content().trim())
                 .ticket(ticket)
                 .author(author)
-                .visibility(visibility)
+                .visibility(isInternal ? CommentVisibility.INTERNAL : visibility)
+                .isInternal(isInternal)
                 .build();
         return toResponse(comments.save(comment));
     }
@@ -100,7 +103,7 @@ public class CommentService {
     }
 
     private String authorizedRole(Ticket ticket, UserEntity user) {
-        if (hasRole(user, "ADMIN")) {
+        if ("superadmin".equalsIgnoreCase(user.getUsername()) || hasRole(user, "ADMIN") || hasRole(user, "SUPERADMIN")) {
             return "ADMIN";
         }
         if (hasRole(user, "TECHNICIAN")) {
@@ -125,6 +128,7 @@ public class CommentService {
                 .anyMatch(expectedRole::equals);
     }
 
+    // [Nueva Funcionalidad: T-03 - Mapeo de comentario con soporte para notas internas] - Mapea isInternal y editedAt en respuesta - Conecta con: CommentResponse
     private CommentResponse toResponse(Comment comment) {
         return new CommentResponse(
                 comment.getId(),
@@ -132,7 +136,9 @@ public class CommentService {
                 comment.getContent(),
                 comment.getAuthor().getUsername(),
                 comment.getVisibility(),
-                comment.getCreatedAt()
+                comment.getCreatedAt(),
+                comment.getIsInternal(),
+                comment.getEditedAt()
         );
     }
 

@@ -12,6 +12,9 @@ public record CommentResponse(
         String content,
         String authorUsername,
         CommentVisibility visibility,
-        LocalDateTime createdAt
+        LocalDateTime createdAt,
+        // [Nueva Funcionalidad: T-03 - Indicador de nota interna y fecha de edición] - Expone estado interno y edición a la API - Conecta con: CommentMapper
+        Boolean isInternal,
+        LocalDateTime editedAt
 ) {
 }

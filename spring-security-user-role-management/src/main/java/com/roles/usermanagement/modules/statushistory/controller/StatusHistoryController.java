@@ -14,8 +14,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
- * Endpoint de solo lectura para consultar el historial de estados de un ticket.
- * No expone operaciones de creación, edición ni borrado: el historial es inmodificable.
+ * Read-only endpoint to view ticket status history.
+ * Exposes no create, edit, or delete operations: status history is immutable.
  */
 @RestController
 @RequestMapping("/api/tickets/{ticketId}/history")
@@ -25,12 +25,12 @@ public class StatusHistoryController {
 
     private final StatusHistoryService historyService;
 
-    // Spring inyecta el service por constructor
+    // Spring injects service via constructor
     public StatusHistoryController(StatusHistoryService historyService) {
         this.historyService = historyService;
     }
 
-    /** Devuelve el historial del ticket en orden cronológico. */
+    /** Returns ticket history in chronological order. */
     @GetMapping
     @Operation(summary = "Get the status history of a ticket")
     public List<StatusHistoryResponse> getHistory(@PathVariable Long ticketId,

@@ -1,10 +1,10 @@
 /**
- * Shell estático de superadministración. Sin lógica de datos hasta disponer de API.
- * Mobile-first: la base es móvil (el sidebar es un menú lateral que se desliza) y
- * desde 1024px el sidebar pasa a ser fijo. El header vive en components/app-header.css.
+ * Static superadmin shell. No data logic until API is available.
+ * Mobile-first: mobile base (sidebar is a slide-out drawer) and
+ * from 1024px sidebar becomes fixed. Header resides in components/app-header.css.
  */
 
-/* ---------- Página ---------- */
+/* ---------- Page ---------- */
 .superadmin-page {
   min-height: 100vh;
   min-height: 100dvh;
@@ -12,7 +12,7 @@
 }
 
 /* ---------- Sidebar ---------- */
-/* Base (móvil y tablet): panel fuera de pantalla; data-sidebar-open lo muestra */
+/* Base (mobile and tablet): off-canvas panel; data-sidebar-open displays it */
 .superadmin-sidebar {
   display: flex;
   position: fixed;
@@ -27,7 +27,7 @@
   border-right: 1px solid var(--cd-color-border-level-1);
   box-shadow: var(--cd-elevation-float);
   transform: translateX(-100%);
-  /* visibility evita que el teclado entre a enlaces que no se ven */
+  /* visibility prevents keyboard focus on hidden links */
   visibility: hidden;
   transition: transform var(--cd-transition-base), visibility 0s linear var(--cd-transition-base);
 }
@@ -38,7 +38,7 @@
   transition: transform var(--cd-transition-base), visibility 0s;
 }
 
-/* Fondo oscuro detrás del menú abierto */
+/* Dark backdrop behind open menu */
 .superadmin-backdrop {
   position: fixed;
   inset: 0;
@@ -55,7 +55,7 @@
   transition: opacity var(--cd-transition-base), visibility 0s;
 }
 
-/* Con el menú abierto, la página de fondo no se desplaza */
+/* When menu is open, background page does not scroll */
 html:has(.superadmin-page[data-sidebar-open]) {
   overflow: hidden;
 }
@@ -66,7 +66,7 @@ html:has(.superadmin-page[data-sidebar-open]) {
   flex-shrink: 0;
   align-items: center;
   gap: var(--cd-space-sm);
-  /* Misma altura que el header: las dos líneas inferiores quedan alineadas */
+  /* Same height as header: the two bottom lines remain aligned */
   min-height: var(--cd-header-height);
   padding: 0 var(--cd-space-lg);
   border-bottom: 1px solid var(--cd-color-border-level-1);
@@ -96,7 +96,7 @@ html:has(.superadmin-page[data-sidebar-open]) {
   font-size: 0.75rem;
 }
 
-/* ---------- Navegación ---------- */
+/* ---------- Navigation ---------- */
 .superadmin-navigation {
   display: flex;
   flex-direction: column;
@@ -120,7 +120,7 @@ html:has(.superadmin-page[data-sidebar-open]) {
   text-transform: uppercase;
 }
 
-/* Base táctil: 44px de alto; en escritorio vuelve a 40px */
+/* Touch target base: 44px height; reverts to 40px on desktop */
 .superadmin-nav-link,
 .superadmin-signout {
   display: flex;
@@ -148,13 +148,13 @@ html:has(.superadmin-page[data-sidebar-open]) {
   color: var(--cd-color-slate-titanium-100);
 }
 
-/* Ícono de navegación: caja fija de 24px; los SVG ya vienen normalizados */
+/* Navigation icon: fixed 24px box; SVGs are normalized */
 .superadmin-nav-link__icon {
   flex-shrink: 0;
   width: 1.5rem;
   height: 1.5rem;
   object-fit: contain;
-  /* Los SVG traen color fijo: el filtro los vuelve blancos sobre el sidebar oscuro */
+  /* SVGs have fixed color: filter makes them white over dark sidebar */
   filter: brightness(0) invert(1);
   opacity: 0.8;
   transition: opacity var(--cd-transition-fast);
@@ -176,15 +176,15 @@ html:has(.superadmin-page[data-sidebar-open]) {
   cursor: default;
 }
 
-/* ---------- Área de trabajo ---------- */
+/* ---------- Workspace ---------- */
 .superadmin-workspace {
   min-width: 0;
 }
 
-/* El padding horizontal coincide con el del header (components/app-header.css) */
+/* Horizontal padding matches header (components/app-header.css) */
 .superadmin-content {
   display: grid;
-  /* minmax(0, 1fr): sin esto, una tabla o un select ancho estira la columna y la página se desborda */
+  /* minmax(0, 1fr): without this, wide table or select stretches column causing overflow */
   grid-template-columns: minmax(0, 1fr);
   min-height: calc(100vh - var(--cd-header-height));
   min-height: calc(100dvh - var(--cd-header-height));
@@ -236,7 +236,7 @@ html:has(.superadmin-page[data-sidebar-open]) {
 }
 
 /* ---------- Escritorio (≥1024px): sidebar fijo ---------- */
-/* Este breakpoint también está en js/sidebar-toggle.js: mantenerlos sincronizados */
+/* This breakpoint is also in js/sidebar-toggle.js: keep them synchronized */
 @media (min-width: 1024px) {
   .superadmin-page {
     display: grid;
@@ -265,7 +265,7 @@ html:has(.superadmin-page[data-sidebar-open]) {
     min-height: 2.5rem;
   }
 
-  /* El botón de menú solo existe mientras el sidebar es deslizable */
+  /* Menu button exists only while sidebar is slide-out drawer */
   .app-header__menu-button {
     display: none;
   }

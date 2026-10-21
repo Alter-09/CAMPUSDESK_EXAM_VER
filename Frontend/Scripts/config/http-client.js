@@ -45,7 +45,7 @@ async function readPayload(response) {
 }
 
 /**
- * @param {string} path Ruta relativa a la API, ej. "/api/user/all".
+ * @param {string} path Relative API route, e.g. "/api/user/all".
  * @param {{ method?: string, body?: unknown }} [options]
  * @returns {Promise<any>}
  * @throws {ApiError}
@@ -53,7 +53,13 @@ async function readPayload(response) {
 export async function apiRequest(path, { method = "GET", body } = {}) {
   /** @type {Record<string, string>} */
   const headers = {};
-  const token = sessionStorage.getItem(TOKEN_STORAGE_KEY);
+  const token = sessionStorage.getItem(TOKEN_STORAGE_KEY)
+    || localStorage.getItem(TOKEN_STORAGE_KEY)
+    || sessionStorage.getItem("token")
+    || localStorage.getItem("token")
+    || sessionStorage.getItem("jwt")
+    || localStorage.getItem("jwt")
+    || "";
 
   if (token) {
     headers.Authorization = `Bearer ${token}`;

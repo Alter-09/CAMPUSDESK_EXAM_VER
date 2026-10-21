@@ -107,7 +107,7 @@ class UserDashboard extends HTMLElement {
     const activeTotal = open + assigned + inProgress;
     const completedTotal = resolved + closed;
 
-    // Inicializar los 12 meses exclusivamente en cero (sin datos simulados)
+    // Initialize 12 months strictly to zero (no simulated data)
     const buckets = Array.from({ length: 12 }, (_, idx) => ({
       index: idx,
       shortLabel: MONTH_LABELS[idx],
@@ -119,7 +119,7 @@ class UserDashboard extends HTMLElement {
       efficiency: "0%",
     }));
 
-    // Agrupar los tickets reales obtenidos desde PostgreSQL por su mes de creación
+    // Group real tickets retrieved from PostgreSQL by creation month
     let hasRealTicketDates = false;
     if (Array.isArray(this.tickets) && this.tickets.length > 0) {
       this.tickets.forEach((ticket) => {
@@ -142,15 +142,15 @@ class UserDashboard extends HTMLElement {
       });
     }
 
-    // Si no hay fechas individuales pero la API de métricas reporta solicitudes,
-    // reflejarlas fielmente en el mes actual del sistema
+    // If no individual dates exist but metrics API reports requests,
+    // reflect them accurately in current system month
     const currentMonth = new Date().getMonth();
     if (!hasRealTicketDates && total > 0) {
       buckets[currentMonth].cyan = activeTotal;
       buckets[currentMonth].purple = completedTotal;
     }
 
-    // Calcular métricas reales mes a mes basadas 100% en datos reales
+    // Compute month-over-month real metrics based 100% on real data
     let prevTotal = 0;
     this.monthlyData = buckets.map((b, idx) => {
       const mTotal = b.cyan + b.purple;
@@ -211,7 +211,7 @@ class UserDashboard extends HTMLElement {
     const pctActive = total > 0 ? Math.min(100, Math.round(((assigned + inProgress) / total) * 100)) : 0;
     const pctCompleted = total > 0 ? Math.min(100, Math.round((completed / total) * 100)) : 0;
 
-    // Obtener las solicitudes recientes del usuario
+    // Retrieve recent requests of the user
     const recentTickets = [...this.tickets]
       .sort((a, b) => (Number(b.id) || 0) - (Number(a.id) || 0))
       .slice(0, 4);

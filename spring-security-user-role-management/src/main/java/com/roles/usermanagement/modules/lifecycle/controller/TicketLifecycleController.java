@@ -23,7 +23,7 @@ public class TicketLifecycleController {
 
     private final TicketLifecycleService lifecycleService;
 
-    // Inyección por constructor
+    // Constructor injection
     public TicketLifecycleController(TicketLifecycleService lifecycleService) {
         this.lifecycleService = lifecycleService;
     }

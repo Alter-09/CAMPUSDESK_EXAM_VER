@@ -15,11 +15,15 @@ public class UserService {
 
   private final UserRepository userRepository;
   private final UserRoleRepository userRoleRepository;
+  private final com.roles.usermanagement.persistance.crud.UserCrudRepository userCrudRepository;
 
   @Autowired
-  public UserService(UserRepository userRepository, UserRoleRepository userRoleRepository) {
+  public UserService(UserRepository userRepository,
+                     UserRoleRepository userRoleRepository,
+                     com.roles.usermanagement.persistance.crud.UserCrudRepository userCrudRepository) {
     this.userRepository = userRepository;
     this.userRoleRepository = userRoleRepository;
+    this.userCrudRepository = userCrudRepository;
   }
 
   public UserDto saveUser(UserDto userDto) {
@@ -61,5 +65,48 @@ public class UserService {
 
   public UserDto register(com.roles.usermanagement.domain.dto.RegisterDto dto) {
     return userRepository.register(dto);
+  }
+
+  // [Nueva Funcionalidad: U-15 - Consulta de perfil de usuario propio] - Obtiene información de perfil ampliado - Conecta con: UserProfileDto y UserEntity
+  public com.roles.usermanagement.domain.dto.UserProfileDto getUserProfile(String username) {
+    var user = userCrudRepository.findById(username)
+            .orElseThrow(() -> new IllegalArgumentException("Usuario no encontrado"));
+    return com.roles.usermanagement.domain.dto.UserProfileDto.builder()
+            .username(user.getUsername())
+            .email(user.getEmail())
+            .phoneNumber(user.getPhoneNumber())
+            .department(user.getDepartment())
+            .build();
+  }
+
+  // [Nueva Funcionalidad: U-15 - Actualización de perfil propio] - Permite al usuario actualizar su teléfono y departamento - Conecta con: UserEntity
+  public com.roles.usermanagement.domain.dto.UserProfileDto updateUserProfile(
+          String username, com.roles.usermanagement.domain.dto.UserProfileUpdateRequest request) {
+    var user = userCrudRepository.findById(username)
+            .orElseThrow(() -> new IllegalArgumentException("Usuario no encontrado"));
+    if (request.phoneNumber() != null) user.setPhoneNumber(request.phoneNumber().trim());
+    if (request.department() != null) user.setDepartment(request.department().trim());
+    userCrudRepository.save(user);
+
+    return com.roles.usermanagement.domain.dto.UserProfileDto.builder()
+            .username(user.getUsername())
+            .email(user.getEmail())
+            .phoneNumber(user.getPhoneNumber())
+            .department(user.getDepartment())
+            .build();
+  }
+
+  // [Nueva Funcionalidad: A-22 - Bloqueo/desbloqueo masivo de usuarios] - Modifica en lote el estado locked de usuarios - Conecta con: UserEntity
+  public int bulkUpdateStatus(List<String> usernames, boolean locked) {
+    int count = 0;
+    for (String username : usernames) {
+      var opt = userCrudRepository.findById(username);
+      if (opt.isPresent()) {
+        opt.get().setLocked(locked);
+        userCrudRepository.save(opt.get());
+        count++;
+      }
+    }
+    return count;
   }
 }

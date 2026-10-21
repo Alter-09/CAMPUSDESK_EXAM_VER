@@ -86,12 +86,15 @@ public class UserRepository implements IUserRepository {
   public UserDto save(UserDto dto) {
     if(dto.getUsername()==null || dto.getUsername().isBlank() || dto.getUsername().length()>50)
       throw invalid("El usuario es obligatorio y debe tener como máximo 50 caracteres");
-    if(users.existsById(dto.getUsername())) throw new ResponseStatusException(HttpStatus.CONFLICT,"El usuario ya existe");
+    String cleanUsername = dto.getUsername().trim();
+    if(users.existsById(cleanUsername)) throw new ResponseStatusException(HttpStatus.CONFLICT,"El usuario ya existe");
     if(dto.getEmail()==null || dto.getEmail().isBlank()) throw invalid("El correo es obligatorio");
+    String cleanEmail = dto.getEmail().trim().toLowerCase();
+    if(users.existsByEmail(cleanEmail)) throw new ResponseStatusException(HttpStatus.CONFLICT,"El correo electrónico ya se encuentra registrado");
     if(dto.getPassword()==null || !PASSWORD_PATTERN.matcher(dto.getPassword()).matches())
       throw invalid("La contraseña es obligatoria, debe tener al menos 6 caracteres, al menos una letra mayúscula y al menos un carácter especial");
     String role=requestedRole(dto,true);
-    UserEntity user=new UserEntity(); user.setUsername(dto.getUsername()); user.setEmail(dto.getEmail());
+    UserEntity user=new UserEntity(); user.setUsername(cleanUsername); user.setEmail(cleanEmail);
     user.setPassword(encoder.encode(dto.getPassword())); user.setLocked(Boolean.TRUE.equals(dto.getLocked()));
     user.setDisabled(Boolean.TRUE.equals(dto.getDisabled()));
     user.setMustChangePassword(dto.getMustChangePassword() != null ? dto.getMustChangePassword() : true);
@@ -105,9 +108,10 @@ public class UserRepository implements IUserRepository {
     String role=requestedRole(dto,false);
     if(dto.getEmail()!=null) {
       if(dto.getEmail().isBlank()) throw invalid("El correo no puede estar vacío");
-      if(users.existsByEmailAndUsernameNot(dto.getEmail(),dto.getUsername()))
+      String cleanEmail = dto.getEmail().trim().toLowerCase();
+      if(users.existsByEmailAndUsernameNot(cleanEmail,dto.getUsername()))
         throw new ResponseStatusException(HttpStatus.CONFLICT,"El correo ya pertenece a otro usuario");
-      user.setEmail(dto.getEmail());
+      user.setEmail(cleanEmail);
     }
     if(dto.getLocked()!=null) user.setLocked(dto.getLocked());
     if(dto.getDisabled()!=null) user.setDisabled(dto.getDisabled());
@@ -121,6 +125,9 @@ public class UserRepository implements IUserRepository {
   @Transactional
   public UserRoleDto assignRole(UserRoleDto dto) {
     UserEntity user=account(dto.getUsername());
+    if ("superadmin".equalsIgnoreCase(user.getUsername())) {
+      throw new ResponseStatusException(HttpStatus.FORBIDDEN, "No se puede modificar el rol del Superadministrador principal");
+    }
     if(dto.getRole()==null || !roles.existsById(dto.getRole())) throw invalid("El rol debe existir en el catálogo");
     setRole(user,dto.getRole()); em.flush();
     UserRoleDto result=new UserRoleDto(); result.setUsername(user.getUsername()); result.setRole(dto.getRole()); return result;
@@ -142,8 +149,13 @@ public class UserRepository implements IUserRepository {
   public UserPermissionsDto permissionDetails(String username) {
     UserEntity user=users.findById(username).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,"El usuario no existe"));
     String role=mapper.roleName(user);
-    List<String> inherited=role==null ? List.of() : roles.findById(role).map(item ->
-        item.getPermissions().stream().map(PermissionEntity::getName).sorted().toList()).orElse(List.of());
+    List<String> inherited;
+    if ("superadmin".equalsIgnoreCase(username) || "SUPERADMIN".equalsIgnoreCase(role)) {
+      inherited = permissionCatalog();
+    } else {
+      inherited=role==null ? List.of() : roles.findById(role).map(item ->
+          item.getPermissions().stream().map(PermissionEntity::getName).sorted().toList()).orElse(List.of());
+    }
     List<String> additional=mapper.permissionNames(user);
     Set<String> effective=new TreeSet<>(inherited); effective.addAll(additional);
     return new UserPermissionsDto(username,role,inherited,additional,List.copyOf(effective));
@@ -161,7 +173,17 @@ public class UserRepository implements IUserRepository {
   @Override public List<UserDto> getAllUsers() {
     List<UserEntity> result=new ArrayList<>(); users.findAll().forEach(result::add); return mapper.toUsersDto(result);
   }
-  @Override public void deleteUser(String username) {users.deleteById(username);}
+  @Override public void deleteUser(String username) {
+    if ("superadmin".equalsIgnoreCase(username)) {
+      throw new ResponseStatusException(HttpStatus.FORBIDDEN, "No se puede eliminar la cuenta principal de Superadministrador");
+    }
+    users.findById(username).ifPresent(u -> {
+      if (u.getRoles() != null && u.getRoles().stream().anyMatch(r -> "SUPERADMIN".equalsIgnoreCase(r.getRole()))) {
+        throw new ResponseStatusException(HttpStatus.FORBIDDEN, "No se puede eliminar un usuario con rol SUPERADMIN");
+      }
+    });
+    users.deleteById(username);
+  }
   @Override public boolean existsByUsername(String username) {return users.existsById(username);}
 
   @Transactional
@@ -200,7 +222,7 @@ public class UserRepository implements IUserRepository {
     return mapper.toUserDto(user);
   }
 
-  @Transactional // metodo nuevo agregado. verifica las caracteristicas de la contraseña
+  @Transactional // newly added method. verifies password characteristics
   public void changeUserPassword(String username, String currentPassword, String newPassword) {
     if (newPassword == null || newPassword.isBlank() || newPassword.length() < 6) {
       throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "La nueva contraseña debe tener al menos 6 caracteres");
@@ -219,7 +241,7 @@ public class UserRepository implements IUserRepository {
     users.save(user);
   }
 
-  @Transactional//metodo nuevo agregado, Comprueba que la contraseña temporal suministrada no sea nula, no esté vacía y tenga al menos 6 caracteres.
+  @Transactional// newly added method, verifies that the supplied temporary password is not null, not empty, and has at least 6 characters.
   public void adminResetPassword(String username, String newTemporaryPassword) {
     if (newTemporaryPassword == null || newTemporaryPassword.isBlank() || newTemporaryPassword.length() < 6) {
       throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "La contraseña temporal debe tener al menos 6 caracteres");

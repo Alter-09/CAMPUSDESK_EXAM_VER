@@ -3,10 +3,117 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="Panel de Superadministrador de CampusDesk." />
+    <meta name="description" content="Panel de Superadministrador de CampusDesk — Gestión global, SLAs, Catálogo y Auditoría." />
     <title>CampusDesk | Panel de Superadministrador</title>
     <link rel="icon" href="./Assets/favicon.svg" type="image/svg+xml" />
     <link rel="stylesheet" href="./stylesheet/main.css" />
+    <style>
+        .superadmin-panel-card {
+            background: #ffffff;
+            border-radius: 12px;
+            border: 1px solid #e2e8f0;
+            padding: 24px;
+            margin-bottom: 24px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+        }
+        .superadmin-panel-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 18px;
+            padding-bottom: 14px;
+            border-bottom: 1px solid #f1f5f9;
+        }
+        .superadmin-panel-header h2 {
+            margin: 0 0 4px 0;
+            font-size: 1.25rem;
+            color: #0f172a;
+        }
+        .superadmin-panel-header p {
+            margin: 0;
+            color: #64748b;
+            font-size: 0.88rem;
+        }
+        .admin-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.88rem;
+            text-align: left;
+        }
+        .admin-table th {
+            background: #f8fafc;
+            color: #475569;
+            font-weight: 600;
+            padding: 12px 14px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        .admin-table td {
+            padding: 12px 14px;
+            border-bottom: 1px solid #f1f5f9;
+            color: #334155;
+        }
+        .admin-table tr:hover {
+            background-color: #f8fafc;
+        }
+        .admin-form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 16px;
+            margin-bottom: 18px;
+        }
+        .admin-form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        .admin-form-group label {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #334155;
+        }
+        .admin-form-group input, .admin-form-group select, .admin-form-group textarea {
+            padding: 10px 12px;
+            border-radius: 8px;
+            border: 1px solid #cbd5e1;
+            font-family: inherit;
+            font-size: 0.9rem;
+        }
+        .badge {
+            display: inline-block;
+            font-size: 0.75rem;
+            font-weight: 700;
+            padding: 3px 8px;
+            border-radius: 999px;
+        }
+        .badge--primary { background: #eff6ff; color: #2563eb; }
+        .badge--success { background: #ecfdf5; color: #059669; }
+        .badge--danger { background: #fef2f2; color: #dc2626; }
+        .badge--warning { background: #fffbeb; color: #d97706; }
+        .badge--secondary { background: #f1f5f9; color: #64748b; }
+        .button--sm {
+            padding: 6px 12px;
+            min-height: auto;
+            font-size: 0.82rem;
+            border-radius: 6px;
+            width: auto;
+            display: inline-block;
+            cursor: pointer;
+            border: 1px solid #cbd5e1;
+            background: #ffffff;
+            color: #1e293b;
+        }
+        .button--sm:hover {
+            background: #f1f5f9;
+        }
+        .catalog-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 16px;
+        }
+        .table-responsive {
+            overflow-x: auto;
+        }
+    </style>
 </head>
 <body>
     <div class="superadmin-page" data-shell>
@@ -24,6 +131,29 @@
                     <a class="superadmin-nav-link" href="#overview" aria-current="page">
                         <img class="superadmin-nav-link__icon" src="./Assets/Icons/dashboard.svg" width="24" height="24" alt="" />
                         <span class="superadmin-nav-link__text">Dashboard</span>
+                    </a>
+                    <a class="superadmin-nav-link" href="./knowledge-base.html">
+                        <img class="superadmin-nav-link__icon" src="./Assets/Icons/search.svg" width="24" height="24" alt="" />
+                        <span class="superadmin-nav-link__text">Base de Conocimiento</span>
+                    </a>
+                    <a class="superadmin-nav-link" href="./user-profile.html">
+                        <img class="superadmin-nav-link__icon" src="./Assets/Icons/user.svg" width="24" height="24" alt="" />
+                        <span class="superadmin-nav-link__text">Mi Perfil</span>
+                    </a>
+                </section>
+                <section class="superadmin-nav-group" aria-labelledby="config-navigation">
+                    <h2 id="config-navigation" class="superadmin-nav-group__label">Configuración del Sistema</h2>
+                    <a class="superadmin-nav-link" href="#sla-policies">
+                        <img class="superadmin-nav-link__icon" src="./Assets/Icons/calendar.svg" width="24" height="24" alt="" />
+                        <span class="superadmin-nav-link__text">Políticas SLA</span>
+                    </a>
+                    <a class="superadmin-nav-link" href="#service-catalog">
+                        <img class="superadmin-nav-link__icon" src="./Assets/Icons/assign.svg" width="24" height="24" alt="" />
+                        <span class="superadmin-nav-link__text">Catálogo de Servicios</span>
+                    </a>
+                    <a class="superadmin-nav-link" href="#audit-logs">
+                        <img class="superadmin-nav-link__icon" src="./Assets/Icons/shieldlock.svg" width="24" height="24" alt="" />
+                        <span class="superadmin-nav-link__text">Auditoría del Sistema</span>
                     </a>
                 </section>
                 <section class="superadmin-nav-group" aria-labelledby="security-navigation">
@@ -61,7 +191,7 @@
                 </section>
             </nav>
             <div class="superadmin-sidebar__footer">
-                <a class="superadmin-nav-link superadmin-nav-link--danger" href="./index.html">
+                <a class="superadmin-nav-link superadmin-nav-link--danger" href="./index.html" id="nav-logout">
                     <img class="superadmin-nav-link__icon" src="./Assets/Icons/logout.svg" width="24" height="24" alt="" />
                     <span class="superadmin-nav-link__text">Cerrar sesión</span>
                 </a>
@@ -81,18 +211,170 @@
                         </ol>
                     </nav>
                 </div>
-                <div class="app-header__user">
+                <div class="app-header__user" style="display: flex; align-items: center; gap: 12px;">
+                    <cd-notification-center></cd-notification-center>
                     <span class="app-header__role">Superadmin</span>
                     <img class="app-header__menu-icon" src="./Assets/Icons/user.svg" width="24" height="24" alt="user icon" />
                 </div>
             </header>
-            <main id="overview" class="superadmin-content superadmin-content--dashboard">
-                <section class="superadmin-dashboard" aria-label="Panel financiero">
-                    <div data-revenue-chart></div>
+            <main class="superadmin-content superadmin-content--dashboard">
+                <cd-announcement-banner></cd-announcement-banner>
+
+                <!-- 1. VISTA DASHBOARD -->
+                <section id="section-overview">
+                    <section class="superadmin-dashboard" aria-label="Panel financiero">
+                        <div data-revenue-chart></div>
+                    </section>
+                </section>
+
+                <!-- 2. VISTA POLÍTICAS SLA (A-01 / A-02 / A-08) -->
+                <section id="section-sla-policies" hidden style="display: none;">
+                    <div class="superadmin-panel-card">
+                        <div class="superadmin-panel-header">
+                            <div>
+                                <h2>Políticas de Acuerdos de Nivel de Servicio (SLA)</h2>
+                                <p>Configura los tiempos máximos permitidos para primera respuesta y resolución definitiva según prioridad.</p>
+                            </div>
+                        </div>
+
+                        <form id="sla-form" style="margin-bottom: 24px; padding: 16px; background: #f8fafc; border-radius: 8px; border: 1px solid #e2e8f0;">
+                            <h3 style="margin-top: 0; font-size: 0.95rem; color: #1e293b;">Definir o Actualizar Política SLA</h3>
+                            <div class="admin-form-grid">
+                                <div class="admin-form-group">
+                                    <label for="sla-priority">Prioridad de Ticket *</label>
+                                    <select id="sla-priority" required>
+                                        <option value="LOW">LOW (Baja)</option>
+                                        <option value="MEDIUM" selected>MEDIUM (Media)</option>
+                                        <option value="HIGH">HIGH (Alta)</option>
+                                        <option value="CRITICAL">CRITICAL (Crítica)</option>
+                                    </select>
+                                </div>
+                                <div class="admin-form-group">
+                                    <label for="sla-name">Nombre de Política</label>
+                                    <input type="text" id="sla-name" placeholder="Ej: Soporte Estándar Campus" />
+                                </div>
+                                <div class="admin-form-group">
+                                    <label for="sla-response-hours">Horas 1ra Respuesta *</label>
+                                    <input type="number" id="sla-response-hours" min="1" max="168" value="4" required />
+                                </div>
+                                <div class="admin-form-group">
+                                    <label for="sla-resolution-hours">Horas Resolución *</label>
+                                    <input type="number" id="sla-resolution-hours" min="1" max="720" value="24" required />
+                                </div>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <label style="display: flex; align-items: center; gap: 8px; font-size: 0.85rem; cursor: pointer;">
+                                    <input type="checkbox" id="sla-is-active" checked /> Política Activa
+                                </label>
+                                <button type="submit" class="button button--primary" style="width: auto; padding: 8px 18px;">
+                                    Guardar Política SLA
+                                </button>
+                            </div>
+                        </form>
+
+                        <div class="table-responsive">
+                            <table class="admin-table">
+                                <thead>
+                                    <tr>
+                                        <th>Prioridad</th>
+                                        <th>Nombre</th>
+                                        <th>Primera Respuesta</th>
+                                        <th>Resolución Definitiva</th>
+                                        <th>Estado</th>
+                                        <th>Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="sla-table-body">
+                                    <tr><td colspan="6" style="text-align: center; padding: 20px;">Cargando políticas SLA...</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 3. VISTA CATÁLOGO DE SERVICIOS (A-13 / U-01 / U-26) -->
+                <section id="section-service-catalog" hidden style="display: none;">
+                    <div class="superadmin-panel-card">
+                        <div class="superadmin-panel-header">
+                            <div>
+                                <h2>Catálogo de Servicios IT Institucionales</h2>
+                                <p>Administra los tipos de soporte y servicios tecnológicos disponibles para los estudiantes y docentes.</p>
+                            </div>
+                        </div>
+
+                        <form id="catalog-item-form" style="margin-bottom: 24px; padding: 16px; background: #f8fafc; border-radius: 8px; border: 1px solid #e2e8f0;">
+                            <h3 style="margin-top: 0; font-size: 0.95rem; color: #1e293b;">Registrar Nuevo Servicio Solicitado</h3>
+                            <div class="admin-form-grid">
+                                <div class="admin-form-group">
+                                    <label for="cat-name">Nombre del Servicio *</label>
+                                    <input type="text" id="cat-name" placeholder="Ej: Préstamo de Portátil o Proyector" required />
+                                </div>
+                                <div class="admin-form-group">
+                                    <label for="cat-category">Categoría General *</label>
+                                    <select id="cat-category" required>
+                                        <option value="Hardware">Hardware / Equipos</option>
+                                        <option value="Software">Software / Licencias</option>
+                                        <option value="Redes">Redes / Wi-Fi Campus</option>
+                                        <option value="Cuentas">Cuentas y Accesos</option>
+                                        <option value="Aulas">Aulas e Informática</option>
+                                    </select>
+                                </div>
+                                <div class="admin-form-group">
+                                    <label for="cat-hours">Horas SLA Estimadas *</label>
+                                    <input type="number" id="cat-hours" min="1" value="12" required />
+                                </div>
+                                <div class="admin-form-group" style="grid-column: 1 / -1;">
+                                    <label for="cat-description">Descripción del Servicio</label>
+                                    <textarea id="cat-description" rows="2" placeholder="Describe qué incluye el soporte para este servicio..."></textarea>
+                                </div>
+                            </div>
+                            <div style="display: flex; justify-content: flex-end;">
+                                <button type="submit" class="button button--primary" style="width: auto; padding: 8px 18px;">
+                                    + Registrar en Catálogo
+                                </button>
+                            </div>
+                        </form>
+
+                        <div class="catalog-grid" id="catalog-items-grid">
+                            <p style="grid-column: 1 / -1; text-align: center; padding: 20px;">Cargando servicios...</p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 4. VISTA AUDITORÍA DE SEGURIDAD (A-18) -->
+                <section id="section-audit-logs" hidden style="display: none;">
+                    <div class="superadmin-panel-card">
+                        <div class="superadmin-panel-header">
+                            <div>
+                                <h2>Registro Inmutable de Auditoría de Seguridad</h2>
+                                <p>Trazabilidad cronológica de eventos críticos, cambios de rol, acceso y modificaciones de tickets.</p>
+                            </div>
+                            <button id="btn-refresh-audit" class="button--sm">🔄 Refrescar Registro</button>
+                        </div>
+
+                        <div class="table-responsive">
+                            <table class="admin-table">
+                                <thead>
+                                    <tr>
+                                        <th>Fecha y Hora</th>
+                                        <th>Usuario</th>
+                                        <th>Acción</th>
+                                        <th>Entidad Afectada</th>
+                                        <th>Detalles de la Operación</th>
+                                        <th>IP Origen</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="audit-table-body">
+                                    <tr><td colspan="6" style="text-align: center; padding: 20px;">Cargando registros de auditoría...</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
                 </section>
             </main>
         </div>
     </div>
+
     <template id="revenue-chart-template">
         <section class="revenue-chart" aria-labelledby="revenue-chart-title">
             <header class="revenue-chart__header">
@@ -169,7 +451,14 @@
             </div>
         </section>
     </template>
+
+    <cd-toast-manager></cd-toast-manager>
+
+    <script type="module" src="./scripts/components/cd-notification-center.js"></script>
+    <script type="module" src="./scripts/components/cd-announcement-banner.js"></script>
+    <script type="module" src="./scripts/components/toast-manager.js"></script>
     <script type="module" src="./scripts/modules/sidebar-toggle.js"></script>
     <script type="module" src="./scripts/modules/superadmin-dashboard.js"></script>
+    <script type="module" src="./scripts/pages/superadmin.js"></script>
 </body>
 </html>

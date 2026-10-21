@@ -39,7 +39,7 @@ export function initSidebarToggle() {
     }
   });
 
-  // Si la pantalla crece hasta el layout de escritorio, el menú deja de ser un panel superpuesto
+  // If screen expands to desktop layout, menu stops behaving as overlay panel
   window.matchMedia(DESKTOP_MEDIA_QUERY).addEventListener("change", (event) => {
     if (event.matches) {
       setOpen(false);

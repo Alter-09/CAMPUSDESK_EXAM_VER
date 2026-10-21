@@ -9,7 +9,7 @@ import java.util.Optional;
 
 public interface LifecycleRuleRepository extends JpaRepository<LifecycleRule, Long> {
 
-    // Busca la regla que permite ejecutar una acción desde un estado concreto.
-    // Optional.empty() significa que esa transición NO está permitida.
+    // Finds the rule that allows executing an action from a specific status.
+    // Optional.empty() means that transition is NOT permitted.
     Optional<LifecycleRule> findByCurrentStatusAndAction(TicketStatus currentStatus, TransitionAction action);
 }

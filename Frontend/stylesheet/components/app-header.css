@@ -59,7 +59,7 @@
   font-size: 0.875rem;
 }
 
-/* En móvil solo se ve la página actual; el recorrido completo aparece desde 768px */
+/* On mobile only the current page is visible; full trail appears from 768px */
 .app-header__crumb {
   display: none;
   color: var(--cd-color-slate-titanium-300);
@@ -80,11 +80,11 @@
   color: var(--cd-color-slate-titanium-500);
   font-weight: var(--cd-font-weight-regular);
   content: "/";
-  /* El segundo valor es el texto alternativo: los lectores de pantalla no leen "barra" */
+  /* The second value is the alternative text: screen readers do not read "slash" */
   content: "/" / "";
 }
 
-/* Bloque de usuario */
+/* User block */
 .app-header__user {
   display: flex;
   flex-shrink: 0;

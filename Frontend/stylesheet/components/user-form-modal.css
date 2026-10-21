@@ -1,4 +1,4 @@
-/* <cd-user-form-modal>: móvil primero; el campo y el botón reutilizan .field y .button de main.css. */
+/* <cd-user-form-modal>: mobile-first; field and button reuse .field and .button from main.css. */
 
 :host {
   display: contents;
@@ -22,7 +22,7 @@
   background: rgb(1 8 20 / 0.72);
 }
 
-/* Movimiento que responde a la acción de abrir. */
+/* Motion responding to opening action. */
 .modal[open] {
   animation: modal-in 160ms ease-out;
 }

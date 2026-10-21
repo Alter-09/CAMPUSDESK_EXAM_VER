@@ -9,6 +9,13 @@ import {
 } from "../services/ticket.service.js";
 import { attachStyles } from "../utils/shadow-styles.js";
 
+// [Nueva Funcionalidad: Integración Web Components Técnico] - Conecta SLA, cronómetro, adjuntos y respuestas predefinidas - Conecta con: cd-sla-indicator, cd-time-tracker, cd-attachment-uploader, cd-pagination, canned-response.service.js
+import "./cd-sla-indicator.js";
+import "./cd-time-tracker.js";
+import "./cd-attachment-uploader.js";
+import "./cd-pagination.js";
+import { getActiveCannedResponses } from "../services/canned-response.service.js";
+
 const TEXT = MESSAGES.tickets;
 
 function formatDate(isoString) {
@@ -36,6 +43,8 @@ export class AssignedTickets extends HTMLElement {
   #activeFilter = "ALL";
   #searchQuery = "";
   #currentTicket = null;
+  #currentPage = 0;
+  #pageSize = 10;
 
   constructor() {
     super();
@@ -102,6 +111,7 @@ export class AssignedTickets extends HTMLElement {
             <span>${TEXT.assigned.retry}</span>
           </button>
           <div class="tickets-grid" id="tickets-grid" role="region" aria-label="Cuadrícula de tiquetes asignados"></div>
+          <cd-pagination id="assigned-pagination"></cd-pagination>
         </div>
 
         <!-- Modal de Detalle Completo de la Incidencia -->
@@ -114,6 +124,7 @@ export class AssignedTickets extends HTMLElement {
                   <span id="modal-ticket-status" class="badge"></span>
                   <span id="modal-ticket-priority" class="badge"></span>
                   <span id="modal-ticket-category" class="badge badge--category"></span>
+                  <cd-sla-indicator id="modal-ticket-sla"></cd-sla-indicator>
                 </div>
                 <h2 id="modal-ticket-title" class="modal-header__title">Cargando…</h2>
               </div>
@@ -146,6 +157,18 @@ export class AssignedTickets extends HTMLElement {
                 </div>
               </section>
 
+              <!-- Control y Registro de Horas Invertidas -->
+              <section class="detail-panel" aria-labelledby="timetrack-panel-title">
+                <h3 id="timetrack-panel-title" class="detail-panel__heading">Control de Horas Invertidas</h3>
+                <cd-time-tracker id="modal-ticket-time-tracker"></cd-time-tracker>
+              </section>
+
+              <!-- Evidencias y Archivos Adjuntos -->
+              <section class="detail-panel" aria-labelledby="attachments-panel-title">
+                <h3 id="attachments-panel-title" class="detail-panel__heading">Evidencias y Adjuntos</h3>
+                <cd-attachment-uploader id="modal-ticket-attachments"></cd-attachment-uploader>
+              </section>
+
               <!-- Ciclo de Vida y Transiciones -->
               <section class="detail-panel" aria-labelledby="lifecycle-panel-title">
                 <h3 id="lifecycle-panel-title" class="detail-panel__heading">${TEXT.detail.sectionLifecycle}</h3>
@@ -158,6 +181,12 @@ export class AssignedTickets extends HTMLElement {
                 <div class="comments-feed" id="comments-feed"></div>
 
                 <form class="comment-form" id="comment-form">
+                  <div style="margin-bottom: 8px;">
+                    <select class="visibility-select" id="canned-response-select" style="width: 100%; border: 1px solid #cbd5e1; border-radius: 6px; padding: 6px 10px;">
+                      <option value="">⚡ Seleccionar respuesta rápida predefinida (canned)...</option>
+                    </select>
+                  </div>
+
                   <textarea
                     class="comment-textarea"
                     id="comment-input"
@@ -228,7 +257,7 @@ export class AssignedTickets extends HTMLElement {
   #bindEvents() {
     this.#refs.retryBtn.addEventListener("click", () => this.#load());
 
-    // Filtrado por pestañas
+    // Filter by tabs
     this.#refs.filterTabs.forEach((tab) => {
       tab.addEventListener("click", () => {
         this.#refs.filterTabs.forEach((t) => {
@@ -253,6 +282,26 @@ export class AssignedTickets extends HTMLElement {
         this.#closeDetail();
       }
     });
+
+    // Paginación
+    const pagination = this.#root.getElementById("assigned-pagination");
+    if (pagination) {
+      pagination.addEventListener("page-change", (e) => {
+        this.#currentPage = e.detail.page;
+        this.#pageSize = e.detail.size;
+        this.#renderGrid();
+      });
+    }
+
+    // Respuestas Rápidas Predefinidas
+    const cannedSelect = this.#root.getElementById("canned-response-select");
+    cannedSelect?.addEventListener("change", (e) => {
+      if (e.target.value) {
+        const input = this.#refs.commentInput;
+        input.value = (input.value ? input.value + "\n\n" : "") + e.target.value;
+      }
+    });
+
     this.#refs.commentForm.addEventListener("submit", (e) => {
       e.preventDefault();
       this.#handleCommentSubmit();
@@ -299,17 +348,31 @@ export class AssignedTickets extends HTMLElement {
 
     grid.innerHTML = "";
 
+    const pagination = this.#root.getElementById("assigned-pagination");
+
     if (filtered.length === 0) {
       statusMessage.textContent = TEXT.assigned.empty;
       statusMessage.hidden = false;
       retryBtn.hidden = true;
+      if (pagination) pagination.hidden = true;
       return;
     }
 
     statusMessage.hidden = true;
     retryBtn.hidden = true;
 
-    filtered.forEach((ticket) => {
+    if (pagination) {
+      pagination.hidden = false;
+      pagination.setAttribute("total-elements", String(filtered.length));
+      pagination.setAttribute("total-pages", String(Math.ceil(filtered.length / this.#pageSize) || 1));
+      pagination.setAttribute("page", String(this.#currentPage));
+      pagination.setAttribute("size", String(this.#pageSize));
+    }
+
+    const startIndex = this.#currentPage * this.#pageSize;
+    const pageItems = filtered.slice(startIndex, startIndex + this.#pageSize);
+
+    pageItems.forEach((ticket) => {
       const card = document.createElement("article");
       card.className = "ticket-card";
       card.tabIndex = 0;
@@ -401,11 +464,54 @@ export class AssignedTickets extends HTMLElement {
     this.#refs.modalCreated.textContent = formatDate(ticket.createdAt);
     this.#refs.modalUpdated.textContent = formatDate(ticket.updatedAt);
 
+    // Configurar Indicador de SLA
+    const slaEl = this.#root.getElementById("modal-ticket-sla");
+    if (slaEl) {
+      slaEl.setAttribute("due-date", ticket.slaDueDate || "");
+      slaEl.setAttribute("breached", String(ticket.slaBreached || false));
+      slaEl.setAttribute("priority", priorityKey);
+      slaEl.setAttribute("status", statusKey);
+    }
+
+    // Configurar Time Tracker
+    const trackerEl = this.#root.getElementById("modal-ticket-time-tracker");
+    if (trackerEl) {
+      trackerEl.setAttribute("ticket-id", ticket.id);
+    }
+
+    // Configurar Evidencias
+    const attachmentsEl = this.#root.getElementById("modal-ticket-attachments");
+    if (attachmentsEl) {
+      attachmentsEl.setAttribute("ticket-id", ticket.id);
+    }
+
+    // Cargar respuestas rápidas predefinidas
+    this.#loadCannedResponses();
+
     this.#renderLifecycleActions(ticket);
 
     this.#refs.modal.showModal();
     this.#loadComments(ticket.id);
     this.#loadHistory(ticket.id);
+  }
+
+  async #loadCannedResponses() {
+    const select = this.#root.getElementById("canned-response-select");
+    if (!select || select.dataset.loaded === "true") return;
+    try {
+      const list = await getActiveCannedResponses();
+      if (Array.isArray(list)) {
+        list.forEach(c => {
+          const opt = document.createElement("option");
+          opt.value = c.content;
+          opt.textContent = `${c.title} (${c.category || "General"})`;
+          select.appendChild(opt);
+        });
+        select.dataset.loaded = "true";
+      }
+    } catch (err) {
+      console.warn("cd-assigned-tickets: Could not load canned responses", err);
+    }
   }
 
   #renderLifecycleActions(ticket) {
@@ -422,12 +528,26 @@ export class AssignedTickets extends HTMLElement {
       btn.addEventListener("click", () => this.#handleTransition("START_PROGRESS"));
       container.append(btn);
     } else if (status === "IN_PROGRESS") {
-      const btn = document.createElement("button");
-      btn.type = "button";
-      btn.className = "button button--action-success";
-      btn.innerHTML = `<span>✓ ${TEXT.detail.actionResolve}</span>`;
-      btn.addEventListener("click", () => this.#handleTransition("RESOLVE"));
-      container.append(btn);
+      const resolveBtn = document.createElement("button");
+      resolveBtn.type = "button";
+      resolveBtn.className = "button button--action-success";
+      resolveBtn.innerHTML = `<span>✓ ${TEXT.detail.actionResolve}</span>`;
+      resolveBtn.addEventListener("click", () => this.#handleTransition("RESOLVE"));
+      container.append(resolveBtn);
+
+      const pauseBtn = document.createElement("button");
+      pauseBtn.type = "button";
+      pauseBtn.className = "button button--secondary";
+      pauseBtn.innerHTML = `<span>⏸️ Pausar Tiquete</span>`;
+      pauseBtn.addEventListener("click", () => this.#handleTransition("PAUSE"));
+      container.append(pauseBtn);
+    } else if (status === "PENDING_USER" || status === "PENDING_VENDOR") {
+      const resumeBtn = document.createElement("button");
+      resumeBtn.type = "button";
+      resumeBtn.className = "button button--action-primary";
+      resumeBtn.innerHTML = `<span>▶ Reanudar Tiquete</span>`;
+      resumeBtn.addEventListener("click", () => this.#handleTransition("RESUME"));
+      container.append(resumeBtn);
     } else if (status === "RESOLVED") {
       const notice = document.createElement("div");
       notice.className = "status-notice";

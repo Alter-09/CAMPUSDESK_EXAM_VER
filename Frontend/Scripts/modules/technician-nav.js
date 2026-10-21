@@ -27,7 +27,7 @@ function setupTechnicianNavigation() {
   function handleRoute() {
     const hash = window.location.hash || "#overview";
 
-    // Actualizar estados visuales de los enlaces del sidebar
+    // Update visual state of sidebar links
     links.forEach((link) => {
       const isTarget = link.getAttribute("href") === hash;
       if (isTarget) {
@@ -37,7 +37,7 @@ function setupTechnicianNavigation() {
       }
     });
 
-    // Ocultar todas las secciones
+    // Hide all sections
     if (assignedSection) assignedSection.hidden = true;
     if (overviewSection) overviewSection.hidden = true;
     if (queueSection) queueSection.hidden = true;
@@ -53,13 +53,13 @@ function setupTechnicianNavigation() {
     } else if (hash === "#resolved-tickets") {
       if (assignedSection) assignedSection.hidden = false;
       if (breadcrumbCurrent) breadcrumbCurrent.textContent = "Historial de Resueltos";
-      // Activar filtro de resueltos en el componente si está disponible
+      // Activate resolved filter in component if available
       if (ticketsComp && ticketsComp.shadowRoot) {
         const tab = ticketsComp.shadowRoot.querySelector("[data-filter='RESOLVED']");
         if (tab) tab.click();
       }
     } else {
-      // Por defecto: Tiquetes Asignados
+      // Default: Assigned Tickets
       if (assignedSection) assignedSection.hidden = false;
       if (breadcrumbCurrent) breadcrumbCurrent.textContent = "Tiquetes Asignados";
       if (ticketsComp && ticketsComp.shadowRoot && hash === "#assigned-tickets") {

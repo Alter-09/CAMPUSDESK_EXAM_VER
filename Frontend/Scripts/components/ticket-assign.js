@@ -19,20 +19,38 @@ class TicketAssign extends HTMLElement {
   }
 
   async loadData() {
+    this.error = null;
     try {
-      // Cargar tiquetes que pueden ser asignados o reasignados (OPEN y ASSIGNED)
-      const ticketsData = await listTickets();
-      const allTickets = Array.isArray(ticketsData) ? ticketsData : [];
-      this.tickets = allTickets.filter(t => t.status === "OPEN" || t.status === "ASSIGNED");
+      const [ticketsResult, techResult] = await Promise.allSettled([
+        listTickets(),
+        listTechnicians(),
+      ]);
 
-      // Si había un ticket seleccionado, mantener su referencia actualizada
+      if (ticketsResult.status === "fulfilled" && Array.isArray(ticketsResult.value)) {
+        this.tickets = ticketsResult.value.filter(t => t.status === "OPEN" || t.status === "ASSIGNED");
+      } else {
+        this.tickets = [];
+        if (ticketsResult.status === "rejected") {
+          console.error("Error al cargar tiquetes:", ticketsResult.reason);
+          this.error = ticketsResult.reason?.message || "Error al cargar la lista de tiquetes.";
+        }
+      }
+
       if (this.selectedTicket) {
         this.selectedTicket = this.tickets.find(t => String(t.id) === String(this.selectedTicket.id)) || null;
       }
 
-      // Usar listTechnicians() que combina /api/user/all + /api/technicians
-      // y filtra correctamente por rol TECHNICIAN
-      this.technicians = await listTechnicians();
+      if (techResult.status === "fulfilled" && Array.isArray(techResult.value)) {
+        this.technicians = techResult.value;
+      } else {
+        this.technicians = [];
+        if (techResult.status === "rejected") {
+          console.error("Error al cargar técnicos:", techResult.reason);
+          if (!this.error) {
+            this.error = techResult.reason?.message || "Error al cargar la lista de técnicos.";
+          }
+        }
+      }
 
       this.render();
       this.attachEvents();
@@ -81,7 +99,7 @@ class TicketAssign extends HTMLElement {
     this.attachEvents();
 
     try {
-      // El backend Spring Boot dispone de endpoints dedicados:
+      // The Spring Boot backend provides dedicated endpoints:
       // - PUT /api/tickets/{ticketId}/assign: asigna incidencias en estado OPEN
       // - PUT /api/tickets/{ticketId}/reassign: reasigna incidencias en estado ASSIGNED
       if (this.selectedTicket && this.selectedTicket.status === "ASSIGNED") {
@@ -92,7 +110,7 @@ class TicketAssign extends HTMLElement {
           await assignTicket(ticketId, technicianUsername);
           this.successMessage = `¡Tiquete #${ticketId} asignado exitosamente a "${technicianUsername}"!`;
         } catch (assignErr) {
-          // Si ya estaba asignado en el backend, reasignar de forma transparente
+          // If already assigned in backend, reassign transparently
           const errMsg = String(assignErr?.message || "").toLowerCase();
           if (errMsg.includes("reasign") || errMsg.includes("abierta") || errMsg.includes("assigned")) {
             await reassignTicket(ticketId, technicianUsername, "Reasignación administrativa");
@@ -129,7 +147,7 @@ class TicketAssign extends HTMLElement {
   }
 
   render() {
-    // Campos del TicketDto: id, title, applicantUsername, priority, category, description, status, technicianUsername
+    // TicketDto fields: id, title, applicantUsername, priority, category, description, status, technicianUsername
     const ticketsOptions = this.tickets.map(t => {
       const isSelected = this.selectedTicket && String(this.selectedTicket.id) === String(t.id);
       const tag = t.status === "ASSIGNED"
@@ -139,7 +157,7 @@ class TicketAssign extends HTMLElement {
         `#${t.id} - ${t.title || t.subject || 'Sin título'} (${t.applicantUsername || t.requester || 'Usuario'}) ${tag}</option>`;
     }).join('');
 
-    // Campos de TechnicianItem: username, email, specialty, availabilityStatus
+    // TechnicianItem fields: username, email, specialty, availabilityStatus
     const techOptions = this.technicians.map(tech =>
       `<option value="${tech.username}">` +
       `${tech.username} (${tech.email || tech.username})</option>`

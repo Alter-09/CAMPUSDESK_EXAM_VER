@@ -158,7 +158,7 @@
   color: var(--ra-success);
 }
 
-/* Efectivo solo por asignación individual: se distingue del que trae el rol. */
+/* Effective only via individual assignment: distinguished from role-granted permission. */
 .perm[data-effective="true"][data-from-role="false"] {
   border-color: var(--cd-color-border-active);
   background: var(--cd-color-signal-coral-muted);
@@ -230,7 +230,7 @@
   cursor: not-allowed;
 }
 
-/* ---------- Confirmación de cambios sin guardar ---------- */
+/* ---------- Unsaved changes confirmation ---------- */
 
 .confirm {
   box-sizing: border-box;
@@ -268,7 +268,7 @@
   color: var(--cd-color-slate-titanium-300);
 }
 
-/* La acción segura ("Seguir editando") lleva el énfasis y el foco inicial. */
+/* The safe action ("Keep editing") carries emphasis and initial focus. */
 .confirm__actions {
   display: flex;
   flex-direction: column-reverse;
@@ -288,7 +288,7 @@
   }
 }
 
-/* base.css tiene el anillo de foco anidado sobre sí mismo; aquí se declara explícito. */
+/* base.css has the focus ring nested on itself; declared explicitly here. */
 :is(button, select, input):focus-visible {
   outline: 2px solid var(--cd-color-signal-coral);
   outline-offset: 2px;

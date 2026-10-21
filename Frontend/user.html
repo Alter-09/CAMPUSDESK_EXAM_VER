@@ -27,6 +27,14 @@
                         <img class="superadmin-nav-link__icon" src="./Assets/Icons/dashboard.svg" width="24" height="24" alt="" />
                         <span class="superadmin-nav-link__text">Inicio</span>
                     </a>
+                    <a class="superadmin-nav-link" href="./knowledge-base.html" id="nav-kb">
+                        <img class="superadmin-nav-link__icon" src="./Assets/Icons/search.svg" width="24" height="24" alt="" />
+                        <span class="superadmin-nav-link__text">Base de Conocimiento</span>
+                    </a>
+                    <a class="superadmin-nav-link" href="./user-profile.html" id="nav-profile">
+                        <img class="superadmin-nav-link__icon" src="./Assets/Icons/user.svg" width="24" height="24" alt="" />
+                        <span class="superadmin-nav-link__text">Mi Perfil</span>
+                    </a>
                 </section>
 
                 <section class="superadmin-nav-group" aria-labelledby="tickets-nav-label">
@@ -70,20 +78,33 @@
                         </ol>
                     </nav>
                 </div>
-                <div class="app-header__user">
+                <div class="app-header__user" style="display: flex; align-items: center; gap: 12px;">
+                    <cd-notification-center></cd-notification-center>
                     <span class="app-header__role" id="header-role">Usuario</span>
                     <img class="app-header__menu-icon" src="./Assets/Icons/user.svg" width="24" height="24" alt="" />
                 </div>
             </header>
             <main id="user-main" class="superadmin-content">
+                <cd-announcement-banner></cd-announcement-banner>
                 <cd-user-dashboard></cd-user-dashboard>
-
             </main>
         </div>
     </div>
+    <cd-toast-manager></cd-toast-manager>
 
     <script type="module" src="./scripts/modules/sidebar-toggle.js"></script>
+    <script type="module" src="./scripts/components/cd-notification-center.js"></script>
+    <script type="module" src="./scripts/components/cd-announcement-banner.js"></script>
+    <script type="module" src="./scripts/components/toast-manager.js"></script>
     <script type="module" src="./scripts/components/user-dashboard.js"></script>
     <script type="module" src="./scripts/pages/user-overview.js"></script>
+    <script type="module">
+        import { enforceRoleAccess, logout } from "./scripts/modules/auth-guard.js";
+        enforceRoleAccess();
+        document.getElementById("nav-logout")?.addEventListener("click", (e) => {
+            e.preventDefault();
+            logout();
+        });
+    </script>
 </body>
 </html>

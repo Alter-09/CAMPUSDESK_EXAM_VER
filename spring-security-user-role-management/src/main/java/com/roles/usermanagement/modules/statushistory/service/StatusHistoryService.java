@@ -20,17 +20,17 @@ import org.springframework.web.server.ResponseStatusException;
 import java.util.List;
 
 /**
- * Registro y consulta del historial de estados de los tickets.
+ * Recording and querying ticket status history.
  */
 @Service
 public class StatusHistoryService {
 
-    private final StatusHistoryRepository historyRepository;  // guarda y lee el historial
-    private final TicketRepository ticketRepository;          // para buscar el ticket al consultar
-    private final TicketAccessPolicy policy;                  // quién puede ver qué
+    private final StatusHistoryRepository historyRepository;  // stores and reads history
+    private final TicketRepository ticketRepository;          // to find ticket when querying
+    private final TicketAccessPolicy policy;                  // who can view what
     private final StatusHistoryMapper mapper;                 // entidad -> DTO
 
-    // Spring entrega las cuatro dependencias por constructor
+    // Spring supplies the four dependencies via constructor
     public StatusHistoryService(StatusHistoryRepository historyRepository,
                                 TicketRepository ticketRepository,
                                 TicketAccessPolicy policy,
@@ -42,8 +42,8 @@ public class StatusHistoryService {
     }
 
     /**
-     * Guarda un cambio de estado en el historial.
-     * Exige una transacción ya abierta (MANDATORY): así el cambio de estado del ticket
+     * Saves a status change in history.
+     * Requires an existing transaction (MANDATORY): ensures ticket status change
      * y su registro se confirman o se revierten juntos.
      */
     @Transactional(propagation = Propagation.MANDATORY)
@@ -52,35 +52,35 @@ public class StatusHistoryService {
                                 TicketStatus newStatus,
                                 UserEntity changedBy,
                                 StatusHistoryAction action) {
-        // Construye la fila del historial con los datos del cambio
+        // Builds history record with transition data
         StatusHistory entry = StatusHistory.builder()
-                .ticket(ticket)                    // a qué ticket pertenece
-                .previousStatus(previousStatus)    // estado anterior (null si es la creación)
+                .ticket(ticket)                    // which ticket it belongs to
+                .previousStatus(previousStatus)    // previous status (null if creation)
                 .newStatus(newStatus)              // estado nuevo
-                .changedBy(changedBy)              // quién hizo el cambio
-                .action(action)                    // tipo de cambio
-                .build();                          // changedAt lo pone @PrePersist de la entidad
+                .changedBy(changedBy)              // who performed the change
+                .action(action)                    // action type
+                .build();                          // changedAt is set by @PrePersist on entity
 
-        // Inserta la fila en la base de datos
+        // Inserts record into database
         return historyRepository.save(entry);
     }
 
 
     /**
-     * Devuelve el historial de un ticket en orden cronológico,
-     * solo si el usuario autenticado tiene permiso para ver ese ticket.
+     * Returns ticket history in chronological order,
+     * only if authenticated user has permission to view that ticket.
      */
     @Transactional(readOnly = true)
     public List<StatusHistoryResponse> getByTicket(Long ticketId, Authentication auth) {
-        // Busca el ticket; si no existe, responde 404
+        // Finds ticket; if not found, responds 404
         Ticket ticket = ticketRepository.findById(ticketId)
                 .orElseThrow(() -> new ResponseStatusException(
                         HttpStatus.NOT_FOUND, "Ticket not found"));
 
-        // El "guardia": si no puede ver el ticket, lanza 403 y el método se corta aquí
+        // Security guard: if user cannot view ticket, throws 403 and execution halts
         policy.assertCanView(ticket, auth);
 
-        // Trae las filas del historial ya ordenadas y las convierte a DTO
+        // Retrieves sorted history records and maps them to DTO
         return historyRepository.findByTicketIdOrderByChangedAtAscIdAsc(ticketId)
                 .stream()
                 .map(mapper::toResponse)

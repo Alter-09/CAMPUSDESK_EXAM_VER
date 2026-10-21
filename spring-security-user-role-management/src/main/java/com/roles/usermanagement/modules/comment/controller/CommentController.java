@@ -3,6 +3,10 @@ package com.roles.usermanagement.modules.comment.controller;
 import com.roles.usermanagement.modules.comment.dto.CommentCreateRequest;
 import com.roles.usermanagement.modules.comment.dto.CommentResponse;
 import com.roles.usermanagement.modules.comment.service.CommentService;
+import com.roles.usermanagement.web.config.OpenApiConfig;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
 import java.util.List;
@@ -23,6 +27,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/tickets/{ticketId}/comments")
 @PreAuthorize("isAuthenticated()")
+@Tag(name = "Comments", description = "Gestión de comentarios y notas internas de incidencias")
+@SecurityRequirement(name = OpenApiConfig.BEARER_AUTH)
 public class CommentController {
 
     private final CommentService commentService;
@@ -35,6 +41,7 @@ public class CommentController {
      * Creates a comment and returns HTTP 201.
      */
     @PostMapping
+    @Operation(summary = "Crear comentario público o nota interna privada en un ticket (MOD-19, T-03)")
     public ResponseEntity<CommentResponse> createComment(
             @PathVariable @Positive Long ticketId,
             @Valid @RequestBody CommentCreateRequest request,
@@ -48,6 +55,7 @@ public class CommentController {
      * Retrieves the comments visible to the authenticated user.
      */
     @GetMapping
+    @Operation(summary = "Listar comentarios visibles según rol del usuario autenticado (MOD-20)")
     public ResponseEntity<List<CommentResponse>> getCommentsByTicket(
             @PathVariable @Positive Long ticketId,
             @AuthenticationPrincipal String username

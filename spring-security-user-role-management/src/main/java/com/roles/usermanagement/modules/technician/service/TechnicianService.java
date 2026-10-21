@@ -2,6 +2,7 @@ package com.roles.usermanagement.modules.technician.service;
 
 import com.roles.usermanagement.modules.technician.dto.TechnicianAvailabilityResponse;
 import com.roles.usermanagement.modules.technician.dto.TechnicianResponse;
+import com.roles.usermanagement.modules.technician.entity.TechnicianProfile;
 import com.roles.usermanagement.modules.technician.enums.TechnicianAvailabilityStatus;
 import com.roles.usermanagement.modules.technician.mapper.TechnicianMapper;
 import com.roles.usermanagement.modules.technician.repository.TechnicianRepository;
@@ -10,21 +11,22 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
- * Consulta de técnicos y su disponibilidad, para que el administrador decida a quién asignar.
+ * Query technicians and their availability, allowing administrator to assign
+ * tickets.
  */
 @Service
 public class TechnicianService {
 
-    private final TechnicianRepository technicianRepository;  // acceso a los perfiles
-    private final TechnicianMapper mapper;                    // entidad -> DTO
+    private final TechnicianRepository technicianRepository; // profile data access
+    private final TechnicianMapper mapper; // entidad -> DTO
 
-    // Spring entrega las dos dependencias por constructor
+    // Spring supplies both dependencies via constructor
     public TechnicianService(TechnicianRepository technicianRepository, TechnicianMapper mapper) {
         this.technicianRepository = technicianRepository;
         this.mapper = mapper;
     }
 
-    /** Devuelve todos los técnicos, sin importar su disponibilidad. */
+    /** Returns all technicians, regardless of availability. */
     @Transactional(readOnly = true)
     public List<TechnicianResponse> listAll() {
         return technicianRepository.findAll()
@@ -33,7 +35,7 @@ public class TechnicianService {
                 .toList();
     }
 
-    /** Devuelve solo los técnicos disponibles, del menos al más cargado. */
+    /** Returns only available technicians, from least to most loaded. */
     @Transactional(readOnly = true)
     public List<TechnicianAvailabilityResponse> listAvailable() {
         return technicianRepository
@@ -41,5 +43,16 @@ public class TechnicianService {
                 .stream()
                 .map(mapper::toAvailabilityResponse)
                 .toList();
+    }
+
+    /** Actualiza el estado de disponibilidad del técnico (T-19). */
+    @Transactional
+    public TechnicianResponse updateAvailability(String username, TechnicianAvailabilityStatus status) {
+        TechnicianProfile profile = technicianRepository.findById(username)
+                .orElseThrow(() -> new org.springframework.web.server.ResponseStatusException(
+                        org.springframework.http.HttpStatus.NOT_FOUND, "Perfil técnico no encontrado para: " + username));
+        profile.setAvailabilityStatus(status);
+        profile.setIsAvailable(status == TechnicianAvailabilityStatus.AVAILABLE);
+        return mapper.toResponse(technicianRepository.save(profile));
     }
 }

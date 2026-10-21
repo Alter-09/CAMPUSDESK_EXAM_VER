@@ -79,7 +79,7 @@ public class UserController {
         
         String tempPass = (body != null) ? body.get("temporaryPassword") : null;
         if (tempPass == null || tempPass.isBlank()) {
-            tempPass = "Temporal123!"; // Valor por defecto si el admin no especifica uno
+            tempPass = "Temporal123!"; // Default value if admin does not specify one
         }
 
         users.adminResetPassword(username, tempPass);
@@ -89,5 +89,32 @@ public class UserController {
                 "temporaryPassword", tempPass,
                 "mustChangePassword", true
         ));
+    }
+
+    // [Nueva Funcionalidad: U-15 - Endpoint de consulta de perfil propio] - Retorna datos personales del usuario autenticado - Conecta con: UserService
+    @GetMapping("/me/profile")
+    @Operation(summary = "Obtener perfil del usuario autenticado")
+    public ResponseEntity<UserProfileDto> getMyProfile(org.springframework.security.core.Authentication auth) {
+        return ResponseEntity.ok(users.getUserProfile(auth.getName()));
+    }
+
+    // [Nueva Funcionalidad: U-15 - Endpoint de actualización de perfil propio] - Permite modificar teléfono y departamento - Conecta con: UserService
+    @PutMapping("/me/profile")
+    @Operation(summary = "Actualizar datos personales de perfil propio")
+    public ResponseEntity<UserProfileDto> updateMyProfile(
+            @RequestBody UserProfileUpdateRequest request,
+            org.springframework.security.core.Authentication auth) {
+        return ResponseEntity.ok(users.updateUserProfile(auth.getName(), request));
+    }
+
+    // [Nueva Funcionalidad: A-22 - Endpoint de bloqueo masivo de usuarios] - Bloquea o desbloquea una lista de usuarios - Conecta con: UserService
+    @PostMapping("/bulk-lock")
+    @PreAuthorize("hasRole('ADMIN')")
+    @Operation(summary = "Bloquear o desbloquear usuarios en lote")
+    public ResponseEntity<Map<String, Object>> bulkLock(
+            @RequestBody List<String> usernames,
+            @RequestParam boolean locked) {
+        int updated = users.bulkUpdateStatus(usernames, locked);
+        return ResponseEntity.ok(Map.of("updatedCount", updated, "locked", locked));
     }
 }

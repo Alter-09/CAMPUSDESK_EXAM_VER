@@ -292,7 +292,7 @@
   border: 1px solid var(--cd-color-border-active);
 }
 
-/* Categorías */
+/* Categories */
 .badge--category {
   background: rgba(255, 255, 255, 0.05);
   color: var(--cd-color-slate-titanium-100);
@@ -394,7 +394,7 @@
   box-sizing: border-box;
 }
 
-/* Paneles dentro del Modal */
+/* Panels inside the Modal */
 .detail-panel {
   background: rgba(255, 255, 255, 0.02);
   border: 1px solid var(--cd-color-border-level-1);
@@ -454,7 +454,7 @@
   font-weight: var(--cd-font-weight-semibold);
 }
 
-/* Transiciones del Ciclo de Vida */
+/* Lifecycle Transitions */
 .lifecycle-actions {
   display: flex;
   flex-wrap: wrap;
