@@ -27,7 +27,7 @@ public class SlaController {
     private final SlaPolicyRepository policyRepository;
 
     @GetMapping("/policies")
-    @Operation(summary = "Consultar políticas activas de SLA por prioridad ")
+    @Operation(summary = "Consultar políticas activas de SLA basadas en prioridad ")
     public ResponseEntity<List<SlaPolicyResponse>> getAllPolicies() {
         List<SlaPolicyResponse> list = policyRepository.findAll().stream()
                 .map(p -> new SlaPolicyResponse(p.getId(), p.getName(), p.getPriority(), p.getFirstResponseHours(), p.getResolutionHours(), p.getIsActive(), p.getCreatedAt()))
@@ -37,7 +37,7 @@ public class SlaController {
 
     @PostMapping("/policies")
     @PreAuthorize("hasRole('ADMIN')")
-    @Operation(summary = "Configurar o actualizar reglas y tiempos de política SLA (ADMIN)")
+    @Operation(summary = "Configurar reglas y tiempos de política SLA (SOLO PARA ADMIN)")
     public ResponseEntity<SlaPolicyResponse> createOrUpdatePolicy(@Valid @RequestBody SlaPolicyRequest request) {
         SlaPolicy policy = policyRepository.findByPriorityAndIsActiveTrue(request.priority())
                 .orElse(SlaPolicy.builder().priority(request.priority()).build());
