@@ -67,10 +67,10 @@ public class SlaService {
 
     private int defaultResolutionHours(SlaPriority priority) {
         return switch (priority) {
-            case LOW -> 72;
-            case MEDIUM -> 48;
-            case HIGH -> 24;
-            case CRITICAL -> 8;
+            case LOW -> 48;
+            case MEDIUM -> 24;
+            case HIGH -> 8;
+            case CRITICAL -> 4;
         };
     }
 
