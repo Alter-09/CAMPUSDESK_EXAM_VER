@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-// [Nueva Funcionalidad: A-01/T-15 - Controlador REST de políticas SLA] - Endpoints para configuración y consulta de políticas SLA - Conecta con: SlaPolicyRepository y SlaPolicy
 @RestController
 @RequestMapping("/api/v1/sla")
 @RequiredArgsConstructor
@@ -28,7 +27,7 @@ public class SlaController {
     private final SlaPolicyRepository policyRepository;
 
     @GetMapping("/policies")
-    @Operation(summary = "Consultar políticas activas de SLA por prioridad (MOD-36, T-15, U-12)")
+    @Operation(summary = "Consultar políticas activas de SLA por prioridad ")
     public ResponseEntity<List<SlaPolicyResponse>> getAllPolicies() {
         List<SlaPolicyResponse> list = policyRepository.findAll().stream()
                 .map(p -> new SlaPolicyResponse(p.getId(), p.getName(), p.getPriority(), p.getFirstResponseHours(), p.getResolutionHours(), p.getIsActive(), p.getCreatedAt()))
@@ -38,7 +37,7 @@ public class SlaController {
 
     @PostMapping("/policies")
     @PreAuthorize("hasRole('ADMIN')")
-    @Operation(summary = "Configurar o actualizar reglas y tiempos de política SLA (ADMIN) (MOD-36, A-01)")
+    @Operation(summary = "Configurar o actualizar reglas y tiempos de política SLA (ADMIN)")
     public ResponseEntity<SlaPolicyResponse> createOrUpdatePolicy(@Valid @RequestBody SlaPolicyRequest request) {
         SlaPolicy policy = policyRepository.findByPriorityAndIsActiveTrue(request.priority())
                 .orElse(SlaPolicy.builder().priority(request.priority()).build());

@@ -16,7 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
-// [Nueva Funcionalidad: A-01/T-15/U-12 - Servicio de gestión de SLA] - Calcula vencimientos y registra infracciones de acuerdos de nivel de servicio - Conecta con: SlaPolicyRepository, SlaViolationRepository y Ticket
+
 @Service
 @RequiredArgsConstructor
 public class SlaService {

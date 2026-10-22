@@ -5,7 +5,6 @@ import jakarta.persistence.*;
 import lombok.*;
 import java.time.LocalDateTime;
 
-// [Nueva Funcionalidad: A-01/T-15 - Entidad de políticas de SLA] - Define tiempos máximos de primera respuesta y resolución por prioridad - Conecta con: SlaViolation y SlaService
 @Getter
 @Setter
 @NoArgsConstructor
