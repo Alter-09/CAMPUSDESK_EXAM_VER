@@ -1,0 +1,36 @@
+Gestión de Acuerdos de Nivel de Servicio (SLA) y Alerta de Vencimiento
+
+Objetivo: 
+Modelado de entidades vinculadas, cálculo de fechas en capa Service y consultas derivadas/JPQL con control de acceso.
+
+Contexto de negocio: TechNova Solutions necesita garantizar tiempos máximos de primera respuesta y resolución según la prioridad del ticket.
+Tiempo asignado: 60 minutos.
+
+
+Requerimientos del Examen
+1 Modelo de Datos (TicketSla o extensión de Ticket):
+Al crear un ticket, calcular automáticamente el atributo fechaLimiteResolucion (LocalDateTime) según la prioridad:
+CRITICA: +4 horas.
+ALTA: +8 horas.
+MEDIA: +24 horas.
+BAJA: +48 horas.
+Campo booleano calculado o persistido: slaVencido.
+
+
+2 Endpoints a Implementar:
+GET /api/tickets/vencidos: Accesible solo por ADMIN. Retorna la lista de tickets abiertos o en proceso cuya fechaLimiteResolucion sea anterior a LocalDateTime.now().
+GET /api/tickets/{id}/sla-status: Accesible por el dueño del ticket, técnico asignado o ADMIN. Retorna DTO con: minutosRestantes, estaVencido y porcentajeConsumido.
+
+
+3 Reglas & Validaciones:
+Si un ticket ya está en RESUELTA o CERRADA, el tiempo restante no debe seguir descontándose (se congela al momento de resolución).
+
+
+
+Resultado esperado
+
+La entrega debe realizarse en un repositorio privado de GitHub con acceso concedido al evaluador antes de los 60 minutos. 
+
+
+
+Los cambios deben registrarse con al menos 3 commits bajo el estándar Conventional Commits (ej. feat(scope): ..., fix(scope): ...) e incluir en la raíz del proyecto un archivo EXAM_SUBMISSION.md que liste de forma clara los archivos creados, modificados y los endpoints implementados para su verificación.
