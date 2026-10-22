@@ -5,7 +5,6 @@ import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
-// [Nueva Funcionalidad: A-01 - Petición de creación/edición de política SLA] - Transporta reglas de tiempo por prioridad - Conecta con: SlaPolicy y SlaService
 public record SlaPolicyRequest(
         @NotBlank(message = "El nombre de la política es obligatorio")
         String name,
