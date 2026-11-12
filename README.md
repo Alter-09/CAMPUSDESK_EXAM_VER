@@ -1,3 +1,32 @@
+<div align="center">
+
+# 🎫 CAMPUSDESK
+### Help desk · Ticket lifecycle · Role-based access
+
+**Plataforma web para registrar, priorizar, asignar, seguir y resolver incidencias y solicitudes técnicas.**
+
+![Java](https://img.shields.io/badge/Java-21-ED8B00?style=for-the-badge&logo=openjdk&logoColor=white)
+![Spring Boot](https://img.shields.io/badge/Spring_Boot-4.x-6DB33F?style=for-the-badge&logo=springboot&logoColor=white)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-14+-4169E1?style=for-the-badge&logo=postgresql&logoColor=white)
+![Frontend](https://img.shields.io/badge/Frontend-HTML%20%7C%20CSS%20%7C%20JS-E34F26?style=for-the-badge)
+
+</div>
+
+## Project overview
+
+CAMPUSDESK reúne un frontend web y un backend Spring Boot para gestionar tickets de soporte, asignaciones de técnicos, seguimiento de estados y permisos por roles. El repositorio incluye documentación técnica adicional del backend y auditorías del proyecto.
+
+| Área | Componentes documentados |
+|---|---|
+| Solicitudes | Creación y seguimiento de tickets |
+| Operación | Asignación y gestión de técnicos |
+| Seguridad | Roles, permisos y autenticación |
+| Auditoría | Historial y trazabilidad de eventos |
+
+**Navegación:** [Tecnologías](#️-tecnologías-utilizadas) · [Requisitos](#-requisitos-previos) · [Instalación](#-instrucciones-de-instalación) · [Documentación backend](spring-security-user-role-management/README.md)
+
+---
+
 # CAMPUSDESK - Plataforma de Mesa de Ayuda y Gestión de Tickets
 
 Sistema web integral para la recepción, priorización, asignación, seguimiento y resolución de incidencias y solicitudes técnicas en entornos institucionales o corporativos de campus. Diseñado con una arquitectura desacoplada y sin estado (*stateless*), incorpora control de acceso granular basado en roles (RBAC) con permisos dinámicos, ciclo de vida estricto para contraseñas y auditoría histórica completa de eventos.
